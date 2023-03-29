@@ -1,7 +1,7 @@
 .book-table {
     font-family: Arial, Helvetica, sans-serif;
     border-collapse: collapse;
-    width: 90%;
+    width: 98%;
     margin: 0 auto;
   }
   
@@ -9,7 +9,6 @@
   .book-table td {
     border: 1px solid #ddd;
     padding: 8px;
-    background-color: white;
   }
   
   .book-table th {
@@ -20,6 +19,13 @@
     color: white;
   }
   
+  .book-table tr {
+    background-color: white;
+  }
   .book-table tr:nth-child(even){background-color: #f2f2f2;}
   
-.book-table tr:hover {background-color: #ddd;}
+.book-table tr:hover {background-color: #ffde5973;}
+
+.button-group {
+  display: inline-block;
+}

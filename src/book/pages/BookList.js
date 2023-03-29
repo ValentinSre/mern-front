@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
+import { AuthContext } from "../../shared/context/auth-context";
 import BookTable from "../components/BookTable";
 
 const BookList = () => {
+  const auth = useContext(AuthContext);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [loadedBooks, setLoadedBooks] = useState();
 
@@ -13,7 +15,7 @@ const BookList = () => {
     const fetchBooks = async () => {
       try {
         const responseData = await sendRequest(
-          `${process.env.REACT_APP_API_URL}/book`
+          `${process.env.REACT_APP_API_URL}/book?user=${auth.userId}`
         );
 
         setLoadedBooks(responseData.books);
@@ -21,7 +23,7 @@ const BookList = () => {
     };
 
     fetchBooks();
-  }, [sendRequest]);
+  }, [sendRequest, auth.userId]);
 
   return (
     <React.Fragment>

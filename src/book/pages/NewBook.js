@@ -2,10 +2,7 @@ import React, { useContext } from "react";
 import { useHistory } from "react-router-dom";
 
 import Input from "../../shared/components/FormElements/Input";
-import {
-  VALIDATOR_MINLENGTH,
-  VALIDATOR_REQUIRE,
-} from "../../shared/util/validators";
+import { VALIDATOR_REQUIRE } from "../../shared/util/validators";
 import Button from "../../shared/components/FormElements/Button";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
@@ -42,7 +39,6 @@ const NewPlace = () => {
   const placeSubmitHandler = async (event) => {
     event.preventDefault();
     try {
-      console.log(formState.inputs.serie.value);
       await sendRequest(
         process.env.REACT_APP_API_URL + "/book",
         "POST",
