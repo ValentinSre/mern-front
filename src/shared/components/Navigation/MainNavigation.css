@@ -43,3 +43,9 @@
     display: block;
   }
 }
+
+.logo {
+  max-width: 100%;
+  height: auto;
+  max-height: 50px; /* Taille maximale de l'image */
+}

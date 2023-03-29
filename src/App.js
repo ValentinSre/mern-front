@@ -15,10 +15,12 @@ import MainNavigation from "./shared/components/Navigation/MainNavigation";
 import LoadingSpinner from "./shared/components/UIElements/LoadingSpinner";
 import { AuthContext } from "./shared/context/auth-context";
 import { useAuth } from "./shared/hooks/auth-hook";
+import BookList from "./book/pages/BookList";
 
 const Users = React.lazy(() => import("./user/pages/Users"));
+const Collection = React.lazy(() => import("./collection/pages/Collection"));
 const NewPlace = React.lazy(() => import("./places/pages/NewPlace"));
-const UserPlaces = React.lazy(() => import("./places/pages/UserPlaces"));
+const NewBook = React.lazy(() => import("./book/pages/NewBook"));
 const UpdatePlace = React.lazy(() => import("./places/pages/UpdatePlace"));
 const Auth = React.lazy(() => import("./user/pages/Auth"));
 
@@ -30,34 +32,37 @@ const App = () => {
   if (!token) {
     routes = (
       <Switch>
-        <Route path="/" exact>
+        <Route path='/' exact>
           <Users />
         </Route>
-        <Route path="/:userId/places" exact>
-          <UserPlaces />
+        <Route path='/:userId/collection' exact>
+          <Collection />
         </Route>
-        <Route path="/auth" exact>
+        <Route path='/auth' exact>
           <Auth />
         </Route>
-        <Redirect to="/" />
+        <Redirect to='/' />
       </Switch>
     );
   } else {
     routes = (
       <Switch>
-        <Route path="/" exact>
+        <Route path='/' exact>
           <Users />
         </Route>
-        <Route path="/:userId/places" exact>
-          <UserPlaces />
+        <Route path='/:userId/collection' exact>
+          <Collection />
         </Route>
-        <Route path="/places/new" exact>
-          <NewPlace />
+        <Route path='/books' exact>
+          <BookList />
         </Route>
-        <Route path="/places/:placeId" exact>
+        <Route path='/book/new' exact>
+          <NewBook />
+        </Route>
+        <Route path='/places/:placeId' exact>
           <UpdatePlace />
         </Route>
-        <Redirect to="/" />
+        <Redirect to='/' />
       </Switch>
     );
   }
@@ -71,7 +76,7 @@ const App = () => {
         <main>
           <Suspense
             fallback={
-              <div className="center">
+              <div className='center'>
                 <LoadingSpinner />
               </div>
             }
