@@ -78,6 +78,7 @@ const NewPlace = () => {
           onInput={inputHandler}
           validators={[]}
           initialIsValid={true}
+          autocompleteOptions={["Amazing Spider-Man", "Immortal Hulk"]}
         />
         <Input
           element='input'

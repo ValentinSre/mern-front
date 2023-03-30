@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect } from "react";
+import React, { useReducer, useEffect, useState } from "react";
 
 import { validate } from "../../util/validators";
 
@@ -52,15 +52,25 @@ const Input = (props) => {
 
   const element =
     props.element === "input" ? (
-      <input
-        id={props.id}
-        type={props.type}
-        placeholder={props.placeholder}
-        onChange={changeHandler}
-        onBlur={touchHandler}
-        value={inputState.value}
-        step={props.step}
-      />
+      <>
+        <input
+          id={props.id}
+          type={props.type}
+          placeholder={props.placeholder}
+          onChange={changeHandler}
+          onBlur={touchHandler}
+          value={inputState.value}
+          step={props.step}
+          list={`${props.id}-options`}
+        />
+        {props.autocompleteOptions && (
+          <datalist id={`${props.id}-options`}>
+            {props.autocompleteOptions.map((option) => (
+              <option key={option} value={option} />
+            ))}
+          </datalist>
+        )}
+      </>
     ) : (
       <textarea
         id={props.id}
