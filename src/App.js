@@ -16,6 +16,7 @@ import LoadingSpinner from "./shared/components/UIElements/LoadingSpinner";
 import { AuthContext } from "./shared/context/auth-context";
 import { useAuth } from "./shared/hooks/auth-hook";
 import BookList from "./book/pages/BookList";
+import Home from "./Home";
 
 const Users = React.lazy(() => import("./user/pages/Users"));
 const Collection = React.lazy(() => import("./collection/pages/Collection"));
@@ -33,7 +34,7 @@ const App = () => {
     routes = (
       <Switch>
         <Route path='/' exact>
-          <Users />
+          <Home />
         </Route>
         <Route path='/:userId/collection' exact>
           <Collection />
@@ -48,7 +49,7 @@ const App = () => {
     routes = (
       <Switch>
         <Route path='/' exact>
-          <Users />
+          <Home />
         </Route>
         <Route path='/:userId/collection' exact>
           <Collection />

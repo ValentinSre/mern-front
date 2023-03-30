@@ -1,0 +1,97 @@
+.book-calendar {
+    width: 400px;
+    height: 400px;
+    border-radius: 10px;
+    background-color: #fff;
+    overflow: auto;
+  }
+  
+  .book-calendar h2 {
+
+    margin: 10px 0;
+  }
+
+  .book-calendar-header {
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    background-color: #d52d2d;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+  }
+  
+  .book-calendar-days {
+    display: flex;
+    flex-direction: column;
+    overflow-x: auto;
+    height: calc(100% - 50px); /* Subtract header height and bottom padding */
+    padding: 0 10px;
+  }
+  
+  .book-calendar-day__div{
+    background-color: #cccccc31;
+    margin: 10px 0;
+    border-radius: 10px;
+  }
+
+  .book-calendar-day {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .book-calendar-day:last-child {
+    border-bottom: none;
+  }
+  
+  .book-calendar-day-label {
+    font-size: 13px;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    background-color: #d52d2d74;
+  }
+  
+  .book-calendar-day-books {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+  
+  .book-calendar-day-books img {
+    width: 100px;
+    height: 150px;
+    object-fit: cover;
+    margin-right: 10px;
+  }
+  
+  /* Scrollbar Styles */
+/* Styles pour la barre de défilement */
+::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background-color: #f5f5f5;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background-color: #ddd;
+    border-radius: 20px;
+    border: 3px solid #f5f5f5;
+  }
+  
+  /* Ajouter !important pour rendre les styles prioritaires */
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #bbb !important;
+  }
+  
+  ::-webkit-scrollbar-thumb:active {
+    background-color: #999 !important;
+  }
+  
