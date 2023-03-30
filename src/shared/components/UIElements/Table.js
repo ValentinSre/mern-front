@@ -89,7 +89,7 @@ const Table = ({ data: initialData, loading: initialLoading, onRowClick, columns
                                                 <IconOnlyButton
                                                     onClick={() => action.handleAction(data._id)}
                                                     icon={action.icon}
-                                                    disabled={action.disabled.every((cond) => !data[cond])}
+                                                    disabled={action.disabled.every((cond) => data[cond])}
                                                     title={action.title}
                                                 />
                                             ))}
