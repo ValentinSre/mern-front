@@ -1,14 +1,8 @@
 .book-calendar {
-    width: 400px;
-    height: 400px;
+    width: 90%;
     border-radius: 10px;
     background-color: #fff;
     overflow: auto;
-  }
-  
-  .book-calendar h2 {
-
-    margin: 10px 0;
   }
 
   .book-calendar-header {
@@ -19,7 +13,7 @@
     font-size: 15px;
     font-weight: bold;
     text-align: center;
-    padding: 10px;
+    padding: 10px;    
   }
   
   .book-calendar-days {
@@ -64,8 +58,8 @@
   }
   
   .book-calendar-day-books img {
-    width: 100px;
-    height: 150px;
+    width: 120px;
+    height: 180px;
     object-fit: cover;
     margin-right: 10px;
   }
@@ -74,6 +68,7 @@
 /* Styles pour la barre de défilement */
 ::-webkit-scrollbar {
     width: 8px;
+    height: 8px;
   }
   
   ::-webkit-scrollbar-track {

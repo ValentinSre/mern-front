@@ -1,0 +1,5 @@
+.outer-div {
+    display: flex; /* permet de transformer la div en conteneur flex */
+    justify-content: center; /* centre la div horizontalement */
+    align-items: center; /* centre la div verticalement */
+  }

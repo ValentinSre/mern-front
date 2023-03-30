@@ -2,6 +2,8 @@ import React from "react";
 
 import BookCalendar from "./book/components/BookCalendar";
 
+import "./Home.css";
+
 const livres = [
   {
     releaseDate: new Date("2023-03-01"),
@@ -52,13 +54,22 @@ const livres = [
       "https://m.media-amazon.com/images/W/IMAGERENDERING_521856-T1/images/I/81aCBz5-N6L.jpg",
     id: "7",
   },
+  {
+    releaseDate: new Date("2023-04-02"),
+    title: "Le livre 8",
+    cover:
+      "https://m.media-amazon.com/images/W/IMAGERENDERING_521856-T1/images/I/81aCBz5-N6L.jpg",
+    id: "8",
+  },
 ];
 
 const Home = () => {
   return (
-    <div style={{ margin: "auto", padding: 10, textAlign: "center" }}>
-      <h1>Home</h1>
-      <BookCalendar month='Mars 2023' books={livres} />
+    <div className='outer-div'>
+      <div>
+        <h2>Coucou</h2>
+        <BookCalendar books={livres} />
+      </div>
     </div>
   );
 };
