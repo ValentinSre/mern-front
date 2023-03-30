@@ -13,9 +13,9 @@ function IconOnlyButton(props) {
         onClick={props.onClick}
         disabled={props.disabled}
       >
-        {props.delete && <DeleteIcon />}
-        {props.wishlist && <AddShoppingCartIcon />}
-        {props.collection && <ArchiveIcon />}
+        {props.icon === 'delete' && <DeleteIcon />}
+        {props.icon === 'wishlist' && <AddShoppingCartIcon />}
+        {props.icon === 'collection' && <ArchiveIcon />}
       </IconButton>
     </Tooltip>
   );
