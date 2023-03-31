@@ -24,6 +24,7 @@ const NewPlace = React.lazy(() => import("./places/pages/NewPlace"));
 const NewBook = React.lazy(() => import("./book/pages/NewBook"));
 const UpdatePlace = React.lazy(() => import("./places/pages/UpdatePlace"));
 const Auth = React.lazy(() => import("./user/pages/Auth"));
+const Book = React.lazy(() => import("./book/pages/Book"));
 
 const App = () => {
   const { userId, token, login, logout } = useAuth();
@@ -38,6 +39,9 @@ const App = () => {
         </Route>
         <Route path='/:userId/collection' exact>
           <Collection />
+        </Route>
+        <Route path='/book/:id' exact>
+          <Book />
         </Route>
         <Route path='/auth' exact>
           <Auth />
@@ -59,6 +63,9 @@ const App = () => {
         </Route>
         <Route path='/book/new' exact>
           <NewBook />
+        </Route>
+        <Route path='/book/:id' exact>
+          <Book />
         </Route>
         <Route path='/places/:placeId' exact>
           <UpdatePlace />
