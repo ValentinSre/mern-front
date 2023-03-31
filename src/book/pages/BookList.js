@@ -4,6 +4,7 @@ import { useHttpClient } from "../../shared/hooks/http-hook";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import Table from "../../shared/components/UIElements/Table";
+import GenericTable from "../../shared/components/UIElements/GenericTable";
 import { AuthContext } from "../../shared/context/auth-context";
 
 const BookList = () => {
@@ -11,17 +12,17 @@ const BookList = () => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [loadedBooks, setLoadedBooks] = useState();
 
+  const fetchBooks = async () => {
+    try {
+      const responseData = await sendRequest(
+        `${process.env.REACT_APP_API_URL}/book?user=${auth.userId}`
+      );
+      console.log(responseData.books);
+      setLoadedBooks(responseData.books);
+    } catch (err) {}
+  };
+
   useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        const responseData = await sendRequest(
-          `${process.env.REACT_APP_API_URL}/book?user=${auth.userId}`
-        );
-
-        setLoadedBooks(responseData.books);
-      } catch (err) { }
-    };
-
     fetchBooks();
   }, [sendRequest, auth.userId]);
 
@@ -36,15 +37,15 @@ const BookList = () => {
     { name: "Éditeur", id: "editeur", sort: true },
     { name: "Format", id: "format", sort: true },
     { name: "Prix", id: "prix", sort: true },
-  ]
+  ];
 
-  const handleAddToList = async (bookId, listName) => {
+  const handleAddToList = async (bookIds, listName) => {
     try {
       const responseData = await sendRequest(
         process.env.REACT_APP_API_URL + "/collection/add",
         "POST",
         JSON.stringify({
-          id_book: bookId,
+          ids_book: bookIds,
           id_user: auth.userId,
           list_name: listName,
           books: loadedBooks,
@@ -55,24 +56,74 @@ const BookList = () => {
         }
       );
 
-      setLoadedBooks(responseData.books);
+      // Refetch the list of books after adding the book to the collection successfully
+      await fetchBooks();
     } catch (err) {
       console.log(err);
     }
   };
 
-  const handleAddToCollection = (bookId) => {
-    handleAddToList(bookId, 'collection')
-  }
+  const handleAddToCollection = (bookIds) => {
+    handleAddToList(bookIds, "collection");
+  };
 
-  const handleAddToWishlist = (bookId) => {
-    handleAddToList(bookId, 'wishlist')
-  }
+  const handleAddToWishlist = (bookIds) => {
+    handleAddToList(bookIds, "wishlist");
+  };
 
   const actions = [
-    { icon: 'collection', title: 'Ajouter à ma collection', handleAction: handleAddToCollection, disabled: ['possede'] },
-    { icon: 'wishlist', title: 'Ajouter à ma wishlist', handleAction: handleAddToWishlist, disabled: ['possede', 'souhaite'] }
-  ]
+    {
+      icon: "collection",
+      title: "Ajouter à ma collection",
+      handleAction: handleAddToCollection,
+      disabled: ["possede"],
+    },
+    {
+      icon: "wishlist",
+      title: "Ajouter à ma wishlist",
+      handleAction: handleAddToWishlist,
+      disabled: ["possede", "souhaite"],
+    },
+  ];
+
+  const headCells = [
+    {
+      id: "serie",
+      numeric: false,
+      disablePadding: false,
+      label: "Série",
+    },
+    {
+      id: "titre",
+      numeric: false,
+      disablePadding: false,
+      label: "Titre",
+    },
+    {
+      id: "tome",
+      numeric: true,
+      disablePadding: false,
+      label: "Tome",
+    },
+    {
+      id: "editeur",
+      numeric: false,
+      disablePadding: false,
+      label: "Editeur",
+    },
+    {
+      id: "format",
+      numeric: false,
+      disablePadding: false,
+      label: "Format",
+    },
+    {
+      id: "prix",
+      numeric: true,
+      disablePadding: false,
+      label: "Prix",
+    },
+  ];
 
   return (
     <React.Fragment>
@@ -83,7 +134,15 @@ const BookList = () => {
         </div>
       )}
       {!isLoading && loadedBooks && (
-        <Table data={loadedBooks} loading={isLoading} onRowClick={handleViewBook} columns={columnsName} actions={actions} />
+        <div className='center'>
+          <GenericTable
+            headCells={headCells}
+            rows={loadedBooks}
+            title='Tous les livres'
+            actions={actions}
+            userInfo={auth.isLoggedIn}
+          />
+        </div>
       )}
     </React.Fragment>
   );
