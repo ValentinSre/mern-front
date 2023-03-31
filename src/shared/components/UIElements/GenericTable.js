@@ -340,10 +340,6 @@ export default function EnhancedTable({
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
-        <FormControlLabel
-          control={<Switch checked={dense} onChange={handleChangeDense} />}
-          label='Condensé'
-        />
         <EnhancedTableToolbar
           numSelected={selected.length}
           selected={selected}
@@ -450,6 +446,11 @@ export default function EnhancedTable({
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+        <FormControlLabel
+          control={<Switch checked={dense} onChange={handleChangeDense} />}
+          label='Condensé'
+          style={{ marginLeft: "1rem", marginBottom: "1rem" }}
         />
       </Paper>
     </Box>

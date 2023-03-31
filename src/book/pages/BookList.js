@@ -7,6 +7,8 @@ import Table from "../../shared/components/UIElements/Table";
 import GenericTable from "../../shared/components/UIElements/GenericTable";
 import { AuthContext } from "../../shared/context/auth-context";
 
+import "./BookList.css";
+
 const BookList = () => {
   const auth = useContext(AuthContext);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
@@ -134,7 +136,7 @@ const BookList = () => {
         </div>
       )}
       {!isLoading && loadedBooks && (
-        <div className='center'>
+        <div className='book-list'>
           <GenericTable
             headCells={headCells}
             rows={loadedBooks}
