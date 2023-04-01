@@ -3,7 +3,6 @@ import React, { useEffect, useState, useContext } from "react";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
-import Table from "../../shared/components/UIElements/Table";
 import GenericTable from "../../shared/components/UIElements/GenericTable";
 import { AuthContext } from "../../shared/context/auth-context";
 
@@ -143,6 +142,7 @@ const BookList = () => {
             title='Tous les livres'
             actions={actions}
             userInfo={auth.isLoggedIn}
+            checkbox
           />
         </div>
       )}

@@ -23,6 +23,7 @@ import PreviewIcon from "@material-ui/icons/Visibility";
 import FilterListIcon from "@material-ui/icons/FilterList";
 
 import IconOnlyButton from "./IconOnlyButton";
+// import SearchBar from "./SearchBar";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -53,7 +54,7 @@ function stableSort(array, comparator) {
 }
 
 const DEFAULT_ORDER = "asc";
-const DEFAULT_ORDER_BY = "editeur"; // ********************************* TO CHANGE *********************************
+const DEFAULT_ORDER_BY = "editeur";
 const DEFAULT_ROWS_PER_PAGE = 25;
 
 function EnhancedTableHead(props) {
@@ -66,6 +67,7 @@ function EnhancedTableHead(props) {
     onRequestSort,
     headCells,
     userInfo,
+    checkbox,
   } = props;
   const createSortHandler = (newOrderBy) => (event) => {
     onRequestSort(event, newOrderBy);
@@ -74,17 +76,19 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding='checkbox'>
-          <Checkbox
-            color='primary'
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{
-              "aria-label": "select all",
-            }}
-          />
-        </TableCell>
+        {checkbox && (
+          <TableCell padding='checkbox'>
+            <Checkbox
+              color='primary'
+              indeterminate={numSelected > 0 && numSelected < rowCount}
+              checked={rowCount > 0 && numSelected === rowCount}
+              onChange={onSelectAllClick}
+              inputProps={{
+                "aria-label": "select all",
+              }}
+            />
+          </TableCell>
+        )}
         <TableCell padding='see'></TableCell>
         {userInfo && (
           <React.Fragment>
@@ -142,7 +146,13 @@ EnhancedTableHead.propTypes = {
 
 function EnhancedTableToolbar(props) {
   const { numSelected, selected: selectedRows, title, actions } = props;
-  console.log(selectedRows);
+
+  const [openFilter, setOpenFilter] = React.useState(false);
+
+  const handleOpenFilter = () => {
+    setOpenFilter(!openFilter);
+  };
+
   return (
     <Toolbar
       sx={{
@@ -177,21 +187,25 @@ function EnhancedTableToolbar(props) {
         </Typography>
       )}
 
-      {numSelected > 0 ? (
-        actions.map((action) => (
-          <IconOnlyButton
-            onClick={() => action.handleAction(selectedRows)}
-            icon={action.icon}
-            title={action.title}
-          />
-        ))
-      ) : (
-        <Tooltip title='Filter list'>
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
-      )}
+      {
+        numSelected > 0
+          ? actions.map((action) => (
+              <IconOnlyButton
+                onClick={() => action.handleAction(selectedRows)}
+                icon={action.icon}
+                title={action.title}
+              />
+            ))
+          : null
+        //    (
+        //     // <Tooltip title='Filter list'>
+        //     //   <IconButton onClick={handleOpenFilter}>
+        //     //     <FilterListIcon />
+        //     //   </IconButton>
+        //     // </Tooltip>
+        //   )
+      }
+      {/* {openFilter && <SearchBar />} */}
     </Toolbar>
   );
 }
@@ -206,6 +220,7 @@ export default function EnhancedTable({
   title,
   actions,
   userInfo,
+  checkbox,
 }) {
   const [order, setOrder] = React.useState(DEFAULT_ORDER);
   const [orderBy, setOrderBy] = React.useState(DEFAULT_ORDER_BY);
@@ -362,6 +377,7 @@ export default function EnhancedTable({
               rowCount={rows.length}
               headCells={headCells}
               userInfo={userInfo}
+              checkbox={checkbox}
             />
             <TableBody>
               {visibleRows
@@ -380,15 +396,17 @@ export default function EnhancedTable({
                         selected={isItemSelected}
                         sx={{ cursor: "pointer" }}
                       >
-                        <TableCell padding='checkbox'>
-                          <Checkbox
-                            color='primary'
-                            checked={isItemSelected}
-                            inputProps={{
-                              "aria-labelledby": labelId,
-                            }}
-                          />
-                        </TableCell>
+                        {checkbox && (
+                          <TableCell padding='checkbox'>
+                            <Checkbox
+                              color='primary'
+                              checked={isItemSelected}
+                              inputProps={{
+                                "aria-labelledby": labelId,
+                              }}
+                            />
+                          </TableCell>
+                        )}
                         <TableCell padding='see'>
                           <IconButton
                             key={row._id}

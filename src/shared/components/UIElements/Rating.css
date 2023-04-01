@@ -1,0 +1,19 @@
+.star {
+    color: #ddd;
+  }
+  
+  .star.filled {
+    color: yellow;
+  }
+  
+  .star.half-filled {
+    background: linear-gradient(to right, yellow 50%, #ddd 50%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .rating {
+    display: flex;
+    align-items: center;
+  }
+  

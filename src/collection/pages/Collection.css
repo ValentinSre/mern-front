@@ -1,0 +1,8 @@
+.collection {
+    border-radius: 10px;
+    background-color: #fff;
+    overflow: auto;
+    width: 90%;
+    margin: 0 auto;
+    padding: 10px;
+}

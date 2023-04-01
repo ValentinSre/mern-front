@@ -1,40 +1,92 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import React, { useEffect, useState, useContext } from "react";
 
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
+import { AuthContext } from "../../shared/context/auth-context";
+import CollectionDisplay from "../components/CollectionDisplay";
+import CollectionFilter from "../components/CollectionFilter";
+
+import "./Collection.css";
 
 const Collection = () => {
+  const auth = useContext(AuthContext);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
-  const [ collection, setCollection ] = useState();
+  const [loadedCollection, setLoadedCollection] = useState();
 
-  const userId = useParams().userId;
+  const [selectedSort, setSelectedSort] = useState(0);
+  const [selectedGroupment, setSelectedGroupment] = useState(0);
+  const [selectedEditeurs, setSelectedEditeurs] = useState();
+
+  const fetchBooks = async () => {
+    try {
+      const responseData = await sendRequest(
+        `${process.env.REACT_APP_API_URL}/collection/${auth.userId}`,
+        "GET",
+        null,
+        { Authorization: "Bearer " + auth.token }
+      );
+
+      setLoadedCollection(responseData.collection);
+      loadEditeurs(responseData.editeurs);
+    } catch (err) {}
+  };
 
   useEffect(() => {
-    const fetchCollections = async () => {
-      try {
-        const responseData = await sendRequest(
-          `${process.env.REACT_APP_API_URL}/collection/${userId}`
-        );
+    fetchBooks();
+  }, [sendRequest, auth.userId]);
 
-        setCollection(responseData.collection);
-      } catch (err) {}
-    };
+  const loadEditeurs = (editeurs) => {
+    const editeursObj = {};
+    for (const editeur of editeurs) {
+      editeursObj[editeur] = true;
+    }
 
-    fetchCollections();
-  }, [sendRequest, userId]);
+    setSelectedEditeurs(editeursObj);
+  };
+
+  const handleEditeursSelection = (name) => {
+    const newEditeurs = { ...selectedEditeurs };
+    console.log(newEditeurs);
+    newEditeurs[name] = !selectedEditeurs[name];
+    console.log(newEditeurs);
+    setSelectedEditeurs(newEditeurs);
+  };
+
+  const handleSortChange = (event) => {
+    setSelectedSort(event.target.value);
+  };
+
+  const handleGroupmentChange = (event) => {
+    setSelectedGroupment(event.target.value);
+  };
 
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />{" "}
       {isLoading && (
-        <div className="center">
+        <div className='center'>
           <LoadingSpinner />
         </div>
       )}
-      {!isLoading && collection && (
-        <p>Collection to display</p>
+      {!isLoading && loadedCollection && selectedEditeurs && (
+        <div className='collection'>
+          <CollectionFilter
+            collection={loadedCollection}
+            selectedSort={selectedSort}
+            selectedGroupment={selectedGroupment}
+            editeurs={selectedEditeurs}
+            handleSortChange={handleSortChange}
+            handleGroupmentChange={handleGroupmentChange}
+            handleEditeursSelection={handleEditeursSelection}
+          />
+          <CollectionDisplay
+            collection={loadedCollection}
+            sort={selectedSort}
+            groupment={selectedGroupment}
+            selectedEditeurs={selectedEditeurs}
+          />
+        </div>
       )}
     </React.Fragment>
   );
