@@ -1,7 +1,11 @@
 import React from "react";
-
 import { Tooltip } from "@material-ui/core";
+import { CiCircleMore } from "react-icons/ci";
+
 import "./CollectionInLists.css";
+
+const MAX_ITEMS_PER_CATEGORY = 20;
+
 const CollectionInLists = ({
   collection,
   sort,
@@ -43,17 +47,31 @@ const CollectionInLists = ({
         <div className='book-category' key={key}>
           <div className='book-category-header'>{key}</div>
           <div className='book-list'>
-            {groupedCollection[key].map((book) => (
-              <Tooltip title={book.title} key={book.id}>
-                <div className='book-item'>
-                  <img
-                    src={book.image}
-                    alt={book.title}
-                    className='book-cover'
-                  />
-                </div>
-              </Tooltip>
-            ))}
+            {groupedCollection[key]
+              .slice(0, MAX_ITEMS_PER_CATEGORY + 1)
+              .map((book, index) =>
+                index < MAX_ITEMS_PER_CATEGORY ? (
+                  <Tooltip title={book.title} key={book.id}>
+                    <div className='book-item'>
+                      <img
+                        src={book.image}
+                        alt={book.title}
+                        className='book-cover'
+                      />
+                    </div>
+                  </Tooltip>
+                ) : (
+                  <div
+                    style={{
+                      marginLeft: "100px",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <CiCircleMore size='50px' color='#ccc' />
+                  </div>
+                )
+              )}
           </div>
         </div>
       ))}
