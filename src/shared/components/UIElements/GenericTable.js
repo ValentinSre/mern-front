@@ -26,10 +26,15 @@ import IconOnlyButton from "./IconOnlyButton";
 // import SearchBar from "./SearchBar";
 
 function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
+  const aValue = a[orderBy] ?? "";
+  const bValue = b[orderBy] ?? "";
+  if (isNaN(aValue) || isNaN(bValue)) {
+    return aValue.localeCompare(bValue);
+  }
+  if (bValue < aValue) {
     return -1;
   }
-  if (b[orderBy] > a[orderBy]) {
+  if (bValue > aValue) {
     return 1;
   }
   return 0;
