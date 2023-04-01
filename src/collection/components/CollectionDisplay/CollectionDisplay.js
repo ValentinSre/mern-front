@@ -3,7 +3,9 @@ import Tooltip from "@material-ui/core/Tooltip";
 import { BsBookmarkCheckFill, BsBookmarkX } from "react-icons/bs";
 import { MdRateReview, MdChatBubbleOutline } from "react-icons/md";
 
-import Rating from "../../shared/components/UIElements/Rating";
+import Rating from "../../../shared/components/UIElements/Rating";
+import CollectionInMosaic from "./components/CollectionInMosaic";
+import CollectionInLists from "./components/CollectionInLists";
 
 import "./CollectionDisplay.css";
 
@@ -165,29 +167,24 @@ const CollectionDisplay = ({
     }
   };
 
-  return (
-    <div className='collection-display'>
-      {groupment ? (
-        Object.keys(groupedCollection).map((key) => (
-          <div key={key} style={{ paddingBottom: "50px" }}>
-            <h2 className='category'>
-              {key !== "undefined" ? key : GROUP_ERROR_MESSAGE[groupment]}
-            </h2>
-            <div className='collection-display__books'>
-              {sortCollection(groupedCollection[key], sort).map(
-                (book) => selectedEditeurs[book.editeur] && content(book)
-              )}
-            </div>
-          </div>
-        ))
-      ) : (
-        <div className='collection-display__books'>
-          {sortCollection(collection, sort).map(
-            (book) => selectedEditeurs[book.editeur] && content(book)
-          )}
-        </div>
-      )}
-    </div>
+  return !groupment ? (
+    <CollectionInMosaic
+      collection={collection}
+      sort={sort}
+      selectedEditeurs={selectedEditeurs}
+      sortCollection={sortCollection}
+      displayContent={content}
+    />
+  ) : (
+    <CollectionInLists
+      collection={collection}
+      sort={sort}
+      groupedCollection={groupedCollection}
+      groupment={groupment}
+      selectedEditeurs={selectedEditeurs}
+      sortCollection={sortCollection}
+      displayContent={content}
+    />
   );
 };
 

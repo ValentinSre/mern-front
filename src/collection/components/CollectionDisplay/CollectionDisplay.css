@@ -5,7 +5,7 @@
     margin: 2rem 0;
   }
   
-  .collection-display__books {
+  .collection-display__books_array {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     grid-gap: 2rem;

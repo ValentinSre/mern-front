@@ -29,14 +29,6 @@
     padding: 10px;    
   }
   
-  .book-calendar-days {
-    display: flex;
-    flex-direction: column;
-    overflow-x: auto;
-    height: calc(100% - 50px); /* Subtract header height and bottom padding */
-    padding: 0 10px;
-  }
-  
   .book-calendar-day__div{
     background-color: #cccccc31;
     margin: 10px 0;

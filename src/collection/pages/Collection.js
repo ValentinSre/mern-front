@@ -4,7 +4,7 @@ import { useHttpClient } from "../../shared/hooks/http-hook";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import { AuthContext } from "../../shared/context/auth-context";
-import CollectionDisplay from "../components/CollectionDisplay";
+import CollectionDisplay from "../components/CollectionDisplay/CollectionDisplay";
 import CollectionFilter from "../components/CollectionFilter";
 
 import "./Collection.css";
@@ -15,7 +15,7 @@ const Collection = () => {
   const [loadedCollection, setLoadedCollection] = useState();
 
   const [selectedSort, setSelectedSort] = useState(0);
-  const [selectedGroupment, setSelectedGroupment] = useState(0);
+  const [selectedGroupment, setSelectedGroupment] = useState(1);
   const [selectedEditeurs, setSelectedEditeurs] = useState();
 
   const fetchBooks = async () => {
