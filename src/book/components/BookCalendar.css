@@ -46,7 +46,10 @@
   .book-calendar-day {
     display: flex;
     align-items: center;
-    padding: 10px;
+    padding-top: 5px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
     border-bottom: 1px solid #ccc;
   }
   
@@ -55,13 +58,18 @@
   }
   
   .book-calendar-day-label {
-    font-size: 13px;
+    background-color: #fff;
+    padding: 1rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    font-family: 'Lato', sans-serif;
+    font-size: 1.1rem;
     font-weight: bold;
+    color: #333;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
     text-align: center;
-    padding: 10px;
-    border-top-right-radius: 10px;
-    border-top-left-radius: 10px;
-    background-color: #d52d2d74;
+    text-transform: uppercase;
   }
   
   .book-calendar-day-books {
@@ -75,6 +83,29 @@
     height: 180px;
     object-fit: cover;
     margin-right: 10px;
+  }
+
+  .book-calendar-day-book {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: space-between;
+    height: 100%;
+    background-color: #fff;
+    padding: 4px;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .book-calendar-day-book:hover {
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2);
+  }
+  
+  .book-calendar-day-book p:first-of-type {
+    font-weight: bold;
+    font-size: 10px;
+    margin-bottom: 10px;
   }
   
   /* Scrollbar Styles */

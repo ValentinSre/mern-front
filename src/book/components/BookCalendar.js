@@ -64,15 +64,18 @@ function BookCalendar({ books }) {
         {datesByMonth[selectedMonth].map((date) => (
           <div className='book-calendar-day__div'>
             <div className='book-calendar-day-label'>
-              Sorties du {new Date(date).getDate()}
+              {new Date(date).getDate()}
               {new Date(date).getDate() === 1 ? "er" : null}{" "}
               {months[selectedMonth]}
             </div>
+
             <div key={date} className='book-calendar-day'>
               <div className='book-calendar-day-books'>
                 {booksByDate[date].map((book) => (
                   <Tooltip title={book.title}>
-                    <img key={book.id} src={book.cover} alt={book.title} />
+                    <div key={book.id}>
+                      <img key={book.id} src={book.cover} alt={book.title} />
+                    </div>
                   </Tooltip>
                 ))}
               </div>
@@ -82,28 +85,6 @@ function BookCalendar({ books }) {
       </TabPanel>
     </div>
   );
-}
-
-{
-  /* <div className='book-calendar-header'>{month}</div>
-<div className='book-calendar-days'>
-  {releaseDates.map((date) => (
-    <div className='book-calendar-day__div'>
-      <div className='book-calendar-day-label'>
-        Sorties du {new Date(date).getDate()} {month}
-      </div>
-      <div key={date} className='book-calendar-day'>
-        <div className='book-calendar-day-books'>
-          {booksByDate[date].map((book) => (
-            <Tooltip title={book.title}>
-              <img key={book.id} src={book.cover} alt={book.title} />
-            </Tooltip>
-          ))}
-        </div>
-      </div>
-    </div>
-  ))}
-</div> */
 }
 
 export default BookCalendar;

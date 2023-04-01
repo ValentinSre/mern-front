@@ -11,6 +11,7 @@ const livres = [
     cover:
       "https://m.media-amazon.com/images/W/IMAGERENDERING_521856-T1/images/I/81aCBz5-N6L.jpg",
     id: "1",
+    prix: 10,
   },
   {
     releaseDate: new Date("2023-03-04"),
@@ -18,6 +19,7 @@ const livres = [
     cover:
       "https://m.media-amazon.com/images/W/IMAGERENDERING_521856-T1/images/I/81aCBz5-N6L.jpg",
     id: "2",
+    prix: 10,
   },
   {
     releaseDate: new Date("2023-03-04"),
@@ -25,6 +27,7 @@ const livres = [
     cover:
       "https://m.media-amazon.com/images/W/IMAGERENDERING_521856-T1/images/I/81aCBz5-N6L.jpg",
     id: "3",
+    prix: 10,
   },
   {
     releaseDate: new Date("2023-03-04"),
@@ -32,6 +35,7 @@ const livres = [
     cover:
       "https://m.media-amazon.com/images/W/IMAGERENDERING_521856-T1/images/I/81aCBz5-N6L.jpg",
     id: "4",
+    prix: 15.99,
   },
   {
     releaseDate: new Date("2023-03-04"),
@@ -39,6 +43,7 @@ const livres = [
     cover:
       "https://m.media-amazon.com/images/W/IMAGERENDERING_521856-T1/images/I/81aCBz5-N6L.jpg",
     id: "5",
+    prix: 10,
   },
   {
     releaseDate: new Date("2023-03-18"),
@@ -46,6 +51,7 @@ const livres = [
     cover:
       "https://m.media-amazon.com/images/W/IMAGERENDERING_521856-T1/images/I/81aCBz5-N6L.jpg",
     id: "6",
+    prix: 17.99,
   },
   {
     releaseDate: new Date("2023-03-21"),
@@ -53,6 +59,7 @@ const livres = [
     cover:
       "https://m.media-amazon.com/images/W/IMAGERENDERING_521856-T1/images/I/81aCBz5-N6L.jpg",
     id: "7",
+    prix: 25,
   },
   {
     releaseDate: new Date("2023-04-02"),
@@ -60,6 +67,7 @@ const livres = [
     cover:
       "https://m.media-amazon.com/images/W/IMAGERENDERING_521856-T1/images/I/81aCBz5-N6L.jpg",
     id: "8",
+    prix: 10,
   },
 ];
 
@@ -67,7 +75,6 @@ const Home = () => {
   return (
     <div className='outer-div'>
       <div>
-        <h2>Coucou</h2>
         <BookCalendar books={livres} />
       </div>
     </div>
