@@ -59,6 +59,63 @@ const CollectionDisplay = ({
 }) => {
   const groupCollection = (collection, groupment) => {
     if (groupment) {
+      // Authors is an array of objects with a name property
+      // Adopt a different strategy : collect all the authors in a single array
+      // Then group by author
+      // A book can appear multiple times in the list
+      if (groupment === 3) {
+        const authors = collection.reduce((acc, book) => {
+          book.auteurs.forEach((author) => {
+            if (!acc.includes(author.nom)) {
+              acc.push(author.nom);
+            }
+          });
+          return acc;
+        }, []);
+
+        const groupedCollection = authors.reduce((acc, author) => {
+          acc[author] = [];
+          collection.forEach((book) => {
+            book.auteurs.forEach((authorBook) => {
+              if (authorBook.nom === author) {
+                acc[author].push(book);
+              }
+            });
+          });
+          return acc;
+        }, {});
+        return groupedCollection;
+      }
+
+      // Illustrators is an array of objects with a name property
+      // Adopt a different strategy : collect all the illustrators in a single array
+      // Then group by illustrator
+      // A book can appear multiple times in the list
+
+      if (groupment === 4) {
+        const illustrators = collection.reduce((acc, book) => {
+          book.dessinateurs.forEach((illustrator) => {
+            if (!acc.includes(illustrator.nom)) {
+              acc.push(illustrator.nom);
+            }
+          });
+          return acc;
+        }, []);
+
+        const groupedCollection = illustrators.reduce((acc, illustrator) => {
+          acc[illustrator] = [];
+          collection.forEach((book) => {
+            book.dessinateurs.forEach((illustratorBook) => {
+              if (illustratorBook.nom === illustrator) {
+                acc[illustrator].push(book);
+              }
+            });
+          });
+          return acc;
+        }, {});
+        return groupedCollection;
+      }
+
       const groupedCollection = collection.reduce((acc, book) => {
         const key = book[GROUPMENT_IDS[groupment]];
         if (!acc[key]) {
@@ -67,8 +124,10 @@ const CollectionDisplay = ({
         acc[key].push(book);
         return acc;
       }, {});
+      console.log(groupedCollection);
       return groupedCollection;
     }
+
     return collection;
   };
 

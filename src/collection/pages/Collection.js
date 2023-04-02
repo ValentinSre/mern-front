@@ -61,6 +61,7 @@ const Collection = () => {
     setSelectedGroupment(event.target.value);
   };
 
+  console.log(loadedCollection);
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />{" "}

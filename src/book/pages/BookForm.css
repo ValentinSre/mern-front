@@ -1,29 +1,64 @@
-.book-form {
-    list-style: none;
-    margin: 0 auto;
-    padding: 1rem;
-    width: 90%;
-    max-width: 40rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-    border-radius: 6px;
-    background: white;
-  }
-  
-  label[for="titre"]::after,
-  label[for="editeur"]::after,
-  label[for="auteur"]::after,
-  label[for="prix"]::after {
-    content: "*";
-    color: red;
-    margin-left: 0.2rem;
-  }
+.form-control {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-  .form-select {
-    width: 100%;
-    font-size: 1.1rem;
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    /* margin-bottom: 1.5rem; */
-    box-sizing: border-box;
-  }
+.form-select {
+  width: 100%;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.book-image {
+  width: 200px;
+  height: auto;
+}
+
+.book-form-container {
+  max-width: 500px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  background-color: white;
+}
+
+.book-form-container h2 {
+  margin-bottom: 20px;
+  font-size: '15px';
+}
+
+.book-form-container > div:not(:last-child) {
+  margin-bottom: 20px;
+}
+
+.book-form-container .MuiTextField-root {
+  width: 100%;
+}
+
+.book-form-container .MuiFormControl-root {
+  width: 100%;
+}
+
+.add-artist-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.add-artist-container .MuiFormControl-root {
+  width: 45%;
+  margin-right: 5%;
+}
+
+.add-artist-container button {
+  width: 45%;
+}
+
+.add-artist-container button svg {
+  margin-right: 5px;
+}

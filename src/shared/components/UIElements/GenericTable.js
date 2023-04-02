@@ -440,6 +440,10 @@ export default function EnhancedTable({
                             <TableCell key={headCell.id} align={align}>
                               {headCell.id === "prix"
                                 ? cellValue.toFixed(2) + "€"
+                                : headCell.id === "serie"
+                                ? row["version"]
+                                  ? cellValue + " (v" + row["version"] + ")"
+                                  : cellValue
                                 : cellValue}
                             </TableCell>
                           );
