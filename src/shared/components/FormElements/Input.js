@@ -61,6 +61,7 @@ const Input = (props) => {
           onBlur={touchHandler}
           value={inputState.value}
           step={props.step}
+          min={props.min}
           list={`${props.id}-options`}
         />
         {props.autocompleteOptions && (

@@ -15,7 +15,7 @@ const Collection = () => {
   const [loadedCollection, setLoadedCollection] = useState();
 
   const [selectedSort, setSelectedSort] = useState(0);
-  const [selectedGroupment, setSelectedGroupment] = useState(1);
+  const [selectedGroupment, setSelectedGroupment] = useState(0);
   const [selectedEditeurs, setSelectedEditeurs] = useState();
 
   const fetchBooks = async () => {

@@ -9,3 +9,21 @@
     background: white;
   }
   
+  label[for="titre"]::after,
+  label[for="editeur"]::after,
+  label[for="auteur"]::after,
+  label[for="prix"]::after {
+    content: "*";
+    color: red;
+    margin-left: 0.2rem;
+  }
+
+  .form-select {
+    width: 100%;
+    font-size: 1.1rem;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    /* margin-bottom: 1.5rem; */
+    box-sizing: border-box;
+  }

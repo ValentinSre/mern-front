@@ -1,5 +1,6 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
+import { Select, MenuItem, InputLabel } from "@material-ui/core";
 
 import Input from "../../shared/components/FormElements/Input";
 import { VALIDATOR_REQUIRE } from "../../shared/util/validators";
@@ -13,9 +14,11 @@ import { useHttpClient } from "../../shared/hooks/http-hook";
 
 import "./BookForm.css";
 
-const NewPlace = () => {
+const NewBook = () => {
   const auth = useContext(AuthContext);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
+
+  const [type, setType] = useState("Comics");
 
   const [formState, inputHandler] = useForm(
     {
@@ -30,6 +33,7 @@ const NewPlace = () => {
       format: { value: "", isValid: true },
       genre: { value: "", isValid: true },
       dessinateur: { value: "", isValid: false },
+      version: { value: null, isValid: true },
     },
     false
   );
@@ -43,8 +47,10 @@ const NewPlace = () => {
         process.env.REACT_APP_API_URL + "/book",
         "POST",
         JSON.stringify({
+          type: type,
           serie: formState.inputs.serie.value,
           titre: formState.inputs.titre.value,
+          version: formState.inputs.version.value,
           tome: formState.inputs.tome.value,
           image: formState.inputs.image.value,
           prix: formState.inputs.prix.value,
@@ -70,6 +76,20 @@ const NewPlace = () => {
       <ErrorModal error={error} onClear={clearError} />
       <form className='book-form' onSubmit={placeSubmitHandler}>
         {isLoading && <LoadingSpinner asOverlay />}
+        <div className='form-control'>
+          <label htmlFor={"type"}>Type</label>
+          <Select
+            label='Type'
+            id='tri-select'
+            value={type}
+            onChange={(e) => setType(e.target.value)}
+            className='form-select'
+          >
+            <MenuItem value={"Comics"}>Comics</MenuItem>
+            <MenuItem value={"Manga"}>Manga</MenuItem>
+            <MenuItem value={"BD"}>BD</MenuItem>
+          </Select>
+        </div>
         <Input
           element='input'
           id='serie'
@@ -80,6 +100,18 @@ const NewPlace = () => {
           initialIsValid={true}
           autocompleteOptions={["Amazing Spider-Man", "Immortal Hulk"]}
         />
+        {formState.inputs.serie.value !== "" && type === "Comics" && (
+          <Input
+            element='input'
+            id='version'
+            type='number'
+            label='Version'
+            min='1'
+            onInput={inputHandler}
+            validators={[]}
+            initialIsValid={true}
+          />
+        )}
         <Input
           element='input'
           id='titre'
@@ -94,6 +126,7 @@ const NewPlace = () => {
           id='tome'
           type='number'
           label='Tome'
+          min='1'
           onInput={inputHandler}
           validators={[]}
           initialIsValid={true}
@@ -171,7 +204,6 @@ const NewPlace = () => {
           validators={[]}
           initialIsValid={true}
         />
-
         <Button type='submit' disabled={!formState.isValid}>
           Ajouter le livre
         </Button>
@@ -180,4 +212,4 @@ const NewPlace = () => {
   );
 };
 
-export default NewPlace;
+export default NewBook;
