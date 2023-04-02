@@ -1,11 +1,8 @@
 import React from "react";
-import Tooltip from "@material-ui/core/Tooltip";
-import { BsBookmarkCheckFill, BsBookmarkX } from "react-icons/bs";
-import { MdRateReview, MdChatBubbleOutline } from "react-icons/md";
 
-import Rating from "../../../shared/components/UIElements/Rating";
 import CollectionInMosaic from "./components/CollectionInMosaic";
 import CollectionInLists from "./components/CollectionInLists";
+import makeTitle from "../../../shared/util/makeTitle";
 
 import "./CollectionDisplay.css";
 
@@ -54,9 +51,6 @@ const GROUP_ERROR_MESSAGE = {
   7: "Type non renseigné",
 };
 
-const EXISTING_STYLE = { color: "#45b061", fontSize: "20px" };
-const MISSING_STYLE = { color: "#e74c3c", fontSize: "20px" };
-
 const CollectionDisplay = ({
   collection,
   sort,
@@ -81,13 +75,14 @@ const CollectionDisplay = ({
   const sortCollection = (collection, sort) => {
     if (sort) {
       return collection.sort((a, b) => {
-        if (a[SORT_IDS[sort]] < b[SORT_IDS[sort]]) {
-          return -1;
+        if (sort === 1) {
+          return makeTitle(a) < makeTitle(b) ? -1 : 1;
         }
-        if (a[SORT_IDS[sort]] > b[SORT_IDS[sort]]) {
-          return 1;
-        }
-        return 0;
+        return a[SORT_IDS[sort]] < b[SORT_IDS[sort]]
+          ? -1
+          : a[SORT_IDS[sort]] > b[SORT_IDS[sort]]
+          ? 1
+          : 0;
       });
     }
     return collection;
@@ -95,85 +90,12 @@ const CollectionDisplay = ({
 
   const groupedCollection = groupCollection(collection, groupment);
 
-  const content = (book) => {
-    return (
-      <Tooltip
-        title={
-          book.serie
-            ? book.serie + " T" + book.tome + " - " + book.titre
-            : book.titre
-        }
-      >
-        <div key={book.id} className='collection-display__book'>
-          <div style={{ padding: "10px" }}>
-            <Rating
-              rating={book.note}
-              size={"1em"}
-              real={typeof book.note === "number"}
-            />
-          </div>
-          <img src={book.image} alt={book.titre} />
-          {bookState(book)}
-        </div>
-      </Tooltip>
-    );
-  };
-
-  const bookState = (book) => {
-    const { lu, critique } = book;
-
-    if (lu) {
-      return (
-        <div className='collection-display__book-state'>
-          <Tooltip title='Livre lu'>
-            <div className='collection-display__book-state__read'>
-              <BsBookmarkCheckFill style={EXISTING_STYLE} />
-            </div>
-          </Tooltip>
-          {critique ? (
-            <Tooltip title='Critique rédigée'>
-              <div className='collection-display__book-state__review'>
-                <MdRateReview style={EXISTING_STYLE} />
-                <i className='fas fa-comment'></i>
-              </div>
-            </Tooltip>
-          ) : (
-            <Tooltip title='Pas de critique'>
-              <div className='collection-display__book-state__review'>
-                <MdChatBubbleOutline style={MISSING_STYLE} />
-                <i className='fas fa-comment'></i>
-              </div>
-            </Tooltip>
-          )}
-        </div>
-      );
-    } else {
-      return (
-        <div className='collection-display__book-state'>
-          <Tooltip title='Livre non lu'>
-            <div className='collection-display__book-state__read'>
-              <BsBookmarkX style={MISSING_STYLE} />
-              <i className='fas fa-times'></i>
-            </div>
-          </Tooltip>
-          <Tooltip title='Pas de critique'>
-            <div className='collection-display__book-state__review'>
-              <MdChatBubbleOutline style={MISSING_STYLE} />
-              <i className='fas fa-comment'></i>
-            </div>
-          </Tooltip>
-        </div>
-      );
-    }
-  };
-
   return !groupment ? (
     <CollectionInMosaic
       collection={collection}
       sort={sort}
       selectedEditeurs={selectedEditeurs}
       sortCollection={sortCollection}
-      displayContent={content}
     />
   ) : (
     <CollectionInLists
@@ -183,7 +105,6 @@ const CollectionDisplay = ({
       groupment={groupment}
       selectedEditeurs={selectedEditeurs}
       sortCollection={sortCollection}
-      displayContent={content}
     />
   );
 };
