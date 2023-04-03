@@ -16,11 +16,12 @@ import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import Checkbox from "@material-ui/core/Checkbox";
 import IconButton from "@material-ui/core/IconButton";
-import Tooltip from "@material-ui/core/Tooltip";
+import Button from "@material-ui/core/Button";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import PreviewIcon from "@material-ui/icons/Visibility";
 import FilterListIcon from "@material-ui/icons/FilterList";
+import CustomButtons from "./CustomButtons";
 
 import IconOnlyButton from "./IconOnlyButton";
 // import SearchBar from "./SearchBar";
@@ -192,24 +193,27 @@ function EnhancedTableToolbar(props) {
         </Typography>
       )}
 
-      {
-        numSelected > 0
-          ? actions.map((action) => (
-              <IconOnlyButton
-                onClick={() => action.handleAction(selectedRows)}
-                icon={action.icon}
-                title={action.title}
-              />
-            ))
-          : null
-        //    (
-        //     // <Tooltip title='Filter list'>
-        //     //   <IconButton onClick={handleOpenFilter}>
-        //     //     <FilterListIcon />
-        //     //   </IconButton>
-        //     // </Tooltip>
-        //   )
-      }
+      {numSelected > 0 ? (
+        <div
+          style={{
+            padding: "10px",
+            margin: "10px",
+            marginLeft: "50px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            border: "1px solid #ccc",
+            borderRadius: "5px",
+          }}
+        >
+          {actions.map((action) => (
+            <CustomButtons
+              buttonType={action.type}
+              onClick={() => action.handleAction(selectedRows)}
+            />
+          ))}
+        </div>
+      ) : null}
       {/* {openFilter && <SearchBar />} */}
     </Toolbar>
   );

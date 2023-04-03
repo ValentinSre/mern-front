@@ -65,6 +65,7 @@ const BookList = () => {
   };
 
   const handleAddToCollection = (bookIds) => {
+    console.log(bookIds);
     handleAddToList(bookIds, "collection");
   };
 
@@ -74,14 +75,12 @@ const BookList = () => {
 
   const actions = [
     {
-      icon: "collection",
-      title: "Ajouter à ma collection",
+      type: "collection",
       handleAction: handleAddToCollection,
       disabled: ["possede"],
     },
     {
-      icon: "wishlist",
-      title: "Ajouter à ma wishlist",
+      type: "wishlist",
       handleAction: handleAddToWishlist,
       disabled: ["possede", "souhaite"],
     },

@@ -9,6 +9,7 @@ import { useState } from "react";
 
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
+import BookDetails from "../components/BookDetails";
 
 const Book = () => {
   const auth = useContext(AuthContext);
@@ -39,7 +40,7 @@ const Book = () => {
           <LoadingSpinner />
         </div>
       )}
-      {!isLoading && loadedBook && <p>{loadedBook.titre}</p>}
+      {!isLoading && loadedBook && <BookDetails book={loadedBook} />}
     </React.Fragment>
   );
 };
