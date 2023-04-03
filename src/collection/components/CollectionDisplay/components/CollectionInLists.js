@@ -1,6 +1,7 @@
 import React from "react";
 import { Tooltip } from "@material-ui/core";
 import { CiCircleMore } from "react-icons/ci";
+import { useHistory } from "react-router-dom";
 
 import makeTitle from "../../../../shared/util/makeTitle";
 
@@ -15,6 +16,8 @@ const CollectionInLists = ({
   groupedCollection,
   groupment,
 }) => {
+  const history = useHistory();
+
   let categories = Object.keys(groupedCollection);
 
   if (groupment === 1) {
@@ -47,9 +50,7 @@ const CollectionInLists = ({
                   <Tooltip title={makeTitle(book)}>
                     <div
                       className='book-item'
-                      onClick={() =>
-                        (window.location.href = `/book/${book.id_book}`)
-                      }
+                      onClick={() => history.push(`/book/${book.id_book}`)}
                     >
                       <img
                         src={book.image}

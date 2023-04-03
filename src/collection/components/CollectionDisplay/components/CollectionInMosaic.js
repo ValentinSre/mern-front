@@ -1,5 +1,6 @@
 import React from "react";
 import Tooltip from "@material-ui/core/Tooltip";
+import { useHistory } from "react-router-dom";
 import { BsBookmarkCheckFill, BsBookmarkX } from "react-icons/bs";
 import { MdRateReview, MdChatBubbleOutline } from "react-icons/md";
 
@@ -65,6 +66,8 @@ const CollectionInMosaic = ({
     }
   };
 
+  const history = useHistory();
+
   return (
     <div className='collection-display'>
       <div className='collection-display__books_array'>
@@ -75,9 +78,7 @@ const CollectionInMosaic = ({
                 <div
                   key={book.id}
                   className='collection-display__book'
-                  onClick={() =>
-                    (window.location.href = `/book/${book.id_book}`)
-                  }
+                  onClick={() => history.push(`/book/${book.id_book}`)}
                 >
                   <div style={{ padding: "10px" }}>
                     <Rating
