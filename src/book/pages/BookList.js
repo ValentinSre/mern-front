@@ -27,10 +27,6 @@ const BookList = () => {
     fetchBooks();
   }, [sendRequest, auth.userId]);
 
-  const handleViewBook = (bookId) => {
-    console.log(bookId);
-  };
-
   const columnsName = [
     { name: "Série", id: "serie", sort: true },
     { name: "Titre", id: "titre", sort: true },
@@ -76,11 +72,13 @@ const BookList = () => {
   const actions = [
     {
       type: "collection",
+      title: "Je possède",
       handleAction: handleAddToCollection,
       disabled: ["possede"],
     },
     {
       type: "wishlist",
+      title: "Je souhaite",
       handleAction: handleAddToWishlist,
       disabled: ["possede", "souhaite"],
     },

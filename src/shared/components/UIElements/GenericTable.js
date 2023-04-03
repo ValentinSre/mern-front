@@ -209,6 +209,7 @@ function EnhancedTableToolbar(props) {
           {actions.map((action) => (
             <CustomButtons
               buttonType={action.type}
+              title={action.title}
               onClick={() => action.handleAction(selectedRows)}
             />
           ))}

@@ -31,7 +31,6 @@ const Book = () => {
     fetchBook();
   }, [sendRequest, bookId, auth.userId]);
 
-  console.log(loadedBook);
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />

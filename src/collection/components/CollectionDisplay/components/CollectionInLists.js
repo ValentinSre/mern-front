@@ -33,6 +33,7 @@ const CollectionInLists = ({
     );
   }
 
+  console.log(groupedCollection);
   return (
     <div className='collection-display'>
       {categories.map((key) => (
@@ -44,7 +45,12 @@ const CollectionInLists = ({
               .map((book, index) =>
                 index < MAX_ITEMS_PER_CATEGORY ? (
                   <Tooltip title={makeTitle(book)}>
-                    <div className='book-item'>
+                    <div
+                      className='book-item'
+                      onClick={() =>
+                        (window.location.href = `/book/${book.id_book}`)
+                      }
+                    >
                       <img
                         src={book.image}
                         alt={book.titre}

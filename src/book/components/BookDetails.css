@@ -5,6 +5,7 @@
     padding: 20px;
     margin-bottom: 20px;
     color: #fff;
+    position: relative;
   }
   
   .book-image {
@@ -73,4 +74,78 @@
 
   .book-subtitle__icon-disposer {
     margin-right: '10px';
+  }
+
+  .book-collection {
+    margin-top: 30px;
+
+  }
+
+  .book-collection__buttons {
+    position: absolute;
+    bottom: 0;
+    margin-bottom: 25px
+  }
+
+  .book-collection__review {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+  }
+
+  .book-collection__review__rating {
+    margin-left: 10px;
+    border: 1px solid #ccc;
+    margin-right: 20px;
+    font-size: 12px;
+    padding-left: 10px;
+    padding-bottom: 10px;
+    padding-right: 10px;
+    border-radius: 5px;
+    color: #424242;
+  }
+
+  @media only screen and (max-width: 768px) {
+    .book-details {
+      margin-left: 0;
+      margin-top: 10px;
+    }
+    .book-container {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .book-image {
+      margin: auto
+    }
+
+      .book-details__major-info {
+        font-size: 12px;
+        margin-bottom: 10px;
+      }
+      
+      .book-details__minor-info {
+        font-size: 10px;
+        margin-top: 10px;
+      }
+
+      .artist-function {
+        font-size: 10px;
+        color: #ccc;
+        margin-bottom: 5px;
+      }
+      
+      .book-details h2 {
+        font-size: 24px;
+        margin-bottom: 5px;
+      }
+      
+      .book-details h3 {
+        font-size: 20px;
+        margin-top: 0;
+      }
+      
+      .book-subtitle__short-date {
+        display: none
+      }
   }

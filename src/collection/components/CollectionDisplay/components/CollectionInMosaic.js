@@ -72,7 +72,13 @@ const CollectionInMosaic = ({
           (book) =>
             selectedEditeurs[book.editeur] && (
               <Tooltip title={makeTitle(book)}>
-                <div key={book.id} className='collection-display__book'>
+                <div
+                  key={book.id}
+                  className='collection-display__book'
+                  onClick={() =>
+                    (window.location.href = `/book/${book.id_book}`)
+                  }
+                >
                   <div style={{ padding: "10px" }}>
                     <Rating
                       rating={book.note}

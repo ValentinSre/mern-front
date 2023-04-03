@@ -47,9 +47,7 @@ const Collection = () => {
 
   const handleEditeursSelection = (name) => {
     const newEditeurs = { ...selectedEditeurs };
-    console.log(newEditeurs);
     newEditeurs[name] = !selectedEditeurs[name];
-    console.log(newEditeurs);
     setSelectedEditeurs(newEditeurs);
   };
 
@@ -61,7 +59,6 @@ const Collection = () => {
     setSelectedGroupment(event.target.value);
   };
 
-  console.log(loadedCollection);
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />{" "}
