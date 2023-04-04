@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { BsCalendarWeek } from "react-icons/bs";
+import { useHistory } from "react-router-dom";
 import { ImBook } from "react-icons/im";
 import { FaSave } from "react-icons/fa";
 import { AiFillTwitterCircle } from "react-icons/ai";
@@ -60,6 +61,7 @@ const BookDetails = ({ book: initialBook }) => {
 
   const auth = useContext(AuthContext);
   const { sendRequest } = useHttpClient();
+  const history = useHistory();
 
   const displayTitle = (serie, version, tome, titre) => {
     if (serie) {
