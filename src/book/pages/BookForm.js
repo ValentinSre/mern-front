@@ -158,6 +158,7 @@ const BookForm = ({
   };
 
   const handleInputSerieChange = (event, value) => {
+    console.log("initial series", initialExistingSeries);
     const filteredSeries = initialExistingSeries.filter((serie) => {
       console.log("serie", serie);
       console.log("value", value);

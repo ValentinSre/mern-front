@@ -46,6 +46,7 @@ const NewBook = () => {
     } catch (err) {}
   };
 
+  console.log("options series", options.series);
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />
