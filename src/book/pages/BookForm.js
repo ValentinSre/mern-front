@@ -210,7 +210,7 @@ const BookForm = ({
             options={existingSeries || []}
             value={serie}
             onChange={(e, value) => setSelectedSerie(value)}
-            inputValue={serie}
+            inputValue={selectedSerie}
             onInputChange={handleInputSerieChange}
             renderInput={(params) => (
               <TextField
