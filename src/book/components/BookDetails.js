@@ -55,7 +55,7 @@ const BookDetails = ({ book: initialBook }) => {
     souhaite,
   } = book;
   const [twitterLink, setTwitterLink] = useState(lien);
-  const [rating, setRating] = useState(parseInt(note));
+  const [rating, setRating] = useState(parseFloat(note));
   //   const [reviewText, setReviewText] = useState(review);
 
   const auth = useContext(AuthContext);
@@ -252,6 +252,7 @@ const BookDetails = ({ book: initialBook }) => {
       );
 
       const { success } = responseData;
+      if (success) history.push(`/book/${bookId}`)
     } catch (err) {
       console.log(err);
     }
@@ -305,7 +306,7 @@ const BookDetails = ({ book: initialBook }) => {
                   <p>Ma note</p>
                   <Rating
                     value={rating}
-                    onChange={(e) => setRating(parseInt(e.target.value))}
+                    onChange={(e) => setRating(parseFloat(e.target.value))}
                     precision={0.5}
                     size='large'
                   />
@@ -390,8 +391,7 @@ const BookDetails = ({ book: initialBook }) => {
           {bookCollectionState({ possede, lu, souhaite })}
         </div>
       </div>
-      {/* à changer à l'avenir !!!!!!!!!!!!!!! */}
-      {!auth.isAdmin && (
+      {auth.isAdmin && (
         <React.Fragment>
           <CustomButtons
             buttonType='edit'
