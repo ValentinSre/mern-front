@@ -39,6 +39,8 @@ const BookForm = ({
     book.dessinateurs ? book.dessinateurs[0] : ""
   );
   const [dessinateurs, setDessinateurs] = useState(book.dessinateurs || []);
+  const [poids, setPoids] = useState(book.poids || null);
+  const [planches, setPlanches] = useState(book.planches || null);
 
   const handleAjoutAuteur = () => {
     if (auteur !== "" && !auteurs.includes(auteur)) {
@@ -77,6 +79,8 @@ const BookForm = ({
       date_parution: date_parution,
       format: format,
       genre: genre,
+      poids: poids,
+      planches: planches,
       dessinateurs: dessinateurs,
     });
   };
@@ -226,6 +230,7 @@ const BookForm = ({
                 value={tome}
                 onChange={(e) => setTome(e.target.value)}
                 margin='normal'
+                type='number'
                 fullWidth
               />
               <TextField
@@ -234,6 +239,7 @@ const BookForm = ({
                 value={version}
                 onChange={(e) => setVersion(e.target.value)}
                 margin='normal'
+                type='number'
                 fullWidth
               />
             </React.Fragment>
@@ -407,6 +413,32 @@ const BookForm = ({
               />
             )}
           />
+        </div>
+        <div>
+            <h2>Informations statistiques</h2>
+
+            <TextField
+              label='Poids'
+              InputProps={{
+                endAdornment: <InputAdornment position='end'>g</InputAdornment>,
+              }}
+              variant='outlined'
+              margin='normal'
+              value={poids}
+              onChange={(e) => setPoids(e.target.value)}
+              fullWidth
+              type='number'
+            />
+            <TextField
+              label='Nombre de planches'
+              variant='outlined'
+              value={planches}
+              onChange={(e) => setPlanches(e.target.value)}
+              margin='normal'
+              type='number'
+              fullWidth
+            />
+            
         </div>
         <Button variant='contained' color='primary' type='submit'>
           Soumettre
