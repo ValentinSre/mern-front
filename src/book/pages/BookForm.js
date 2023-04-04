@@ -208,16 +208,16 @@ const BookForm = ({
           <Autocomplete
             freeSolo
             options={existingSeries || []}
-            value={serie}
+            value={selectedSerie}
             onChange={(e, value) => setSelectedSerie(value)}
-            inputValue={selectedSerie}
+            inputValue={serie}
             onInputChange={handleInputSerieChange}
             renderInput={(params) => (
               <TextField
                 {...params}
-                label='Série'
-                variant='outlined'
-                margin='normal'
+                label="Série"
+                variant="outlined"
+                margin="normal"
                 fullWidth
               />
             )}
