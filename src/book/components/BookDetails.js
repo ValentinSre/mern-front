@@ -235,7 +235,8 @@ const BookDetails = ({ book: initialBook }) => {
     console.log("Suppression du livre");
   };
 
-  const handleSubmitReview = async (bookId) => {
+  const handleSubmitReview = async (event, bookId) => {
+    event.preventDefault();
     try {
       const responseData = await sendRequest(
         process.env.REACT_APP_API_URL + "/collection/edit",
@@ -302,7 +303,7 @@ const BookDetails = ({ book: initialBook }) => {
       auth.token && (
         <div className='book-collection'>
           <div className='book-collection__review'>
-            <form onSubmit={() => handleSubmitReview(id)}>
+            <form onSubmit={(event) => handleSubmitReview(event, id)}>
               <div style={{ display: "flex", alignItems: "center" }}>
                 <div className='book-collection__review__rating'>
                   <p>Ma note</p>
