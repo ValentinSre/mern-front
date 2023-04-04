@@ -158,16 +158,16 @@ const BookForm = ({
   };
 
   const handleInputSerieChange = (event, value) => {
-    const filteredSeries = initialExistingSeries.filter((serie) =>
-      serie.toLowerCase().includes(value.toLowerCase())
-    );
+    const filteredSeries = initialExistingSeries.filter((serie) => {
+      console.log("serie", serie);
+      console.log("value", value);
+      serie.toLowerCase().includes(value.toLowerCase());
+    });
 
     setExistingSeries(filteredSeries);
     setSerie(value);
   };
 
-  console.log("existingSeries", existingSeries, initialExistingSeries);
-  console.log("serie", serie, "selectedSerie", selectedSerie);
   const DeletableChips = ({ artistes, handleDelete, typeOfArtist }) => {
     return artistes.map((artiste) => (
       <div className='chip' key={artiste}>
