@@ -173,6 +173,15 @@ const BookForm = ({
           key={artiste}
           label={artiste}
           onDelete={() => handleDelete(artiste, typeOfArtist)}
+          onClick={() => {
+            if (typeOfArtist === "auteur") {
+              setAuteur(artiste);
+              setAuteurs(auteurs.filter((a) => a !== artiste));
+            } else {
+              setDessinateur(artiste);
+              setDessinateurs(dessinateurs.filter((d) => d !== artiste));
+            }
+          }}
         />
       </div>
     ));
@@ -416,7 +425,20 @@ const BookForm = ({
         </div>
         <div>
           <h2>Informations statistiques</h2>
-
+          <TextField
+            label='Nombre de planches'
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position='end'>planches</InputAdornment>
+              ),
+            }}
+            variant='outlined'
+            value={planches}
+            onChange={(e) => setPlanches(e.target.value)}
+            margin='normal'
+            type='number'
+            fullWidth
+          />
           <TextField
             label='Poids'
             InputProps={{
@@ -428,15 +450,6 @@ const BookForm = ({
             onChange={(e) => setPoids(e.target.value)}
             fullWidth
             type='number'
-          />
-          <TextField
-            label='Nombre de planches'
-            variant='outlined'
-            value={planches}
-            onChange={(e) => setPlanches(e.target.value)}
-            margin='normal'
-            type='number'
-            fullWidth
           />
         </div>
         <Button variant='contained' color='primary' type='submit'>

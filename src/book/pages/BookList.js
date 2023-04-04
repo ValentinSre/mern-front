@@ -18,7 +18,6 @@ const BookList = () => {
       const responseData = await sendRequest(
         `${process.env.REACT_APP_API_URL}/book?user=${auth.userId}`
       );
-      console.log(responseData.books);
       setLoadedBooks(responseData.books);
     } catch (err) {}
   };
@@ -61,7 +60,6 @@ const BookList = () => {
   };
 
   const handleAddToCollection = (bookIds) => {
-    console.log(bookIds);
     handleAddToList(bookIds, "collection");
   };
 
@@ -139,7 +137,7 @@ const BookList = () => {
             title='Tous les livres'
             actions={actions}
             userInfo={auth.isLoggedIn}
-            checkbox
+            checkbox={auth.isLoggedIn}
           />
         </div>
       )}

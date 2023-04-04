@@ -7,10 +7,12 @@ import "./NavLinks.css";
 const NavLinks = (props) => {
   const auth = useContext(AuthContext);
 
+  console.log(auth.isAdmin);
+
   return (
-    <ul className="nav-links">
+    <ul className='nav-links'>
       <li>
-        <NavLink to="/" exact>
+        <NavLink to='/' exact>
           ACCUEIL
         </NavLink>
       </li>
@@ -29,19 +31,17 @@ const NavLinks = (props) => {
           <NavLink to={`/${auth.userId}/stats`}>MES STATISTIQUES</NavLink>
         </li>
       )}
-      {auth.isLoggedIn && (
+      <li>
+        <NavLink to={`/books`}>LA BIBLIOTHÈQUE</NavLink>
+      </li>
+      {auth.isAdmin && (
         <li>
-          <NavLink to={`/books`}>LA BIBLIOTHÈQUE</NavLink>
-        </li>
-      )}
-      {auth.isLoggedIn && (
-        <li>
-          <NavLink to="/book/new">AJOUTER UN LIVRE</NavLink>
+          <NavLink to='/book/new'>AJOUTER UN LIVRE</NavLink>
         </li>
       )}
       {!auth.isLoggedIn && (
         <li>
-          <NavLink to="/auth">SE CONNECTER</NavLink>
+          <NavLink to='/auth'>SE CONNECTER</NavLink>
         </li>
       )}
       {auth.isLoggedIn && (

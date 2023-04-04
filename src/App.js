@@ -27,18 +27,20 @@ const Auth = React.lazy(() => import("./user/pages/Auth"));
 const Book = React.lazy(() => import("./book/pages/Book"));
 
 const App = () => {
-  const { userId, token, login, logout } = useAuth();
+  const { userId, isAdmin, token, login, logout } = useAuth();
 
   let routes;
 
+  console.log("isAdmin", isAdmin);
+  // Not logged in
   if (!token) {
     routes = (
       <Switch>
         <Route path='/' exact>
           <Home />
         </Route>
-        <Route path='/:userId/collection' exact>
-          <Collection />
+        <Route path='/books' exact>
+          <BookList />
         </Route>
         <Route path='/book/:id' exact>
           <Book />
@@ -50,6 +52,7 @@ const App = () => {
       </Switch>
     );
   } else {
+    // Logged in
     routes = (
       <Switch>
         <Route path='/' exact>
@@ -61,14 +64,13 @@ const App = () => {
         <Route path='/books' exact>
           <BookList />
         </Route>
-        <Route path='/book/new' exact>
-          <NewBook />
-        </Route>
+        {isAdmin && (
+          <Route path='/book/new' exact>
+            <NewBook />
+          </Route>
+        )}
         <Route path='/book/:id' exact>
           <Book />
-        </Route>
-        <Route path='/places/:placeId' exact>
-          <UpdatePlace />
         </Route>
         <Redirect to='/' />
       </Switch>
@@ -77,7 +79,7 @@ const App = () => {
 
   return (
     <AuthContext.Provider
-      value={{ isLoggedIn: !!token, token, userId, login, logout }}
+      value={{ isLoggedIn: !!token, token, isAdmin, userId, login, logout }}
     >
       <Router>
         <MainNavigation />

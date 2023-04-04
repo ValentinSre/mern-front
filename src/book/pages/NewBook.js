@@ -2,12 +2,11 @@ import React, { useContext, useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
-import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import { AuthContext } from "../../shared/context/auth-context";
-import BookForm from "./BookForm";
+import BookForm from "../components/BookForm";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 
-import "./BookForm.css";
+import "../components/BookForm.css";
 
 const NewBook = () => {
   const auth = useContext(AuthContext);

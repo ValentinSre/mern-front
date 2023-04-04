@@ -19,7 +19,6 @@ const Book = () => {
 
   useEffect(() => {
     const fetchBook = async () => {
-      console.log("fetchBooks");
       try {
         const responseData = await sendRequest(
           `${process.env.REACT_APP_API_URL}/book/${bookId}?user=${auth.userId}`

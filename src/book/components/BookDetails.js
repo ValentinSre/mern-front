@@ -13,6 +13,7 @@ import { useHttpClient } from "../../shared/hooks/http-hook";
 import { AuthContext } from "../../shared/context/auth-context";
 import CustomButtons from "../../shared/components/UIElements/CustomButtons";
 import Rating from "@material-ui/lab/Rating";
+import EditBookDialog from "./EditBookDialog";
 
 import "./BookDetails.css";
 
@@ -60,6 +61,8 @@ const BookDetails = ({ book: initialBook }) => {
   //   const [reviewText, setReviewText] = useState(review);
 
   const auth = useContext(AuthContext);
+  const [openEditDialog, setOpenEditDialog] = useState(false);
+
   const { sendRequest } = useHttpClient();
   const history = useHistory();
 
@@ -228,7 +231,12 @@ const BookDetails = ({ book: initialBook }) => {
   };
 
   const handleBookEdition = (bookId) => {
-    console.log("Edition du livre");
+    setOpenEditDialog(true);
+  };
+
+  const handleCloseEditDialog = () => {
+    setOpenEditDialog(false);
+    history.push("/books");
   };
 
   const handleBookDeletion = (bookId) => {
@@ -255,7 +263,7 @@ const BookDetails = ({ book: initialBook }) => {
       );
 
       const { success } = responseData;
-      history.push(`/${auth.userId}/collection`)
+      history.push(`/${auth.userId}/collection`);
     } catch (err) {
       console.log(err);
     }
@@ -394,6 +402,11 @@ const BookDetails = ({ book: initialBook }) => {
           {bookCollectionState({ possede, lu, souhaite })}
         </div>
       </div>
+      <EditBookDialog
+        open={openEditDialog}
+        handleCloseDialog={handleCloseEditDialog}
+        book={book}
+      />
       {auth.isAdmin && (
         <React.Fragment>
           <CustomButtons
