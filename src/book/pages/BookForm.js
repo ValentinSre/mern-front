@@ -158,12 +158,9 @@ const BookForm = ({
   };
 
   const handleInputSerieChange = (event, value) => {
-    console.log("initial series", initialExistingSeries);
-    const filteredSeries = initialExistingSeries.filter((serie) => {
-      console.log("serie", serie);
-      console.log("value", value);
-      serie.toLowerCase().includes(value.toLowerCase());
-    });
+    const filteredSeries = initialExistingSeries.filter((serie) =>
+      serie.toLowerCase().includes(value.toLowerCase())
+    );
 
     setExistingSeries(filteredSeries);
     setSerie(value);
