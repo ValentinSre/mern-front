@@ -166,6 +166,8 @@ const BookForm = ({
     setSerie(value);
   };
 
+  console.log("existingSeries", existingSeries, initialExistingSeries);
+  console.log("serie", serie, "selectedSerie", selectedSerie);
   const DeletableChips = ({ artistes, handleDelete, typeOfArtist }) => {
     return artistes.map((artiste) => (
       <div className='chip' key={artiste}>
@@ -215,9 +217,9 @@ const BookForm = ({
             renderInput={(params) => (
               <TextField
                 {...params}
-                label="Série"
-                variant="outlined"
-                margin="normal"
+                label='Série'
+                variant='outlined'
+                margin='normal'
                 fullWidth
               />
             )}
@@ -415,30 +417,29 @@ const BookForm = ({
           />
         </div>
         <div>
-            <h2>Informations statistiques</h2>
+          <h2>Informations statistiques</h2>
 
-            <TextField
-              label='Poids'
-              InputProps={{
-                endAdornment: <InputAdornment position='end'>g</InputAdornment>,
-              }}
-              variant='outlined'
-              margin='normal'
-              value={poids}
-              onChange={(e) => setPoids(e.target.value)}
-              fullWidth
-              type='number'
-            />
-            <TextField
-              label='Nombre de planches'
-              variant='outlined'
-              value={planches}
-              onChange={(e) => setPlanches(e.target.value)}
-              margin='normal'
-              type='number'
-              fullWidth
-            />
-            
+          <TextField
+            label='Poids'
+            InputProps={{
+              endAdornment: <InputAdornment position='end'>g</InputAdornment>,
+            }}
+            variant='outlined'
+            margin='normal'
+            value={poids}
+            onChange={(e) => setPoids(e.target.value)}
+            fullWidth
+            type='number'
+          />
+          <TextField
+            label='Nombre de planches'
+            variant='outlined'
+            value={planches}
+            onChange={(e) => setPlanches(e.target.value)}
+            margin='normal'
+            type='number'
+            fullWidth
+          />
         </div>
         <Button variant='contained' color='primary' type='submit'>
           Soumettre
