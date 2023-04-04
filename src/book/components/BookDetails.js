@@ -254,7 +254,7 @@ const BookDetails = ({ book: initialBook }) => {
       );
 
       const { success } = responseData;
-      if (success) history.push(`/book/${bookId}`)
+      history.push(`/book/${bookId}`)
     } catch (err) {
       console.log(err);
     }
