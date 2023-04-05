@@ -31,7 +31,6 @@ const App = () => {
 
   let routes;
 
-  console.log("isAdmin", isAdmin);
   // Not logged in
   if (!token) {
     routes = (

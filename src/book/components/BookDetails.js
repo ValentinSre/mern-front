@@ -239,8 +239,19 @@ const BookDetails = ({ book: initialBook }) => {
     history.push("/books");
   };
 
-  const handleBookDeletion = (bookId) => {
-    console.log("Suppression du livre");
+  const handleBookDeletion = async (bookId) => {
+    try {
+      await sendRequest(
+        process.env.REACT_APP_API_URL + "/book/" + bookId,
+        "DELETE",
+        null,
+        {
+          Authorization: "Bearer " + auth.token,
+        }
+      );
+
+      history.push("/books");
+    } catch (err) {}
   };
 
   const handleSubmitReview = async (event, bookId) => {

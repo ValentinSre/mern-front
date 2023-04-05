@@ -7,8 +7,6 @@ import "./NavLinks.css";
 const NavLinks = (props) => {
   const auth = useContext(AuthContext);
 
-  console.log(auth.isAdmin);
-
   return (
     <ul className='nav-links'>
       <li>
