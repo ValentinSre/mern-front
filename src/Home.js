@@ -32,7 +32,9 @@ const Home = () => {
           <LoadingSpinner />
         </div>
       )}
-      {!isLoading && loadedBooks && <BookCalendar books={loadedBooks} />}
+      {!isLoading && loadedBooks && loadedBooks.length && (
+        <BookCalendar books={loadedBooks} />
+      )}
     </div>
   );
 };
