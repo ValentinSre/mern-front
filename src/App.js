@@ -17,6 +17,7 @@ import { AuthContext } from "./shared/context/auth-context";
 import { useAuth } from "./shared/hooks/auth-hook";
 import BookList from "./book/pages/BookList";
 import Home from "./Home";
+import Stats from "./collection/pages/Stats";
 import Wishlist from "./collection/pages/Wishlist";
 
 const Users = React.lazy(() => import("./user/pages/Users"));
@@ -63,6 +64,9 @@ const App = () => {
         </Route>
         <Route path='/:userId/wishlist' exact>
           <Wishlist />
+        </Route>
+        <Route path='/:userId/stats' exact>
+          <Stats />
         </Route>
         <Route path='/books' exact>
           <BookList />
