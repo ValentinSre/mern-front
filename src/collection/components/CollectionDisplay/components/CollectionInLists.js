@@ -36,7 +36,6 @@ const CollectionInLists = ({
     );
   }
 
-  console.log(groupedCollection);
   return (
     <div className='collection-display'>
       {categories.map((key) => (

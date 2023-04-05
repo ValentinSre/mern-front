@@ -1,8 +1,11 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import Tooltip from "@material-ui/core/Tooltip";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import TabPanel from "../../shared/util/TabPanel";
+
+import makeTitle from "../../shared/util/makeTitle";
 
 import "./BookCalendar.css";
 
@@ -22,16 +25,20 @@ const months = {
 };
 
 function BookCalendar({ books }) {
+  const history = useHistory();
+
+  console.log("books", books);
   // Group books by release date
   const booksByDate = books.reduce((acc, book) => {
-    const releaseDate = book.releaseDate.toISOString().slice(0, 10); // Keep only YYYY-MM-DD
+    const { date_parution } = book;
+    const releaseDate = new Date(date_parution).toISOString().slice(0, 10); // Keep only YYYY-MM-DD
     if (!acc[releaseDate]) {
       acc[releaseDate] = [];
     }
     acc[releaseDate].push(book);
     return acc;
   }, {});
-
+  console.log("bookByDate", booksByDate);
   const releaseDates = Object.keys(booksByDate);
 
   // Group dates by month
@@ -72,11 +79,17 @@ function BookCalendar({ books }) {
             <div key={date} className='book-calendar-day'>
               <div className='book-calendar-day-books'>
                 {booksByDate[date].map((book) => (
-                  <Tooltip title={book.title}>
-                    <div key={book.id}>
-                      <img key={book.id} src={book.cover} alt={book.title} />
-                    </div>
-                  </Tooltip>
+                  <div onClick={() => history.push(`/book/${book.id}`)}>
+                    <Tooltip title={makeTitle(book)}>
+                      <div key={book.id}>
+                        <img
+                          key={book.id}
+                          src={book.image}
+                          alt={makeTitle(book)}
+                        />
+                      </div>
+                    </Tooltip>
+                  </div>
                 ))}
               </div>
             </div>

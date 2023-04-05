@@ -1,82 +1,38 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import BookCalendar from "./book/components/BookCalendar";
+import ErrorModal from "./shared/components/UIElements/ErrorModal";
+import LoadingSpinner from "./shared/components/UIElements/LoadingSpinner";
+import { useHttpClient } from "./shared/hooks/http-hook";
 
 import "./Home.css";
 
-const livres = [
-  {
-    releaseDate: new Date("2023-03-01"),
-    title: "Le livre 1",
-    cover:
-      "https://m.media-amazon.com/images/W/IMAGERENDERING_521856-T1/images/I/81aCBz5-N6L.jpg",
-    id: "1",
-    prix: 10,
-  },
-  {
-    releaseDate: new Date("2023-03-04"),
-    title: "Le livre 2",
-    cover:
-      "https://m.media-amazon.com/images/W/IMAGERENDERING_521856-T1/images/I/81aCBz5-N6L.jpg",
-    id: "2",
-    prix: 10,
-  },
-  {
-    releaseDate: new Date("2023-03-04"),
-    title: "Le livre 3",
-    cover:
-      "https://m.media-amazon.com/images/W/IMAGERENDERING_521856-T1/images/I/81aCBz5-N6L.jpg",
-    id: "3",
-    prix: 10,
-  },
-  {
-    releaseDate: new Date("2023-03-04"),
-    title: "Le livre 4",
-    cover:
-      "https://m.media-amazon.com/images/W/IMAGERENDERING_521856-T1/images/I/81aCBz5-N6L.jpg",
-    id: "4",
-    prix: 15.99,
-  },
-  {
-    releaseDate: new Date("2023-03-04"),
-    title: "Le livre 5",
-    cover:
-      "https://m.media-amazon.com/images/W/IMAGERENDERING_521856-T1/images/I/81aCBz5-N6L.jpg",
-    id: "5",
-    prix: 10,
-  },
-  {
-    releaseDate: new Date("2023-03-18"),
-    title: "Le livre 6",
-    cover:
-      "https://m.media-amazon.com/images/W/IMAGERENDERING_521856-T1/images/I/81aCBz5-N6L.jpg",
-    id: "6",
-    prix: 17.99,
-  },
-  {
-    releaseDate: new Date("2023-03-21"),
-    title: "Le livre 7",
-    cover:
-      "https://m.media-amazon.com/images/W/IMAGERENDERING_521856-T1/images/I/81aCBz5-N6L.jpg",
-    id: "7",
-    prix: 25,
-  },
-  {
-    releaseDate: new Date("2023-04-02"),
-    title: "Le livre 8",
-    cover:
-      "https://m.media-amazon.com/images/W/IMAGERENDERING_521856-T1/images/I/81aCBz5-N6L.jpg",
-    id: "8",
-    prix: 10,
-  },
-];
-
 const Home = () => {
+  const [loadedBooks, setLoadedBooks] = useState();
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        const responseData = await sendRequest(
+          `${process.env.REACT_APP_API_URL}/book/future-releases`
+        );
+
+        setLoadedBooks(responseData.books);
+      } catch (err) {}
+    };
+    fetchBooks();
+  }, [sendRequest]);
+
   return (
     <div className='outer-div'>
-      <div>
-        <BookCalendar books={livres} />
-      </div>
+      <ErrorModal error={error} onClear={clearError} />
+      {isLoading && (
+        <div className='center'>
+          <LoadingSpinner />
+        </div>
+      )}
+      {!isLoading && loadedBooks && <BookCalendar books={loadedBooks} />}
     </div>
   );
 };
