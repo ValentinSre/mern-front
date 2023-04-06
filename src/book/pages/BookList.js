@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
+import { useHistory } from "react-router-dom";
 
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
@@ -10,6 +11,7 @@ import "./BookList.css";
 
 const BookList = () => {
   const auth = useContext(AuthContext);
+  const history = useHistory();
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [loadedBooks, setLoadedBooks] = useState();
 
@@ -44,7 +46,6 @@ const BookList = () => {
           ids_book: bookIds,
           id_user: auth.userId,
           list_name: listName,
-          books: loadedBooks,
         }),
         {
           "Content-Type": "application/json",
@@ -52,6 +53,11 @@ const BookList = () => {
         }
       );
 
+      if (responseData.success) {
+        history.push(
+          `/${auth.userId}/${listName}?success=${responseData.success}`
+        );
+      }
       // Refetch the list of books after adding the book to the collection successfully
       await fetchBooks();
     } catch (err) {
@@ -60,6 +66,7 @@ const BookList = () => {
   };
 
   const handleAddToCollection = (bookIds) => {
+    console.log(bookIds);
     handleAddToList(bookIds, "collection");
   };
 

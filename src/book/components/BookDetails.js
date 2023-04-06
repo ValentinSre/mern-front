@@ -185,14 +185,13 @@ const BookDetails = ({ book: initialBook }) => {
 
   const handleAddToList = async (bookIds, listName) => {
     try {
-      const responseData = await sendRequest(
+      await sendRequest(
         process.env.REACT_APP_API_URL + "/collection/add",
         "POST",
         JSON.stringify({
           ids_book: bookIds,
           id_user: auth.userId,
           list_name: listName,
-          books: [book],
         }),
         {
           "Content-Type": "application/json",
@@ -200,8 +199,8 @@ const BookDetails = ({ book: initialBook }) => {
         }
       );
 
-      const { success, books } = responseData;
-      if (success) setBook(books[0]);
+      const bookId = bookIds[0];
+      history.push("/book/" + bookId);
     } catch (err) {
       console.log(err);
     }
