@@ -16,14 +16,15 @@ import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import Checkbox from "@material-ui/core/Checkbox";
 import IconButton from "@material-ui/core/IconButton";
+import { FormControl, RadioGroup, Radio } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import PreviewIcon from "@material-ui/icons/Visibility";
 import FilterListIcon from "@material-ui/icons/FilterList";
-import CustomButtons from "./CustomButtons";
 
-import IconOnlyButton from "./IconOnlyButton";
+import CustomButtons from "../../shared/components/UIElements/CustomButtons";
+import IconOnlyButton from "../../shared/components/UIElements/IconOnlyButton";
 // import SearchBar from "./SearchBar";
 
 function descendingComparator(a, b, orderBy) {
@@ -63,7 +64,7 @@ const DEFAULT_ORDER = "asc";
 const DEFAULT_ORDER_BY = "editeur";
 const DEFAULT_ROWS_PER_PAGE = 25;
 
-function EnhancedTableHead(props) {
+function BookTableHead(props) {
   const {
     onSelectAllClick,
     order,
@@ -72,8 +73,8 @@ function EnhancedTableHead(props) {
     rowCount,
     onRequestSort,
     headCells,
-    userInfo,
     checkbox,
+    displayImage,
   } = props;
   const createSortHandler = (newOrderBy) => (event) => {
     onRequestSort(event, newOrderBy);
@@ -96,15 +97,10 @@ function EnhancedTableHead(props) {
           </TableCell>
         )}
         <TableCell padding='see'></TableCell>
-        {userInfo && (
-          <React.Fragment>
-            <TableCell>
-              <IconOnlyButton icon='collection' title='Je possède' />
-            </TableCell>
-            <TableCell>
-              <IconOnlyButton icon='wishlist' title='Je souhaite' />
-            </TableCell>
-          </React.Fragment>
+        {!displayImage && (
+          <TableCell>
+            <IconOnlyButton icon='image' title='Image' />
+          </TableCell>
         )}
         {headCells.map((headCell) => (
           <TableCell
@@ -141,7 +137,7 @@ function EnhancedTableHead(props) {
   );
 }
 
-EnhancedTableHead.propTypes = {
+BookTableHead.propTypes = {
   numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
   onSelectAllClick: PropTypes.func.isRequired,
@@ -150,8 +146,15 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
-function EnhancedTableToolbar(props) {
-  const { numSelected, selected: selectedRows, title, actions } = props;
+function BookTableToolbar(props) {
+  const {
+    numSelected,
+    selected: selectedRows,
+    title,
+    actions,
+    filterValue,
+    handleChangeFilter,
+  } = props;
 
   const [openFilter, setOpenFilter] = React.useState(false);
 
@@ -193,6 +196,52 @@ function EnhancedTableToolbar(props) {
         </Typography>
       )}
 
+      <IconButton onClick={handleOpenFilter}>
+        <FilterListIcon />
+      </IconButton>
+      {openFilter && (
+        <FormControl>
+          <div
+            style={{
+              padding: "10px",
+              margin: "10px",
+              marginLeft: "50px",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              border: "1px solid #ccc",
+              borderRadius: "5px",
+            }}
+          >
+            {" "}
+            <RadioGroup
+              row
+              aria-labelledby='test'
+              name='test'
+              value={filterValue}
+              onChange={handleChangeFilter}
+            >
+              <FormControlLabel value='all' control={<Radio />} label='Tout' />
+              <FormControlLabel
+                value='collection'
+                control={<Radio />}
+                label='Collection'
+              />
+              <FormControlLabel
+                value='wishlist'
+                control={<Radio />}
+                label='Wishlist'
+              />
+              <FormControlLabel
+                value='none'
+                control={<Radio />}
+                label='Autres'
+              />
+            </RadioGroup>
+          </div>
+        </FormControl>
+      )}
+
       {numSelected > 0 ? (
         <div
           style={{
@@ -220,17 +269,18 @@ function EnhancedTableToolbar(props) {
   );
 }
 
-EnhancedTableToolbar.propTypes = {
+BookTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function EnhancedTable({
+export default function BookTable({
   rows,
   headCells,
   title,
   actions,
-  userInfo,
   checkbox,
+  handleChangeFilter,
+  filterValue,
 }) {
   const [order, setOrder] = React.useState(DEFAULT_ORDER);
   const [orderBy, setOrderBy] = React.useState(DEFAULT_ORDER_BY);
@@ -253,7 +303,7 @@ export default function EnhancedTable({
     );
 
     setVisibleRows(rowsOnMount);
-  }, []);
+  }, [rows]);
 
   const handleRequestSort = React.useCallback(
     (event, newOrderBy) => {
@@ -365,20 +415,22 @@ export default function EnhancedTable({
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
-        <EnhancedTableToolbar
+        <BookTableToolbar
           numSelected={selected.length}
           selected={selected}
           title={title}
           actions={actions}
+          filterValue={filterValue}
+          handleChangeFilter={handleChangeFilter}
         />
         <TableContainer>
           <Table
             stickyHeader
             sx={{ minWidth: 750 }}
             aria-labelledby='tableTitle'
-            size={dense ? "small" : "medium"}
+            size={dense ? "small" : "large"}
           >
-            <EnhancedTableHead
+            <BookTableHead
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
@@ -386,14 +438,14 @@ export default function EnhancedTable({
               onRequestSort={handleRequestSort}
               rowCount={rows.length}
               headCells={headCells}
-              userInfo={userInfo}
               checkbox={checkbox}
+              displayImage={dense}
             />
             <TableBody>
               {visibleRows
                 ? visibleRows.map((row, index) => {
                     const isItemSelected = isSelected(row._id);
-                    const labelId = `enhanced-table-checkbox-${index}`;
+                    const labelId = `Book-table-checkbox-${index}`;
 
                     return (
                       <TableRow
@@ -425,17 +477,15 @@ export default function EnhancedTable({
                             <PreviewIcon />
                           </IconButton>
                         </TableCell>
-                        {userInfo && (
-                          <React.Fragment>
-                            <TableCell>
-                              <Checkbox disabled checked={row.possede} />
-                            </TableCell>
-                            <TableCell>
-                              <Checkbox disabled checked={row.souhaite} />
-                            </TableCell>
-                          </React.Fragment>
+                        {!dense && (
+                          <TableCell>
+                            <img
+                              src={row.image}
+                              style={{ width: "100px" }}
+                              alt={row.titre}
+                            />
+                          </TableCell>
                         )}
-
                         {headCells.map((headCell) => {
                           const cellValue = row[headCell.id];
 

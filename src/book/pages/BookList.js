@@ -4,8 +4,8 @@ import { useHistory } from "react-router-dom";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
-import GenericTable from "../../shared/components/UIElements/GenericTable";
 import { AuthContext } from "../../shared/context/auth-context";
+import BookTable from "../components/BookTable";
 
 import "./BookList.css";
 
@@ -27,15 +27,6 @@ const BookList = () => {
   useEffect(() => {
     fetchBooks();
   }, [sendRequest, auth.userId]);
-
-  const columnsName = [
-    { name: "Série", id: "serie", sort: true },
-    { name: "Titre", id: "titre", sort: true },
-    { name: "Tome", id: "tome", sort: true },
-    { name: "Éditeur", id: "editeur", sort: true },
-    { name: "Format", id: "format", sort: true },
-    { name: "Prix", id: "prix", sort: true },
-  ];
 
   const handleAddToList = async (bookIds, listName) => {
     try {
@@ -128,6 +119,32 @@ const BookList = () => {
     },
   ];
 
+  const [filterValue, setFilterValue] = useState("all");
+  console.log(filterValue);
+
+  const handleChangeFilter = (event) => {
+    setFilterValue(event.target.value);
+  };
+
+  const [filteredBooks, setFilteredBooks] = useState([]);
+
+  useEffect(() => {
+    if (loadedBooks) {
+      // Calculate filteredBooks whenever loadedBooks or filterValue changes
+      if (filterValue === "all") {
+        setFilteredBooks(loadedBooks);
+      } else if (filterValue === "collection") {
+        setFilteredBooks(loadedBooks.filter((book) => book.possede === true));
+      } else if (filterValue === "wishlist") {
+        setFilteredBooks(loadedBooks.filter((book) => book.souhaite === true));
+      } else {
+        setFilteredBooks(
+          loadedBooks.filter((book) => !book.possede && !book.souhaite)
+        );
+      }
+    }
+  }, [loadedBooks, filterValue]);
+
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />{" "}
@@ -138,13 +155,14 @@ const BookList = () => {
       )}
       {!isLoading && loadedBooks && (
         <div className='book-list'>
-          <GenericTable
+          <BookTable
             headCells={headCells}
-            rows={loadedBooks}
+            rows={filteredBooks}
             title='Tous les livres'
             actions={actions}
-            userInfo={auth.isLoggedIn}
             checkbox={auth.isLoggedIn}
+            handleChangeFilter={handleChangeFilter}
+            filterValue={filterValue}
           />
         </div>
       )}
