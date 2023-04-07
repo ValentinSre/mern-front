@@ -27,7 +27,6 @@ const months = {
 function BookCalendar({ books }) {
   const history = useHistory();
 
-  console.log("books", books);
   // Group books by release date
   const booksByDate = books.reduce((acc, book) => {
     const { date_parution } = book;
@@ -38,8 +37,11 @@ function BookCalendar({ books }) {
     acc[releaseDate].push(book);
     return acc;
   }, {});
-  console.log("bookByDate", booksByDate);
+
   const releaseDates = Object.keys(booksByDate);
+
+  // Sort dates by ascending order
+  releaseDates.sort((a, b) => new Date(a) - new Date(b));
 
   // Group dates by month
   const datesByMonth = releaseDates.reduce((acc, date) => {
