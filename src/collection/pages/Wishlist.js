@@ -110,13 +110,21 @@ const Wishlist = () => {
     if (groupCol === "editeur") return name;
     const date = new Date(name);
     return `${date.getDate()}${date.getDate() === 1 ? "er" : ""} ${
-      months[date.getMonth()]
+      months[date.getMonth() + 1]
     }`;
   };
 
   const displayTab = (collection, groupCol) => {
     const groupedBooks = groupCollection(collection, groupCol);
     const groupNames = Object.keys(groupedBooks);
+
+    if (groupCol === "editeur") {
+      groupNames.sort();
+    } else {
+      groupNames.sort((a, b) => {
+        return new Date(a) - new Date(b);
+      });
+    }
 
     return (
       <div className='collection-display'>
