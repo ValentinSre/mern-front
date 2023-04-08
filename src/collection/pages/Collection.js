@@ -13,6 +13,7 @@ const Collection = () => {
   const auth = useContext(AuthContext);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [loadedCollection, setLoadedCollection] = useState();
+  const [originalCollection, setOriginalCollection] = useState([]);
 
   const [selectedSort, setSelectedSort] = useState(0);
   const [selectedGroupment, setSelectedGroupment] = useState(0);
@@ -27,6 +28,7 @@ const Collection = () => {
         { Authorization: "Bearer " + auth.token }
       );
 
+      setOriginalCollection(responseData.collection);
       setLoadedCollection(responseData.collection);
       loadEditeurs(responseData.editeurs);
     } catch (err) {}
@@ -59,6 +61,27 @@ const Collection = () => {
     setSelectedGroupment(event.target.value);
   };
 
+  const handleSearchBooks = (searchText) => {
+    const collectionFilteredBySearch = originalCollection.filter((book) => {
+      const { titre, auteurs, serie, dessinateurs, editeur, format } = book;
+      const searchLower = searchText.toLowerCase();
+      return (
+        titre.toLowerCase().includes(searchLower) ||
+        auteurs.some((author) =>
+          author.nom.toLowerCase().includes(searchLower)
+        ) ||
+        (serie && serie.toLowerCase().includes(searchLower)) ||
+        dessinateurs.some((dessinateur) =>
+          dessinateur.nom.toLowerCase().includes(searchLower)
+        ) ||
+        (editeur && editeur.toLowerCase().includes(searchLower)) ||
+        (format && format.toLowerCase().includes(searchLower))
+      );
+    });
+
+    setLoadedCollection(collectionFilteredBySearch);
+  };
+
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />{" "}
@@ -77,6 +100,7 @@ const Collection = () => {
             handleSortChange={handleSortChange}
             handleGroupmentChange={handleGroupmentChange}
             handleEditeursSelection={handleEditeursSelection}
+            handleSearchBooks={handleSearchBooks}
           />
           <CollectionDisplay
             collection={loadedCollection}

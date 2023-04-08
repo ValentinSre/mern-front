@@ -10,6 +10,15 @@ import makeTitle from "../../../../shared/util/makeTitle";
 import "./CollectionInLists.css";
 
 const MAX_ITEMS_PER_CATEGORY = 20;
+const UNDEFINED_CATEGORIES = {
+  1: "Editeur non défini",
+  2: "Format non défini",
+  3: "Auteur non défini",
+  4: "Dessinateur non défini",
+  5: "Genre non défini",
+  6: "Année non définie",
+  7: "Type non défini",
+};
 
 const CollectionInLists = ({
   sort,
@@ -58,7 +67,9 @@ const CollectionInLists = ({
       />
       {categories.map((key) => (
         <div className='book-category' key={key}>
-          <div className='book-category-header'>{key}</div>
+          <div className='book-category-header'>
+            {key !== "undefined" ? key : UNDEFINED_CATEGORIES[groupment]}
+          </div>
           <div className='book-list'>
             {sortCollection(groupedCollection[key], sort)
               .slice(0, MAX_ITEMS_PER_CATEGORY + 1)

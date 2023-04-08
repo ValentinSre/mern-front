@@ -17,6 +17,7 @@ const CollectionFilter = ({
   handleSortChange,
   handleGroupmentChange,
   handleEditeursSelection,
+  handleSearchBooks,
 }) => {
   const DeletableChips = ({ editeurs: editeursAvailability, handleDelete }) => {
     const editeursName = Object.keys(editeursAvailability);
@@ -49,6 +50,12 @@ const CollectionFilter = ({
     );
   };
 
+  const [searchText, setSearchText] = React.useState("");
+
+  const handleSearch = (event) => {
+    setSearchText(event.target.value);
+    handleSearchBooks(event.target.value);
+  };
   return (
     <div className='collection'>
       <InputLabel id='label-tri' style={{ paddingBottom: "5px" }}>
@@ -86,6 +93,15 @@ const CollectionFilter = ({
         <MenuItem value={6}>Par année</MenuItem>
         <MenuItem value={7}>Par type</MenuItem>
       </Select>
+      <TextField
+        label='Recherche'
+        variant='outlined'
+        value={searchText}
+        onChange={handleSearch}
+        margin='normal'
+        fullWidth
+        InputLabelProps={{ position: "top" }}
+      />
       <DeletableChips
         editeurs={editeurs}
         handleDelete={handleEditeursSelection}

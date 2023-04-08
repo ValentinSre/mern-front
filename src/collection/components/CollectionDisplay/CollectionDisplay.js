@@ -59,10 +59,7 @@ const CollectionDisplay = ({
 }) => {
   const groupCollection = (collection, groupment) => {
     if (groupment) {
-      // Authors is an array of objects with a name property
-      // Adopt a different strategy : collect all the authors in a single array
-      // Then group by author
-      // A book can appear multiple times in the list
+      // Authors
       if (groupment === 3) {
         const authors = collection.reduce((acc, book) => {
           book.auteurs.forEach((author) => {
@@ -87,11 +84,7 @@ const CollectionDisplay = ({
         return groupedCollection;
       }
 
-      // Illustrators is an array of objects with a name property
-      // Adopt a different strategy : collect all the illustrators in a single array
-      // Then group by illustrator
-      // A book can appear multiple times in the list
-
+      // Illustrators
       if (groupment === 4) {
         const illustrators = collection.reduce((acc, book) => {
           book.dessinateurs.forEach((illustrator) => {
@@ -116,6 +109,29 @@ const CollectionDisplay = ({
         return groupedCollection;
       }
 
+      // Year
+      if (groupment === 6) {
+        const years = collection.reduce((acc, book) => {
+          const year = new Date(book.date_parution).getFullYear();
+          if (!acc.includes(year)) {
+            acc.push(year);
+          }
+          return acc;
+        }, []);
+
+        const groupedCollection = years.reduce((acc, year) => {
+          acc[year] = [];
+          collection.forEach((book) => {
+            const bookYear = new Date(book.date_parution).getFullYear();
+            if (bookYear === year) {
+              acc[year].push(book);
+            }
+          });
+          return acc;
+        }, {});
+        return groupedCollection;
+      }
+
       const groupedCollection = collection.reduce((acc, book) => {
         const key = book[GROUPMENT_IDS[groupment]];
         if (!acc[key]) {
@@ -133,6 +149,32 @@ const CollectionDisplay = ({
 
   const sortCollection = (collection, sort) => {
     if (sort) {
+      // tri par date de parution
+      if (sort === 3) {
+        return collection.sort((a, b) => {
+          const dateA = new Date(a[SORT_IDS[sort]]);
+          const dateB = new Date(b[SORT_IDS[sort]]);
+          return dateA < dateB ? -1 : dateA > dateB ? 1 : 0;
+        });
+      }
+
+      // tri par note (si note = undefined, on le met à la fin) par ordre décroissant
+      if (sort === 4) {
+        return collection.sort((a, b) => {
+          if (a[SORT_IDS[sort]] === undefined) {
+            return 1;
+          }
+          if (b[SORT_IDS[sort]] === undefined) {
+            return -1;
+          }
+          return a[SORT_IDS[sort]] < b[SORT_IDS[sort]]
+            ? 1
+            : a[SORT_IDS[sort]] > b[SORT_IDS[sort]]
+            ? -1
+            : 0;
+        });
+      }
+
       return collection.sort((a, b) => {
         if (sort === 1) {
           return makeTitle(a) < makeTitle(b) ? -1 : 1;

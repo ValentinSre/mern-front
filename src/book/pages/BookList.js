@@ -8,6 +8,7 @@ import { AuthContext } from "../../shared/context/auth-context";
 import BookTable from "../components/BookTable";
 
 import "./BookList.css";
+import { TextField } from "@material-ui/core";
 
 const BookList = () => {
   const auth = useContext(AuthContext);
@@ -126,22 +127,46 @@ const BookList = () => {
 
   const [filteredBooks, setFilteredBooks] = useState([]);
 
+  const [searchText, setSearchText] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+
   useEffect(() => {
     if (loadedBooks) {
+      const results = loadedBooks.filter(
+        (book) =>
+          book.titre.toLowerCase().includes(searchText.toLowerCase()) ||
+          (book.serie &&
+            book.serie.toLowerCase().includes(searchText.toLowerCase())) ||
+          (book.editeur &&
+            book.editeur.toLowerCase().includes(searchText.toLowerCase())) ||
+          (book.format &&
+            book.format.toLowerCase().includes(searchText.toLowerCase())) ||
+          book.auteurs.some((auteur) =>
+            auteur.nom.toLowerCase().includes(searchText.toLowerCase())
+          ) ||
+          book.dessinateurs.some((dessinateur) =>
+            dessinateur.nom.toLowerCase().includes(searchText.toLowerCase())
+          )
+      );
+
       // Calculate filteredBooks whenever loadedBooks or filterValue changes
       if (filterValue === "all") {
-        setFilteredBooks(loadedBooks);
+        setFilteredBooks(results);
       } else if (filterValue === "collection") {
-        setFilteredBooks(loadedBooks.filter((book) => book.possede === true));
+        setFilteredBooks(results.filter((book) => book.possede === true));
       } else if (filterValue === "wishlist") {
-        setFilteredBooks(loadedBooks.filter((book) => book.souhaite === true));
+        setFilteredBooks(results.filter((book) => book.souhaite === true));
       } else {
         setFilteredBooks(
-          loadedBooks.filter((book) => !book.possede && !book.souhaite)
+          results.filter((book) => !book.possede && !book.souhaite)
         );
       }
     }
-  }, [loadedBooks, filterValue]);
+  }, [loadedBooks, filterValue, searchText]);
+
+  const handleSearch = (event) => {
+    setSearchText(event.target.value);
+  };
 
   return (
     <React.Fragment>
@@ -153,6 +178,15 @@ const BookList = () => {
       )}
       {!isLoading && loadedBooks && (
         <div className='book-list'>
+          <TextField
+            label='Recherche'
+            variant='outlined'
+            value={searchText}
+            onChange={(event) => setSearchText(event.target.value)}
+            margin='normal'
+            fullWidth
+            InputLabelProps={{ position: "top" }}
+          />
           <BookTable
             headCells={headCells}
             rows={filteredBooks}
