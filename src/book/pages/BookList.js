@@ -57,7 +57,6 @@ const BookList = () => {
   };
 
   const handleAddToCollection = (bookIds) => {
-    console.log(bookIds);
     handleAddToList(bookIds, "collection");
   };
 
@@ -120,7 +119,6 @@ const BookList = () => {
   ];
 
   const [filterValue, setFilterValue] = useState("all");
-  console.log(filterValue);
 
   const handleChangeFilter = (event) => {
     setFilterValue(event.target.value);

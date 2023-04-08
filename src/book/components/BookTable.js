@@ -77,7 +77,6 @@ function BookTableHead(props) {
     displayImage,
   } = props;
   const createSortHandler = (newOrderBy) => (event) => {
-    console.log("newOrderBy: ", newOrderBy);
     onRequestSort(event, newOrderBy);
   };
 
@@ -156,6 +155,7 @@ function BookTableToolbar(props) {
     filterValue,
     handleChangeFilter,
     handleResetOrderBy,
+    handleResetPage,
   } = props;
 
   const [openFilter, setOpenFilter] = React.useState(false);
@@ -225,6 +225,7 @@ function BookTableToolbar(props) {
               onChange={(event) => {
                 handleChangeFilter(event);
                 handleResetOrderBy();
+                handleResetPage();
               }}
             >
               <FormControlLabel value='all' control={<Radio />} label='Tout' />
@@ -367,10 +368,11 @@ export default function BookTable({
   };
 
   const handleChangePage = React.useCallback(
-    (event, newPage) => {
+    (event, newPage, rows) => {
       setPage(newPage);
 
       const sortedRows = stableSort(rows, getComparator(order, orderBy));
+
       const updatedRows = sortedRows.slice(
         newPage * rowsPerPage,
         newPage * rowsPerPage + rowsPerPage
@@ -391,7 +393,7 @@ export default function BookTable({
   );
 
   const handleChangeRowsPerPage = React.useCallback(
-    (event) => {
+    (event, rows) => {
       const updatedRowsPerPage = parseInt(event.target.value, 10);
       setRowsPerPage(updatedRowsPerPage);
 
@@ -434,6 +436,7 @@ export default function BookTable({
           filterValue={filterValue}
           handleChangeFilter={handleChangeFilter}
           handleResetOrderBy={() => setOrderBy(null)}
+          handleResetPage={() => setPage(0)}
         />
         <TableContainer>
           <Table
@@ -538,8 +541,10 @@ export default function BookTable({
           labelRowsPerPage='Éléments par page'
           rowsPerPage={rowsPerPage}
           page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
+          onPageChange={(event, newPage) =>
+            handleChangePage(event, newPage, rows)
+          }
+          onRowsPerPageChange={(event) => handleChangeRowsPerPage(event, rows)}
         />
         <FormControlLabel
           control={<Switch checked={dense} onChange={handleChangeDense} />}
