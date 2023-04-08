@@ -1,6 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import PropTypes from "prop-types";
+import PropTypes, { checkPropTypes } from "prop-types";
 import { alpha } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Table from "@material-ui/core/Table";
@@ -61,7 +61,7 @@ function stableSort(array, comparator) {
 }
 
 const DEFAULT_ORDER = "asc";
-const DEFAULT_ORDER_BY = "editeur";
+const DEFAULT_ORDER_BY = null;
 const DEFAULT_ROWS_PER_PAGE = 25;
 
 function BookTableHead(props) {
@@ -77,6 +77,7 @@ function BookTableHead(props) {
     displayImage,
   } = props;
   const createSortHandler = (newOrderBy) => (event) => {
+    console.log("newOrderBy: ", newOrderBy);
     onRequestSort(event, newOrderBy);
   };
 
@@ -154,6 +155,7 @@ function BookTableToolbar(props) {
     actions,
     filterValue,
     handleChangeFilter,
+    handleResetOrderBy,
   } = props;
 
   const [openFilter, setOpenFilter] = React.useState(false);
@@ -219,7 +221,11 @@ function BookTableToolbar(props) {
               aria-labelledby='test'
               name='test'
               value={filterValue}
-              onChange={handleChangeFilter}
+              // execute la fonction handleChangeFilter et lui passe en paramètre l'event
+              onChange={(event) => {
+                handleChangeFilter(event);
+                handleResetOrderBy();
+              }}
             >
               <FormControlLabel value='all' control={<Radio />} label='Tout' />
               <FormControlLabel
@@ -307,6 +313,11 @@ export default function BookTable({
 
   const handleRequestSort = React.useCallback(
     (event, newOrderBy) => {
+      // execute the code only if theOrderBy is equal to the current orderBy
+      if (newOrderBy !== orderBy) {
+        setOrderBy(newOrderBy);
+        return;
+      }
       const isAsc = orderBy === newOrderBy && order === "asc";
       const toggledOrder = isAsc ? "desc" : "asc";
       setOrder(toggledOrder);
@@ -422,6 +433,7 @@ export default function BookTable({
           actions={actions}
           filterValue={filterValue}
           handleChangeFilter={handleChangeFilter}
+          handleResetOrderBy={() => setOrderBy(null)}
         />
         <TableContainer>
           <Table
