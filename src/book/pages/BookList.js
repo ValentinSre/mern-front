@@ -178,15 +178,6 @@ const BookList = () => {
       )}
       {!isLoading && loadedBooks && (
         <div className='book-list'>
-          <TextField
-            label='Recherche'
-            variant='outlined'
-            value={searchText}
-            onChange={(event) => setSearchText(event.target.value)}
-            margin='normal'
-            fullWidth
-            InputLabelProps={{ position: "top" }}
-          />
           <BookTable
             headCells={headCells}
             rows={filteredBooks}
@@ -195,6 +186,8 @@ const BookList = () => {
             checkbox={auth.isLoggedIn}
             handleChangeFilter={handleChangeFilter}
             filterValue={filterValue}
+            searchText={searchText}
+            handleSearch={handleSearch}
           />
         </div>
       )}

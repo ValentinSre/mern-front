@@ -22,10 +22,12 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import PreviewIcon from "@material-ui/icons/Visibility";
 import FilterListIcon from "@material-ui/icons/FilterList";
+import TextField from "@material-ui/core/TextField";
 
 import CustomButtons from "../../shared/components/UIElements/CustomButtons";
 import IconOnlyButton from "../../shared/components/UIElements/IconOnlyButton";
-// import SearchBar from "./SearchBar";
+
+import "./BookTable.css";
 
 function descendingComparator(a, b, orderBy) {
   const aValue = a[orderBy] ?? "";
@@ -156,6 +158,8 @@ function BookTableToolbar(props) {
     handleChangeFilter,
     handleResetOrderBy,
     handleResetPage,
+    searchText,
+    handleSearch,
   } = props;
 
   const [openFilter, setOpenFilter] = React.useState(false);
@@ -201,13 +205,76 @@ function BookTableToolbar(props) {
       <IconButton onClick={handleOpenFilter}>
         <FilterListIcon />
       </IconButton>
-      {openFilter && (
-        <FormControl>
+      <div className='filter-container'>
+        {openFilter && (
+          <React.Fragment>
+            <FormControl>
+              <div
+                style={{
+                  padding: "10px",
+                  margin: "10px",
+                  marginLeft: "50px",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  border: "1px solid #ccc",
+                  borderRadius: "5px",
+                }}
+              >
+                {" "}
+                <RadioGroup
+                  row
+                  aria-labelledby='test'
+                  name='test'
+                  value={filterValue}
+                  // execute la fonction handleChangeFilter et lui passe en paramètre l'event
+                  onChange={(event) => {
+                    handleChangeFilter(event);
+                    handleResetOrderBy();
+                    handleResetPage();
+                  }}
+                >
+                  <FormControlLabel
+                    value='all'
+                    control={<Radio />}
+                    label='Tout'
+                  />
+                  <FormControlLabel
+                    value='collection'
+                    control={<Radio />}
+                    label='Collection'
+                  />
+                  <FormControlLabel
+                    value='wishlist'
+                    control={<Radio />}
+                    label='Wishlist'
+                  />
+                  <FormControlLabel
+                    value='none'
+                    control={<Radio />}
+                    label='Autres'
+                  />
+                </RadioGroup>
+              </div>
+            </FormControl>
+
+            <TextField
+              label='Recherche'
+              variant='outlined'
+              value={searchText}
+              onChange={handleSearch}
+              margin='normal'
+              InputLabelProps={{ position: "top" }}
+            />
+          </React.Fragment>
+        )}
+
+        {numSelected > 0 ? (
           <div
             style={{
-              padding: "10px",
+              padding: "12px",
               margin: "10px",
-              marginLeft: "50px",
+              marginLeft: "10px",
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
@@ -215,62 +282,16 @@ function BookTableToolbar(props) {
               borderRadius: "5px",
             }}
           >
-            {" "}
-            <RadioGroup
-              row
-              aria-labelledby='test'
-              name='test'
-              value={filterValue}
-              // execute la fonction handleChangeFilter et lui passe en paramètre l'event
-              onChange={(event) => {
-                handleChangeFilter(event);
-                handleResetOrderBy();
-                handleResetPage();
-              }}
-            >
-              <FormControlLabel value='all' control={<Radio />} label='Tout' />
-              <FormControlLabel
-                value='collection'
-                control={<Radio />}
-                label='Collection'
+            {actions.map((action) => (
+              <CustomButtons
+                buttonType={action.type}
+                title={action.title}
+                onClick={() => action.handleAction(selectedRows)}
               />
-              <FormControlLabel
-                value='wishlist'
-                control={<Radio />}
-                label='Wishlist'
-              />
-              <FormControlLabel
-                value='none'
-                control={<Radio />}
-                label='Autres'
-              />
-            </RadioGroup>
+            ))}
           </div>
-        </FormControl>
-      )}
-
-      {numSelected > 0 ? (
-        <div
-          style={{
-            padding: "10px",
-            margin: "10px",
-            marginLeft: "50px",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            border: "1px solid #ccc",
-            borderRadius: "5px",
-          }}
-        >
-          {actions.map((action) => (
-            <CustomButtons
-              buttonType={action.type}
-              title={action.title}
-              onClick={() => action.handleAction(selectedRows)}
-            />
-          ))}
-        </div>
-      ) : null}
+        ) : null}
+      </div>
       {/* {openFilter && <SearchBar />} */}
     </Toolbar>
   );
@@ -288,6 +309,8 @@ export default function BookTable({
   checkbox,
   handleChangeFilter,
   filterValue,
+  handleSearch,
+  searchText,
 }) {
   const [order, setOrder] = React.useState(DEFAULT_ORDER);
   const [orderBy, setOrderBy] = React.useState(DEFAULT_ORDER_BY);
@@ -437,6 +460,8 @@ export default function BookTable({
           handleChangeFilter={handleChangeFilter}
           handleResetOrderBy={() => setOrderBy(null)}
           handleResetPage={() => setPage(0)}
+          handleSearch={handleSearch}
+          searchText={searchText}
         />
         <TableContainer>
           <Table

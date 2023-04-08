@@ -1,0 +1,30 @@
+@media (max-width:600px) {
+    .filter-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+}
+
+.filter-list {
+    padding: "10px";
+    margin: "10px";
+    margin-left: "50px";
+    display: "flex";
+    justify-content: "space-between";
+    align-items: "center";
+    border: "1px solid #ccc";
+    border-radius: "5px";
+}
+
+.add-buttons {
+    padding: "12px";
+    margin: "10px";
+    margin-left: "10px";
+    display: "flex";
+    justify-content: "space-between";
+    align-items: "center";
+    border: "1px solid #ccc";
+    border-radius: "5px";
+}
