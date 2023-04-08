@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { Tooltip } from "@material-ui/core";
 import { CiCircleMore } from "react-icons/ci";
 import { useHistory } from "react-router-dom";
+
+import CollectionInDialog from "./CollectionInDialog";
 
 import makeTitle from "../../../../shared/util/makeTitle";
 
@@ -20,6 +22,10 @@ const CollectionInLists = ({
 
   let categories = Object.keys(groupedCollection);
 
+  const [openCategoryDialog, setOpenCategoryDialog] = useState(false);
+  const [categoryBooks, setCategoryBooks] = useState([]);
+  const [categoryName, setCategoryName] = useState("");
+
   if (groupment === 1) {
     // Groupement par éditeur
     categories = categories.filter((editeur) => selectedEditeurs[editeur]);
@@ -36,8 +42,20 @@ const CollectionInLists = ({
     );
   }
 
+  const handleSeeCategory = (books, name) => {
+    setOpenCategoryDialog(true);
+    setCategoryBooks(books);
+    setCategoryName(name);
+  };
+
   return (
     <div className='collection-display'>
+      <CollectionInDialog
+        open={openCategoryDialog}
+        books={categoryBooks}
+        title={categoryName}
+        onClose={() => setOpenCategoryDialog(false)}
+      />
       {categories.map((key) => (
         <div className='book-category' key={key}>
           <div className='book-category-header'>{key}</div>
@@ -66,7 +84,13 @@ const CollectionInLists = ({
                       alignItems: "center",
                     }}
                   >
-                    <CiCircleMore size='50px' color='#ccc' />
+                    <CiCircleMore
+                      size='50px'
+                      color='#ccc'
+                      onClick={() =>
+                        handleSeeCategory(groupedCollection[key], key)
+                      }
+                    />
                   </div>
                 )
               )}
