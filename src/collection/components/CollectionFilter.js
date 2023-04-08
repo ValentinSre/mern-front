@@ -7,10 +7,8 @@ import {
   TextField,
 } from "@material-ui/core";
 import { Delete as DeleteIcon, Done as DoneIcon } from "@material-ui/icons";
-import Autocomplete from "@material-ui/lab/Autocomplete";
 
 const CollectionFilter = ({
-  collection,
   selectedSort,
   selectedGroupment,
   editeurs,
@@ -32,24 +30,6 @@ const CollectionFilter = ({
     ));
   };
 
-  const CollectionAutocompletes = ({ collection }) => {
-    return (
-      <div>
-        <Autocomplete
-          id=''
-          freeSolo
-          options={
-            collection
-              .map((book) => (book.serie ? book.serie : undefined))
-              .filter((serie) => serie !== undefined) // Ajoutez cette ligne pour exclure les valeurs nulles ou non définies
-          }
-          getOptionLabel={(option) => option} // Ajoutez cette ligne pour éviter l'erreur "getOptionLabel"
-          renderInput={(params) => <TextField {...params} label='freeSolo' />}
-        />
-      </div>
-    );
-  };
-
   const [searchText, setSearchText] = React.useState("");
 
   const handleSearch = (event) => {
@@ -57,7 +37,14 @@ const CollectionFilter = ({
     handleSearchBooks(event.target.value);
   };
   return (
-    <div className='collection'>
+    <div
+      style={{
+        padding: "20px",
+        margin: "10px",
+        border: "1px solid #ccc",
+        borderRadius: "5px",
+      }}
+    >
       <InputLabel id='label-tri' style={{ paddingBottom: "5px" }}>
         Tri
       </InputLabel>
@@ -67,32 +54,36 @@ const CollectionFilter = ({
         id='tri-select'
         value={selectedSort}
         onChange={handleSortChange}
-        className='collection-filter'
+        fullWidth
       >
-        <MenuItem value={0}>Par défaut</MenuItem>
+        <MenuItem value={0}>Par ajout</MenuItem>
         <MenuItem value={1}>Par titre/série</MenuItem>
         <MenuItem value={2}>Par prix</MenuItem>
         <MenuItem value={3}>Par date</MenuItem>
         <MenuItem value={4}>Par note</MenuItem>
       </Select>
-      <InputLabel id='label-groupement' style={{ paddingBottom: "5px" }}>
-        Groupement
-      </InputLabel>
-      <Select
-        label='Groupement'
-        id='demo-simple-select'
-        value={selectedGroupment}
-        onChange={handleGroupmentChange}
-      >
-        <MenuItem value={0}>Sans groupement</MenuItem>
-        <MenuItem value={1}>Par éditeur</MenuItem>
-        <MenuItem value={2}>Par format</MenuItem>
-        <MenuItem value={3}>Par auteur</MenuItem>
-        <MenuItem value={4}>Par dessinateur</MenuItem>
-        <MenuItem value={5}>Par genre</MenuItem>
-        <MenuItem value={6}>Par année</MenuItem>
-        <MenuItem value={7}>Par type</MenuItem>
-      </Select>
+
+      <div style={{ marginTop: "10px" }}>
+        <InputLabel id='label-groupement' style={{ paddingBottom: "5px" }}>
+          Groupement
+        </InputLabel>
+        <Select
+          label='Groupement'
+          id='demo-simple-select'
+          value={selectedGroupment}
+          onChange={handleGroupmentChange}
+          fullWidth
+        >
+          <MenuItem value={0}>Sans groupement</MenuItem>
+          <MenuItem value={1}>Par éditeur</MenuItem>
+          <MenuItem value={2}>Par format</MenuItem>
+          <MenuItem value={3}>Par auteur</MenuItem>
+          <MenuItem value={4}>Par dessinateur</MenuItem>
+          <MenuItem value={5}>Par genre</MenuItem>
+          <MenuItem value={6}>Par année</MenuItem>
+          <MenuItem value={7}>Par type</MenuItem>
+        </Select>
+      </div>
       <TextField
         label='Recherche'
         variant='outlined'

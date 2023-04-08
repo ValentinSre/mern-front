@@ -168,22 +168,20 @@ const BookForm = ({
 
   const DeletableChips = ({ artistes, handleDelete, typeOfArtist }) => {
     return artistes.map((artiste) => (
-      <div className='chip' key={artiste}>
-        <Chip
-          key={artiste}
-          label={artiste}
-          onDelete={() => handleDelete(artiste, typeOfArtist)}
-          onClick={() => {
-            if (typeOfArtist === "auteur") {
-              setAuteur(artiste);
-              setAuteurs(auteurs.filter((a) => a !== artiste));
-            } else {
-              setDessinateur(artiste);
-              setDessinateurs(dessinateurs.filter((d) => d !== artiste));
-            }
-          }}
-        />
-      </div>
+      <Chip
+        key={artiste}
+        label={artiste}
+        onDelete={() => handleDelete(artiste, typeOfArtist)}
+        onClick={() => {
+          if (typeOfArtist === "auteur") {
+            setAuteur(artiste);
+            setAuteurs(auteurs.filter((a) => a !== artiste));
+          } else {
+            setDessinateur(artiste);
+            setDessinateurs(dessinateurs.filter((d) => d !== artiste));
+          }
+        }}
+      />
     ));
   };
 

@@ -7,7 +7,7 @@ import { AiFillTwitterCircle } from "react-icons/ai";
 import { CiBookmark } from "react-icons/ci";
 import { Tooltip } from "@material-ui/core";
 import { TextField, InputAdornment, IconButton } from "@material-ui/core";
-import { Button } from "@material-ui/core";
+import { Button, Modal, Box, Typography } from "@material-ui/core";
 
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import { AuthContext } from "../../shared/context/auth-context";
@@ -114,7 +114,7 @@ const BookDetails = ({ book: initialBook }) => {
       const lastName = uniqueNames.pop();
 
       // Afficher les noms
-      return allNames.length
+      return uniqueNames.length
         ? uniqueNames.join(", ") + " et " + lastName
         : lastName;
     }
@@ -175,11 +175,13 @@ const BookDetails = ({ book: initialBook }) => {
 
   const [showArtistDetails, setShowArtistDetails] = useState(false);
 
-  const handleAdditionToCollection = (bookId) => {
+  const handleAdditionToCollection = () => {
+    const bookId = book.id;
     handleAddToList([bookId], "collection");
   };
 
-  const handleAdditionToWishlist = (bookId) => {
+  const handleAdditionToWishlist = () => {
+    const bookId = book.id;
     handleAddToList([bookId], "wishlist");
   };
 
@@ -200,14 +202,15 @@ const BookDetails = ({ book: initialBook }) => {
         }
       );
 
-      const bookId = bookIds[0];
       setBook(requestData.book);
     } catch (err) {
       console.log(err);
     }
   };
 
-  const handleBookReading = async (bookId) => {
+  const handleBookReading = async () => {
+    const bookId = book.id;
+
     try {
       const responseData = await sendRequest(
         process.env.REACT_APP_API_URL + "/collection/edit",
@@ -230,7 +233,7 @@ const BookDetails = ({ book: initialBook }) => {
     }
   };
 
-  const handleBookEdition = (bookId) => {
+  const handleBookEdition = () => {
     setOpenEditDialog(true);
   };
 
@@ -239,7 +242,8 @@ const BookDetails = ({ book: initialBook }) => {
     history.push("/books");
   };
 
-  const handleBookDeletion = async (bookId) => {
+  const handleBookDeletion = async () => {
+    const bookId = book.id;
     try {
       await sendRequest(
         process.env.REACT_APP_API_URL + "/book/" + bookId,
@@ -254,10 +258,11 @@ const BookDetails = ({ book: initialBook }) => {
     } catch (err) {}
   };
 
-  const handleSubmitReview = async (event, bookId) => {
+  const handleSubmitReview = async (event) => {
     event.preventDefault();
+    const bookId = book.id;
     try {
-      const responseData = await sendRequest(
+      await sendRequest(
         process.env.REACT_APP_API_URL + "/collection/edit",
         "POST",
         JSON.stringify({
@@ -273,7 +278,6 @@ const BookDetails = ({ book: initialBook }) => {
         }
       );
 
-      const { success } = responseData;
       history.push(`/${auth.userId}/collection`);
     } catch (err) {
       console.log(err);
@@ -287,17 +291,19 @@ const BookDetails = ({ book: initialBook }) => {
           buttonType='collection'
           title='Ajouter à ma collection'
           disabled={possede}
-          onClick={() => handleAdditionToCollection(id)}
+          onClick={handleAdditionToCollection}
         />
         <CustomButtons
           buttonType='wishlist'
           title='Ajouter à ma wishlist'
           disabled={souhaite || possede}
-          onClick={() => handleAdditionToWishlist(id)}
+          onClick={handleAdditionToWishlist}
         />
       </div>
     );
   };
+
+  const [dateToRegister, setDateToRegister] = useState(new Date());
 
   const bookCollectionState = ({ possede, lu, souhaite }) => {
     if (!auth.token) return null;
@@ -312,7 +318,7 @@ const BookDetails = ({ book: initialBook }) => {
           <CustomButtons
             buttonType='read'
             title='Marquer comme lu'
-            onClick={() => handleBookReading(id)}
+            onClick={handleBookReading}
           />
         </div>
       );
@@ -322,7 +328,7 @@ const BookDetails = ({ book: initialBook }) => {
       auth.token && (
         <div className='book-collection'>
           <div className='book-collection__review'>
-            <form onSubmit={(event) => handleSubmitReview(event, id)}>
+            <form onSubmit={(event) => handleSubmitReview(event)}>
               <div style={{ display: "flex", alignItems: "center" }}>
                 <div className='book-collection__review__rating'>
                   <p>Ma note</p>
@@ -420,16 +426,18 @@ const BookDetails = ({ book: initialBook }) => {
       />
       {auth.isAdmin && (
         <React.Fragment>
-          <CustomButtons
-            buttonType='edit'
-            title='Modifier'
-            onClick={() => handleBookEdition(id)}
-          />
-          <CustomButtons
-            buttonType='delete'
-            title='Supprimer'
-            onClick={() => handleBookDeletion(id)}
-          />
+          <div className='book-details__admin'>
+            <CustomButtons
+              buttonType='edit'
+              title='Modifier'
+              onClick={handleBookEdition}
+            />
+            <CustomButtons
+              buttonType='delete'
+              title='Supprimer'
+              onClick={handleBookDeletion}
+            />
+          </div>
         </React.Fragment>
       )}
     </div>
