@@ -244,6 +244,7 @@ const BookDetails = ({ book: initialBook }) => {
 
   const handleBookDeletion = async () => {
     const bookId = book.id;
+
     try {
       await sendRequest(
         process.env.REACT_APP_API_URL + "/book/" + bookId,
