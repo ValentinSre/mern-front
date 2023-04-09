@@ -9,7 +9,7 @@ import { useState } from "react";
 
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
-import BookDetails from "../components/BookDetails";
+import BookDetails from "../components/BookDetails/BookDetails";
 
 const Book = () => {
   const auth = useContext(AuthContext);

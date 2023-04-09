@@ -2,38 +2,45 @@ import React, { useState, useContext, useEffect } from "react";
 import { BsCalendarWeek } from "react-icons/bs";
 import { useHistory } from "react-router-dom";
 import { ImBook } from "react-icons/im";
-import { FaSave } from "react-icons/fa";
 import { AiFillTwitterCircle } from "react-icons/ai";
 import { CiBookmark } from "react-icons/ci";
-import { Tooltip } from "@material-ui/core";
-import { TextField, InputAdornment, IconButton } from "@material-ui/core";
-import { Button, Modal, Box, Typography } from "@material-ui/core";
-
-import { useHttpClient } from "../../shared/hooks/http-hook";
-import { AuthContext } from "../../shared/context/auth-context";
-import CustomButtons from "../../shared/components/UIElements/CustomButtons";
 import Rating from "@material-ui/lab/Rating";
-import EditBookDialog from "./EditBookDialog";
+import {
+  Button,
+  Modal,
+  Box,
+  Chip,
+  Tooltip,
+  TextField,
+  InputAdornment,
+  IconButton,
+  Typography,
+} from "@material-ui/core";
+
+import { useHttpClient } from "../../../shared/hooks/http-hook";
+import { AuthContext } from "../../../shared/context/auth-context";
+import EditBookDialog from "./components/EditBookDialog";
+import CustomButtons from "../../../shared/components/UIElements/CustomButtons";
+import {
+  displayArtists,
+  displayButton,
+  displaySubtitle,
+  displayTitle,
+  displayType,
+  MONTHS,
+} from "./utils/DisplayFunctions";
+import DateButton from "./components/DateButton";
+import DateModal from "./components/DateModal";
 
 import "./BookDetails.css";
 
-const MONTHS = {
-  1: "janv.",
-  2: "fév.",
-  3: "mars",
-  4: "avril",
-  5: "mai",
-  6: "juin",
-  7: "juil.",
-  8: "août",
-  9: "sept.",
-  10: "oct.",
-  11: "nov.",
-  12: "déc.",
-};
-
 const BookDetails = ({ book: initialBook }) => {
+  const auth = useContext(AuthContext);
+  const history = useHistory();
+  const { sendRequest } = useHttpClient();
+
   const [book, setBook] = useState(initialBook);
+
   const {
     serie,
     tome,
@@ -45,6 +52,7 @@ const BookDetails = ({ book: initialBook }) => {
     format,
     editeur,
     date_parution,
+    date_lecture,
     image,
     version,
     note,
@@ -56,125 +64,19 @@ const BookDetails = ({ book: initialBook }) => {
     possede,
     souhaite,
   } = book;
-  const [twitterLink, setTwitterLink] = useState(lien);
+
+  const [dateLecture, setDateLecture] = useState(null);
+  const [dateObtention, setDateObtention] = useState(null);
+  const [isHovering, setIsHovering] = useState(false);
+  const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [openCollectionModal, setOpenCollectionModal] = useState(false);
+  const [openReadModal, setOpenReadModal] = useState(false);
   const [rating, setRating] = useState(parseFloat(note));
+  const [showArtistDetails, setShowArtistDetails] = useState(false);
+  const [twitterLink, setTwitterLink] = useState(lien);
   //   const [reviewText, setReviewText] = useState(review);
 
-  const auth = useContext(AuthContext);
-  const [openEditDialog, setOpenEditDialog] = useState(false);
-
-  const { sendRequest } = useHttpClient();
-  const history = useHistory();
-
-  const displayTitle = (serie, version, tome, titre) => {
-    if (serie) {
-      return (
-        <React.Fragment>
-          <h2>
-            {serie} {version ? "(v" + version + ")" : null}
-          </h2>
-          <h3>
-            {tome}. {titre}
-          </h3>
-        </React.Fragment>
-      );
-    } else {
-      return <h2>{titre}</h2>;
-    }
-  };
-
-  const displayType = (type) => {
-    switch (type) {
-      case "BD":
-        return "Une bande dessinée";
-      case "Manga":
-        return "Un manga";
-      case "Comics":
-        return "Un comics";
-      default:
-        return "Un livre";
-    }
-  };
-
-  const displayArtists = (auteurs, dessinateurs, details) => {
-    const auteursNames = auteurs.map((auteur) => auteur.nom);
-    const dessinateursNames = dessinateurs.map(
-      (dessinateur) => dessinateur.nom
-    );
-
-    if (!details) {
-      const allNames = [...auteursNames, ...dessinateursNames];
-
-      // Enlever les noms en double
-      const uniqueNames = allNames.filter((name, index) => {
-        return allNames.indexOf(name) === index;
-      });
-
-      // Enlever le dernier nom
-      const lastName = uniqueNames.pop();
-
-      // Afficher les noms
-      return uniqueNames.length
-        ? uniqueNames.join(", ") + " et " + lastName
-        : lastName;
-    }
-
-    return (
-      <p>
-        {auteursNames.map((auteur) => (
-          <span key={auteur}>
-            {" "}
-            {auteur} <span className='artist-function'>(Scénario)</span>
-          </span>
-        ))}
-        {dessinateursNames.map((dessinateur) => (
-          <span key={dessinateur}>
-            {" "}
-            {dessinateur} <span className='artist-function'>(Dessin)</span>
-          </span>
-        ))}
-      </p>
-    );
-  };
-
-  const displaySubtitle = (genre, date_parution, format) => {
-    const date = new Date(date_parution);
-    const day = date.getDate();
-    const month = date.getMonth();
-    const year = date.getFullYear();
-
-    return (
-      <div className='book-subtitle'>
-        <p>
-          <Tooltip title='Genre' style={{ marginRight: "30px" }}>
-            <span>
-              <CiBookmark /> {genre}
-            </span>
-          </Tooltip>
-          <Tooltip title='Parution' style={{ marginRight: "30px" }}>
-            <span>
-              <BsCalendarWeek />{" "}
-              <span className='book-subtitle__short-date'>
-                {month + "/" + year + " ("}
-              </span>
-              <span>{day + " " + MONTHS[month] + " " + year}</span>
-              <span className='book-subtitle__short-date'>)</span>
-            </span>
-          </Tooltip>
-          {format && (
-            <Tooltip title='Format'>
-              <span>
-                <ImBook /> {format}
-              </span>
-            </Tooltip>
-          )}
-        </p>
-      </div>
-    );
-  };
-
-  const [showArtistDetails, setShowArtistDetails] = useState(false);
-
+  // Handle functions for adding to collection and wishlist
   const handleAdditionToCollection = () => {
     const bookId = book.id;
     handleAddToList([bookId], "collection");
@@ -186,6 +88,7 @@ const BookDetails = ({ book: initialBook }) => {
   };
 
   const handleAddToList = async (bookIds, listName) => {
+    console.log("there");
     try {
       const requestData = await sendRequest(
         process.env.REACT_APP_API_URL + "/collection/add",
@@ -195,6 +98,7 @@ const BookDetails = ({ book: initialBook }) => {
           id_user: auth.userId,
           list_name: listName,
           book: book,
+          date_achat: dateObtention,
         }),
         {
           "Content-Type": "application/json",
@@ -208,6 +112,11 @@ const BookDetails = ({ book: initialBook }) => {
     }
   };
 
+  // Handle functions to update the state of the book in collection
+  const handleOpenReadModal = () => {
+    setOpenReadModal(true);
+  };
+
   const handleBookReading = async () => {
     const bookId = book.id;
 
@@ -219,6 +128,7 @@ const BookDetails = ({ book: initialBook }) => {
           id_book: bookId,
           id_user: auth.userId,
           lu: true,
+          date_lecture: dateLecture,
         }),
         {
           "Content-Type": "application/json",
@@ -227,10 +137,20 @@ const BookDetails = ({ book: initialBook }) => {
       );
 
       const { success } = responseData;
-      if (success) setBook({ ...book, lu: true });
+      if (success)
+        setBook({ ...book, lu: true, date_lecture: new Date(dateLecture) });
     } catch (err) {
       console.log(err);
     }
+  };
+
+  // Handle functions to display the read date
+  const handleMouseEnter = () => {
+    setIsHovering(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovering(false);
   };
 
   const handleBookEdition = () => {
@@ -285,41 +205,31 @@ const BookDetails = ({ book: initialBook }) => {
     }
   };
 
-  const displayButton = ({ possede, souhaite }) => {
-    return (
-      <div className='book-collection__buttons'>
-        <CustomButtons
-          buttonType='collection'
-          title='Ajouter à ma collection'
-          disabled={possede}
-          onClick={handleAdditionToCollection}
-        />
-        <CustomButtons
-          buttonType='wishlist'
-          title='Ajouter à ma wishlist'
-          disabled={souhaite || possede}
-          onClick={handleAdditionToWishlist}
-        />
-      </div>
-    );
-  };
-
-  const [dateToRegister, setDateToRegister] = useState(new Date());
-
   const bookCollectionState = ({ possede, lu, souhaite }) => {
     if (!auth.token) return null;
 
     if (!possede) {
-      return displayButton({ possede, souhaite });
+      return displayButton({
+        possede,
+        souhaite,
+        bookId: book.id,
+        handleAdditionToCollection,
+        handleAdditionToWishlist,
+        handleOpenCollectionModal: () => setOpenCollectionModal(true),
+      });
     }
 
     if (possede && !lu) {
       return (
         <div className='book-collection__buttons'>
-          <CustomButtons
-            buttonType='read'
-            title='Marquer comme lu'
-            onClick={handleBookReading}
+          <DateButton
+            options={[
+              { name: "Marquer comme lu", action: handleBookReading },
+              {
+                name: "Marquer comme lu (daté)",
+                action: handleOpenReadModal,
+              },
+            ]}
           />
         </div>
       );
@@ -389,11 +299,50 @@ const BookDetails = ({ book: initialBook }) => {
     );
   };
 
+  const date = new Date(date_lecture);
+
   return (
     <div>
       <div className='book-container'>
-        <div className='book-image'>
-          <img src={image} alt={titre} />
+        <div className='book-image' style={{ position: "relative" }}>
+          <img
+            src={image}
+            alt={titre}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          />
+          {isHovering && date_lecture && (
+            <div
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+              }}
+            >
+              <Chip
+                label={
+                  "Lu le " +
+                  date.getDate() +
+                  " " +
+                  MONTHS[date.getMonth() + 1] +
+                  " " +
+                  date.getFullYear()
+                }
+                size='large'
+                style={{
+                  backgroundColor: "#ffde59",
+                  color: "black",
+                  height: "48px",
+                  borderRadius: "24px",
+                  border: "1px solid black",
+                  padding: "0 24px",
+                  fontSize: "18px",
+                  fontWeight: "bold",
+                }}
+              />
+            </div>
+          )}
         </div>
         <div className='book-details'>
           <div>
@@ -417,6 +366,7 @@ const BookDetails = ({ book: initialBook }) => {
             )}
             {displaySubtitle(genre, date_parution, format)}
           </div>
+
           {bookCollectionState({ possede, lu, souhaite })}
         </div>
       </div>
@@ -424,6 +374,24 @@ const BookDetails = ({ book: initialBook }) => {
         open={openEditDialog}
         handleCloseDialog={handleCloseEditDialog}
         book={book}
+      />
+      <DateModal
+        open={openReadModal}
+        handleClose={() => setOpenReadModal(false)}
+        date={dateLecture}
+        label='Date de lecture'
+        title='Quand avez-vous lu ce livre ?'
+        handleChange={(e) => setDateLecture(e.target.value)}
+        handleSubmit={handleBookReading}
+      />
+      <DateModal
+        open={openCollectionModal}
+        handleClose={() => setOpenReadModal(false)}
+        date={dateObtention}
+        label="Date d'achat"
+        title='Quand avez-vous acheté ce livre ?'
+        handleChange={(e) => setDateObtention(e.target.value)}
+        handleSubmit={handleAdditionToCollection}
       />
       {auth.isAdmin && (
         <React.Fragment>
