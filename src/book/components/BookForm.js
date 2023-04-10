@@ -201,6 +201,7 @@ const BookForm = ({
             <MenuItem value={"Comics"}>Comics</MenuItem>
             <MenuItem value={"Manga"}>Manga</MenuItem>
             <MenuItem value={"BD"}>BD</MenuItem>
+            <MenuItem value={"Roman"}>Roman</MenuItem>
           </Select>
           <TextField
             label='Titre'

@@ -386,7 +386,7 @@ const BookDetails = ({ book: initialBook }) => {
       />
       <DateModal
         open={openCollectionModal}
-        handleClose={() => setOpenReadModal(false)}
+        handleClose={() => setOpenCollectionModal(false)}
         date={dateObtention}
         label="Date d'achat"
         title='Quand avez-vous acheté ce livre ?'
