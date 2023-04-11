@@ -1,34 +1,25 @@
 import React from "react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-} from "recharts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
 
 const BooksByEditor = ({ data }) => {
   return (
     <BarChart
-      width={800}
+      width={380}
       height={400}
       data={data}
       margin={{
-        top: 20,
-        right: 30,
+        top: 5,
         left: 20,
         bottom: 5,
       }}
+      layout='vertical'
+      barSize={10} // définir la largeur des barres
     >
-      <CartesianGrid strokeDasharray='3 3' />
-      <XAxis dataKey='editeur' />
-      <YAxis />
+      <XAxis type='number' />
+      <YAxis dataKey='editeur' type='category' />
       <Tooltip />
-      <Legend />
-      <Bar dataKey='total' stackId='a' fill='#8884d8' />
-      <Bar dataKey='lu' stackId='a' fill='#82ca9d' />
+      <Bar dataKey='total' stackId='a' fill='#ffde59' />
+      {/* <Bar dataKey='lu' stackId='a' fill='#82ca9d' /> */}
     </BarChart>
   );
 };

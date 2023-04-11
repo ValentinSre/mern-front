@@ -9,10 +9,13 @@ import BoughtBooksByMonthComparison from "../components/StatsComponents/BoughtBo
 import AmountEvolution from "../components/StatsComponents/AmountEvolution";
 import ReadEvolution from "../components/StatsComponents/ReadEvolution";
 import BooksByEditor from "../components/StatsComponents/BooksByEditor";
-
+import EvolutionFrame from "../components/StatsComponents/EvolutionFrame";
 import { TbPigMoney } from "react-icons/tb";
+import { BsFillCartPlusFill, BsFillEyeFill, BsBookmarks } from "react-icons/bs";
+import { GiReceiveMoney, GiWeight } from "react-icons/gi";
+import { MdSpeakerNotes } from "react-icons/md";
+import { ImBooks } from "react-icons/im";
 
-import CustomCard from "../components/StatsComponents/CustomCard";
 import "./Stats.css";
 
 const Stats = () => {
@@ -221,6 +224,55 @@ const Stats = () => {
     }
   }
 
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const collectionStatsData = [
+    {
+      title: "Informations de lecture",
+      component1: (
+        <ReadReviewedProportion
+          categoryPercentages={readNotReadPercentages}
+          criticalPercentages={reviewedNotReviewedPercentages}
+        />
+      ),
+      component1Name: "Proportion de livres lus et critiqués",
+      component2: <ReadEvolution data={readBooksByMonthArray} />,
+      component2Name: "Evolution du nombre de livres lus",
+    },
+    {
+      title: "Informations d'achat",
+      component1: <AmountEvolution data={areaChartArray} />,
+      component1Name: "Evolution du montant des achats",
+      component2: (
+        <BoughtBooksByMonthComparison data={boughtBooksByMonthArray} />
+      ),
+      component2Name: "Comparaison des achats mensuels",
+    },
+    {
+      title: "Informations par éditeur",
+      component1: <BooksByEditor data={booksByEditeur} />,
+      component1Name: "Livres par éditeur",
+      component2: null,
+      component2Name: null,
+    },
+  ];
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentIndex((currentIndex + 1) % collectionStatsData.length);
+    }, 60000);
+    return () => clearInterval(intervalId);
+  }, [currentIndex]);
+
+  const handleTabClick = (index) => {
+    setSelectedIndex(index);
+    setCurrentIndex(index);
+  };
+
+  const { title, component1, component2, component1Name, component2Name } =
+    collectionStatsData[currentIndex];
+
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />{" "}
@@ -231,63 +283,133 @@ const Stats = () => {
       )}
       {!isLoading && loadedCollection && (
         <div className='collection'>
-          <CustomCard
-            title='Total sales'
-            value={1500.5}
-            sign='€'
-            icon={<TbPigMoney />}
-          />
-          <h2>Informations générales</h2>
           <div className='collection-stats'>
             <div className='collection-stats__frame'>
-              <h3>Nombre de livres possédés</h3>
-              <p>{calculateStats().totalPossede}</p>
+              <EvolutionFrame
+                title={"Nb. de livres possédés"}
+                value={calculateStats().totalPossede}
+                positive
+                difference={(
+                  (boughtBooksByMonthArray[11].valeur /
+                    calculateStats().totalPossede) *
+                  100
+                ).toFixed(2)}
+                icon={<ImBooks />}
+              />
             </div>
+
             <div className='collection-stats__frame'>
-              <h3>Nombre de livres lus</h3>
-              <p>{calculateStats().totalLu}</p>
+              <EvolutionFrame
+                title={"Prix des livres possédés"}
+                value={calculateStats().totalPrixPossede.toFixed(2) + " €"}
+                positive
+                difference={(
+                  (areaChartArray[areaChartArray.length - 1].total /
+                    calculateStats().totalPrixPossede) *
+                  100
+                ).toFixed(2)}
+                icon={<GiReceiveMoney />}
+              />
             </div>
+
             <div className='collection-stats__frame'>
-              <h3>Wishlist</h3>
-              <p>{calculateStats().totalSouhaite}</p>
+              <EvolutionFrame
+                title={"Nb. de livres souhaités"}
+                value={calculateStats().totalSouhaite}
+                icon={<BsFillCartPlusFill />}
+              />
             </div>
+
             <div className='collection-stats__frame'>
-              <h3>Critiques</h3>
-              <p>{calculateStats().totalCritique}</p>
+              <EvolutionFrame
+                title={"Prix des livres souhaités"}
+                value={calculateStats().totalPrixSouhaite.toFixed(2) + " €"}
+                icon={<TbPigMoney />}
+              />
             </div>
+
             <div className='collection-stats__frame'>
-              <h3>valeur (collection)</h3>
-              <p>{calculateStats().totalPrixPossede}€</p>
+              <EvolutionFrame
+                title={"Nb. de livres lus"}
+                value={calculateStats().totalLu}
+                positive={
+                  (readBooksByMonthArray[readBooksByMonthArray.length - 1]
+                    .livres /
+                    readBooksByMonthArray[readBooksByMonthArray.length - 2]
+                      .livres -
+                    1) *
+                    100 >
+                  0
+                }
+                difference={(
+                  (readBooksByMonthArray[readBooksByMonthArray.length - 1]
+                    .livres /
+                    readBooksByMonthArray[readBooksByMonthArray.length - 2]
+                      .livres -
+                    1) *
+                  100
+                ).toFixed(2)}
+                icon={<BsFillEyeFill />}
+              />
             </div>
+
             <div className='collection-stats__frame'>
-              <h3>Prix (wishlist)</h3>
-              <p>{calculateStats().totalPrixSouhaite}€</p>
+              <EvolutionFrame
+                title={"Nb. de livres critiqués"}
+                value={calculateStats().totalCritique}
+                percentage={(
+                  (calculateStats().totalCritique /
+                    calculateStats().totalPossede) *
+                  100
+                ).toFixed(2)}
+                icon={<MdSpeakerNotes />}
+              />
             </div>
+
             <div className='collection-stats__frame'>
-              <h3>Nombre de pages</h3>
-              <p>{calculateStats().totalPages}</p>
+              <EvolutionFrame
+                title={"Nb. de pages cumulées"}
+                value={calculateStats().totalPagesPossede}
+                icon={<BsBookmarks />}
+              />
             </div>
+
             <div className='collection-stats__frame'>
-              <h3>Poids total</h3>
-              <p>{calculateStats().totalPoids}g</p>
+              <EvolutionFrame
+                title={"Poids total des livres"}
+                value={
+                  (calculateStats().totalPoidsPossede / 1000).toFixed(2) + " kg"
+                }
+                icon={<GiWeight />}
+              />
             </div>
           </div>
-          <div className='collection-stats__read'>
-            <h2>Informations de lecture</h2>
-            <ReadReviewedProportion
-              categoryPercentages={readNotReadPercentages}
-              criticalPercentages={reviewedNotReviewedPercentages}
-            />
-            <ReadEvolution data={readBooksByMonthArray} />
-          </div>
-          <div className='collection-stats__buy'>
-            <h2>Informations d'achat</h2>
-            <AmountEvolution data={areaChartArray} />
-            <BoughtBooksByMonthComparison data={boughtBooksByMonthArray} />
-          </div>
-          <div className='collection-stats__editeur'>
-            <h2>Informations par éditeur</h2>
-            <BooksByEditor data={booksByEditeur} />
+
+          <div className='collection-stats_container'>
+            <div className='collection-stats__stepper'>
+              {collectionStatsData.map((_, index) => (
+                <div
+                  key={index}
+                  className={`collection-stats__step ${
+                    index === selectedIndex ? "selected" : ""
+                  }`}
+                  onClick={() => handleTabClick(index)}
+                />
+              ))}
+            </div>
+            <div className='collection-stats__title'>
+              <h2>{title}</h2>
+            </div>
+            <div className='collection-stats__components'>
+              <h2>{component1Name}</h2>
+              {component1}
+              {component2 && (
+                <>
+                  <h2>{component2Name}</h2>
+                  {component2}
+                </>
+              )}
+            </div>
           </div>
         </div>
       )}

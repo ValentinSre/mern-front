@@ -11,14 +11,14 @@ import {
 
 const BoughtBooksByMonthComparison = ({ data }) => {
   return (
-    <BarChart width={600} height={300} data={data}>
+    <BarChart width={380} height={300} data={data}>
       <CartesianGrid strokeDasharray='3 3' />
       <XAxis dataKey='date' />
       <YAxis />
       <Tooltip />
       <Legend />
-      <Bar dataKey='valeur' fill='#8884d8' />
-      <Bar dataKey='precVal' fill='#82ca9d' />
+      <Bar dataKey='precVal' fill='#d0b54b' />
+      <Bar dataKey='valeur' fill='#ffde59' />
     </BarChart>
   );
 };

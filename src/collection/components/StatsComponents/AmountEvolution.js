@@ -11,13 +11,12 @@ import {
 
 const AmountEvolution = ({ data }) => {
   return (
-    <AreaChart width={600} height={400} data={data}>
+    <AreaChart width={390} height={300} data={data}>
       <CartesianGrid strokeDasharray='3 3' />
       <XAxis dataKey='date' />
       <YAxis />
       <Tooltip />
-      <Legend />
-      <Area type='monotone' dataKey='total' stroke='#8884d8' fill='#8884d8' />
+      <Area type='monotone' dataKey='total' stroke='#ffde59' fill='#ffde59' />
     </AreaChart>
   );
 };

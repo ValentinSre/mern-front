@@ -13,7 +13,7 @@ import {
 
 const ReadEvolution = ({ data }) => {
   return (
-    <ComposedChart width={600} height={400} data={data}>
+    <ComposedChart width={400} height={400} data={data}>
       <CartesianGrid strokeDasharray='3 3' />
       <XAxis dataKey='date' />
       <YAxis yAxisId='left' />
@@ -25,15 +25,15 @@ const ReadEvolution = ({ data }) => {
         yAxisId='left'
         type='monotone'
         dataKey='pages'
-        fill='#8884d8'
-        stroke='#8884d8'
+        fill='#ffde59'
+        stroke='#ffde59'
       />
-      <Bar dataKey='livres' yAxisId='right' barSize={20} fill='#413ea0' />
+      <Bar dataKey='livres' yAxisId='right' barSize={20} fill='#a38e3d' />
       <Line
         yAxisId='right'
         type='monotone'
         dataKey='critique'
-        stroke='#ff7300'
+        stroke='#fffc76'
       />
     </ComposedChart>
   );
