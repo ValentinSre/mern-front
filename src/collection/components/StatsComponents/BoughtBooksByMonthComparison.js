@@ -17,8 +17,8 @@ const BoughtBooksByMonthComparison = ({ data }) => {
       <YAxis />
       <Tooltip />
       <Legend />
-      <Bar dataKey='precVal' fill='#d0b54b' />
-      <Bar dataKey='valeur' fill='#ffde59' />
+      <Bar dataKey='precVal' fill='#0cc0df' />
+      <Bar dataKey='valeur' fill='#0097b2' />
     </BarChart>
   );
 };

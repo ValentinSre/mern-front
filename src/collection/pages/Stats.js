@@ -354,11 +354,14 @@ const Stats = () => {
                 title={"Prix des livres possédés"}
                 value={calculateStats().totalPrixPossede.toFixed(2) + " €"}
                 positive
-                difference={(
-                  (areaChartArray[areaChartArray.length - 1].total /
-                    calculateStats().totalPrixPossede) *
-                  100
-                ).toFixed(2)}
+                difference={
+                  areaChartArray.length &&
+                  (
+                    (areaChartArray[areaChartArray.length - 1].total /
+                      calculateStats().totalPrixPossede) *
+                    100
+                  ).toFixed(2)
+                }
                 icon={<GiReceiveMoney />}
                 comparisonPhrase={"depuis le mois dernier"}
               />

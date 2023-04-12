@@ -16,7 +16,7 @@ const AmountEvolution = ({ data }) => {
       <XAxis dataKey='date' />
       <YAxis />
       <Tooltip />
-      <Area type='monotone' dataKey='total' stroke='#ffde59' fill='#ffde59' />
+      <Area type='monotone' dataKey='total' stroke='#0097b2' fill='#0097b2' />
     </AreaChart>
   );
 };

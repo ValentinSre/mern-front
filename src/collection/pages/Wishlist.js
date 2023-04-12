@@ -180,6 +180,7 @@ const Wishlist = () => {
                 value={value}
                 onChange={handleChange}
                 aria-label='basic tabs example'
+                indicatorColor='primary'
               >
                 <Tab label='Livres déjà disponibles' {...a11yProps(0)} />
                 <Tab label='Livres à venir' {...a11yProps(1)} />

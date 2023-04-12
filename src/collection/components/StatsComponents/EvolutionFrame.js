@@ -63,7 +63,7 @@ const EvolutionFrame = (props) => {
               height: 56,
               width: 56,
             }}
-            style={{ backgroundColor: "#ffde59" }}
+            style={{ backgroundColor: "#0097b2" }}
           >
             <SvgIcon>{icon}</SvgIcon>
           </Avatar>

@@ -2,6 +2,7 @@
     border-radius: 10px;
     background-color: #fff;
     overflow: auto;
+    margin-bottom: 20px;
   }
   
   @media (max-width: 767px) {
@@ -14,14 +15,14 @@
   @media (min-width: 768px) {
     /* appliquez les styles ci-dessous uniquement si la largeur de l'écran est supérieure ou égale à 768px (taille de l'écran de bureau) */
     .book-calendar {
-      width: 600px;
+      width: 800px;
     }
   }
   
   .book-calendar-header {
     border-top-right-radius: 10px;
     border-top-left-radius: 10px;
-    background-color: #d52d2d;
+    background-color: #0cc0df;
     color: white;
     font-size: 15px;
     font-weight: bold;

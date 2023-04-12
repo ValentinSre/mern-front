@@ -15,7 +15,7 @@ const ReadReviewedProportion = ({
     percentage: criticalPercentages[category],
   }));
 
-  const COLORS = ["#ffde59", "#a38e3d"];
+  const COLORS = ["#0097b2", "#0cc0df"];
 
   // find the percentage of the "Lus" category in data1
   const nonLusPercentage = categoryPercentages["Non lus"];
@@ -56,7 +56,7 @@ const ReadReviewedProportion = ({
   };
 
   return (
-    <PieChart width={250} height={300}>
+    <PieChart width={380} height={300}>
       <Tooltip />
       <Pie
         data={data1}

@@ -18,7 +18,7 @@ const BooksByEditor = ({ data }) => {
       <XAxis type='number' />
       <YAxis dataKey='editeur' type='category' />
       <Tooltip />
-      <Bar dataKey='total' stackId='a' fill='#ffde59' />
+      <Bar dataKey='total' stackId='a' fill='#0097b2' />
       {/* <Bar dataKey='lu' stackId='a' fill='#82ca9d' /> */}
     </BarChart>
   );

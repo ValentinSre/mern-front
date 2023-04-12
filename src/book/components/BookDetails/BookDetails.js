@@ -331,7 +331,7 @@ const BookDetails = ({ book: initialBook }) => {
                 }
                 size='large'
                 style={{
-                  backgroundColor: "#ffde59",
+                  backgroundColor: "#0097b2",
                   color: "black",
                   height: "48px",
                   borderRadius: "24px",
