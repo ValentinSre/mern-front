@@ -5,7 +5,7 @@ import MainHeader from "./MainHeader";
 import NavLinks from "./NavLinks";
 import SideDrawer from "./SideDrawer";
 import Backdrop from "../UIElements/Backdrop";
-import logo from "../../images/logo.png";
+import logo from "../../images/blue-logo.png";
 
 import "./MainNavigation.css";
 
