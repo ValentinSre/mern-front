@@ -333,22 +333,29 @@ const Stats = () => {
                 title={"Nb. de livres lus"}
                 value={calculateStats().totalLu}
                 positive={
-                  (readBooksByMonthArray[readBooksByMonthArray.length - 1]
-                    .livres /
-                    readBooksByMonthArray[readBooksByMonthArray.length - 2]
-                      .livres -
-                    1) *
-                    100 >
-                  0
+                  readBooksByMonthArray.length < 2
+                    ? (readBooksByMonthArray[readBooksByMonthArray.length - 1]
+                        .livres /
+                        readBooksByMonthArray[readBooksByMonthArray.length - 2]
+                          .livres -
+                        1) *
+                        100 >
+                      0
+                    : true
                 }
-                difference={(
-                  (readBooksByMonthArray[readBooksByMonthArray.length - 1]
-                    .livres /
-                    readBooksByMonthArray[readBooksByMonthArray.length - 2]
-                      .livres -
-                    1) *
-                  100
-                ).toFixed(2)}
+                difference={
+                  readBooksByMonthArray.length < 2
+                    ? (
+                        (readBooksByMonthArray[readBooksByMonthArray.length - 1]
+                          .livres /
+                          readBooksByMonthArray[
+                            readBooksByMonthArray.length - 2
+                          ].livres -
+                          1) *
+                        100
+                      ).toFixed(2)
+                    : 0
+                }
                 icon={<BsFillEyeFill />}
               />
             </div>
