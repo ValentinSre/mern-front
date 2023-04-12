@@ -20,6 +20,7 @@ const EvolutionFrame = (props) => {
     title,
     percentage,
     icon,
+    comparisonPhrase,
   } = props;
 
   const cardStyle = {
@@ -28,6 +29,8 @@ const EvolutionFrame = (props) => {
     height: "150px",
     width: 300,
   };
+
+  const color = positive ? { color: "#06b87f" } : { color: "#cb1515" };
 
   return (
     <Card sx={{ height: "100%" }} style={cardStyle}>
@@ -60,6 +63,7 @@ const EvolutionFrame = (props) => {
               height: 56,
               width: 56,
             }}
+            style={{ backgroundColor: "#ffde59" }}
           >
             <SvgIcon>{icon}</SvgIcon>
           </Avatar>
@@ -82,21 +86,20 @@ const EvolutionFrame = (props) => {
                 justifyContent: "flex-start",
               }}
             >
-              <SvgIcon color={positive ? "success" : "error"} fontSize='small'>
+              <SvgIcon style={color} fontSize='small'>
                 {positive ? <ArrowUpIcon /> : <ArrowDownIcon />}
               </SvgIcon>
 
               <Typography
-                color={positive ? "success.main" : "error.main"}
+                style={{ ...color, marginLeft: 5, fontSize: 15 }}
                 variant='body2'
-                style={{ marginLeft: 4 }}
               >
                 {difference}%
               </Typography>
             </div>
 
             <Typography color='text.secondary' variant='caption'>
-              en 1 mois
+              {comparisonPhrase}
             </Typography>
           </div>
         )}

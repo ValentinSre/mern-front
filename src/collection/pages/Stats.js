@@ -179,7 +179,23 @@ const Stats = () => {
         prevVal: previousNumberOfBooks,
       });
     }
-    boughtBooksByMonthArray.reverse();
+    boughtBooksByMonthArray.sort((a, b) => {
+      const aDate = a.date.split("/");
+      const bDate = b.date.split("/");
+      if (aDate[1] < bDate[1]) {
+        return -1;
+      } else if (aDate[1] > bDate[1]) {
+        return 1;
+      } else {
+        if (aDate[0] < bDate[0]) {
+          return -1;
+        } else if (aDate[0] > bDate[0]) {
+          return 1;
+        } else {
+          return 0;
+        }
+      }
+    });
 
     // Calculate the price of books bought each month since the beginning (AmountEvolution)
     let total = 0;
@@ -189,7 +205,23 @@ const Stats = () => {
       });
       areaChartArray.push({ date: monthYear, total: total });
     }
-    areaChartArray.reverse();
+    areaChartArray.sort((a, b) => {
+      const aDate = a.date.split("/");
+      const bDate = b.date.split("/");
+      if (aDate[1] < bDate[1]) {
+        return -1;
+      } else if (aDate[1] > bDate[1]) {
+        return 1;
+      } else {
+        if (aDate[0] < bDate[0]) {
+          return -1;
+        } else if (aDate[0] > bDate[0]) {
+          return 1;
+        } else {
+          return 0;
+        }
+      }
+    });
 
     // Calculate the number of books read and the number of pages read each month separately (ReadBooksByMonthComparison)
     for (const monthYear in readBooksByMonth) {
@@ -210,7 +242,25 @@ const Stats = () => {
         critique: numberOfReviews,
       });
     }
-    readBooksByMonthArray.reverse();
+
+    // reorder the array by date (oldest first) : the date is in the form 'MM/YYYY' in an object
+    readBooksByMonthArray.sort((a, b) => {
+      const aDate = a.date.split("/");
+      const bDate = b.date.split("/");
+      if (aDate[1] < bDate[1]) {
+        return -1;
+      } else if (aDate[1] > bDate[1]) {
+        return 1;
+      } else {
+        if (aDate[0] < bDate[0]) {
+          return -1;
+        } else if (aDate[0] > bDate[0]) {
+          return 1;
+        } else {
+          return 0;
+        }
+      }
+    });
 
     // Calculate the number of books of each editor and the number of books read of each editor
     const totalBooksByEditeur = calculateStats().totalBooksByEditeur;
@@ -295,6 +345,7 @@ const Stats = () => {
                   100
                 ).toFixed(2)}
                 icon={<ImBooks />}
+                comparisonPhrase={"depuis le mois dernier"}
               />
             </div>
 
@@ -309,6 +360,7 @@ const Stats = () => {
                   100
                 ).toFixed(2)}
                 icon={<GiReceiveMoney />}
+                comparisonPhrase={"depuis le mois dernier"}
               />
             </div>
 
@@ -333,7 +385,7 @@ const Stats = () => {
                 title={"Nb. de livres lus"}
                 value={calculateStats().totalLu}
                 positive={
-                  readBooksByMonthArray.length < 2
+                  readBooksByMonthArray.length > 2
                     ? (readBooksByMonthArray[readBooksByMonthArray.length - 1]
                         .livres /
                         readBooksByMonthArray[readBooksByMonthArray.length - 2]
@@ -344,7 +396,7 @@ const Stats = () => {
                     : true
                 }
                 difference={
-                  readBooksByMonthArray.length < 2
+                  readBooksByMonthArray.length > 2
                     ? (
                         (readBooksByMonthArray[readBooksByMonthArray.length - 1]
                           .livres /
@@ -354,8 +406,9 @@ const Stats = () => {
                           1) *
                         100
                       ).toFixed(2)
-                    : 0
+                    : null
                 }
+                comparisonPhrase={"par rapport au mois dernier"}
                 icon={<BsFillEyeFill />}
               />
             </div>

@@ -22,9 +22,7 @@ import Wishlist from "./collection/pages/Wishlist";
 
 const Users = React.lazy(() => import("./user/pages/Users"));
 const Collection = React.lazy(() => import("./collection/pages/Collection"));
-const NewPlace = React.lazy(() => import("./places/pages/NewPlace"));
 const NewBook = React.lazy(() => import("./book/pages/NewBook"));
-const UpdatePlace = React.lazy(() => import("./places/pages/UpdatePlace"));
 const Auth = React.lazy(() => import("./user/pages/Auth"));
 const Book = React.lazy(() => import("./book/pages/Book"));
 
