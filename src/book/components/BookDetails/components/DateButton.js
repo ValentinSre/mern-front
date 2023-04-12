@@ -15,8 +15,8 @@ import { IoMdArrowDropdown } from "react-icons/io";
 import CustomButtons from "../../../../shared/components/UIElements/CustomButtons";
 
 const ColoredButton = styled(Button)(({ theme }) => ({
-  color: theme.palette.getContrastText("#0097b2"),
-  backgroundColor: "#0097b2",
+  color: theme.palette.getContrastText("#ffde59"),
+  backgroundColor: "#ffde59",
   "&:hover": {
     backgroundColor: "##ad9326",
   },

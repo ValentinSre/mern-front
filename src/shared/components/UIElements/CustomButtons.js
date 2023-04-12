@@ -29,8 +29,8 @@ const CustomButtons = ({ buttonType, onClick, title, disabled }) => {
 };
 
 const PossessionButtonStyle = styled(Button)(({ theme }) => ({
-  color: theme.palette.getContrastText("#0097b2"),
-  backgroundColor: "#0097b2",
+  color: theme.palette.getContrastText("#ffde59"),
+  backgroundColor: "#ffde59",
   "&:hover": {
     backgroundColor: "##ad9326",
   },
@@ -40,13 +40,13 @@ const WishlistButtonStyle = styled(Button)(({ theme }) => ({
   color: theme.palette.getContrastText("#ad9326"),
   backgroundColor: "#ad9326",
   "&:hover": {
-    backgroundColor: "##0097b2",
+    backgroundColor: "##ffde59",
   },
 }));
 
 const ReadButtonStyle = styled(Button)(({ theme }) => ({
-  color: theme.palette.getContrastText("#0097b2"),
-  backgroundColor: "#0097b2",
+  color: theme.palette.getContrastText("#ffde59"),
+  backgroundColor: "#ffde59",
   "&:hover": {
     backgroundColor: "##ad9326",
   },

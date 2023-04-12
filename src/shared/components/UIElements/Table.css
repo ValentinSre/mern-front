@@ -15,7 +15,7 @@
     padding-top: 12px;
     padding-bottom: 12px;
     text-align: center;
-    background-color: #0097b2;
+    background-color: #ffde59;
     color: white;
   }
   
@@ -24,7 +24,7 @@
   }
   .gen-table tr:nth-child(even){background-color: #f2f2f2;}
   
-.gen-table tr:hover {background-color: #0097b273;}
+.gen-table tr:hover {background-color: #ffde5973;}
 
 .button-group {
   display: inline-block;

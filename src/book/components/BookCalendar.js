@@ -64,7 +64,7 @@ function BookCalendar({ books }) {
         value={selectedMonth}
         onChange={(event, newValue) => setSelectedMonth(newValue)}
         centered
-        indicatorColor='primary'
+        indicatorColor='amber'
       >
         {releaseMonths.map((month) => (
           <Tab key={month} label={months[month]} value={month} />

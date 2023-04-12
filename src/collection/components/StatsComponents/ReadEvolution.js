@@ -25,15 +25,15 @@ const ReadEvolution = ({ data }) => {
         yAxisId='left'
         type='monotone'
         dataKey='pages'
-        fill='#0cc0df'
-        stroke='#0cc0df'
+        fill='#ffde59'
+        stroke='#ffde59'
       />
-      <Bar dataKey='livres' yAxisId='right' barSize={20} fill='#0097b2' />
+      <Bar dataKey='livres' yAxisId='right' barSize={20} fill='#d0b32c' />
       <Line
         yAxisId='right'
         type='monotone'
         dataKey='critique'
-        stroke='#1976d2'
+        stroke='#786830'
       />
     </ComposedChart>
   );

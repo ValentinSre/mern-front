@@ -13,18 +13,18 @@ import BookCalendar from "../../book/components/BookCalendar";
 import "./Wishlist.css";
 
 const months = {
-  1: "JANVIER",
-  2: "FÉVRIER",
-  3: "MARS",
-  4: "AVRIL",
-  5: "MAI",
-  6: "JUIN",
-  7: "JUILLET",
-  8: "AOÛT",
-  9: "SEPTEMBRE",
-  10: "OCTOBRE",
-  11: "NOVEMBRE",
-  12: "DÉCEMBRE",
+  1: "janvier",
+  2: "février",
+  3: "mars",
+  4: "avril",
+  5: "mai",
+  6: "juin",
+  7: "juillet",
+  8: "août",
+  9: "septembre",
+  10: "octobre",
+  11: "novembre",
+  12: "décembre",
 };
 
 function TabPanel(props) {

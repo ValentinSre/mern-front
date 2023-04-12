@@ -15,7 +15,7 @@ const ReadReviewedProportion = ({
     percentage: criticalPercentages[category],
   }));
 
-  const COLORS = ["#0097b2", "#0cc0df"];
+  const COLORS = ["#ffde59", "#d0b32c"];
 
   // find the percentage of the "Lus" category in data1
   const nonLusPercentage = categoryPercentages["Non lus"];

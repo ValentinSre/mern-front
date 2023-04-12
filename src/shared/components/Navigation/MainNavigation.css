@@ -46,7 +46,7 @@
 
 .logo {
   max-width: 100%;
-  margin-top: 5px;
+  margin-top: 10px;
   height: auto;
-  max-height: 70px; /* Taille maximale de l'image */
+  max-height: 50px; /* Taille maximale de l'image */
 }
