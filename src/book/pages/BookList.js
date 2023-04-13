@@ -28,7 +28,7 @@ const BookList = () => {
     fetchBooks();
   }, [sendRequest, auth.userId]);
 
-  const handleAddToList = async (bookIds, listName) => {
+  const handleAddToList = async (bookIds, listName, dateObtention) => {
     try {
       const responseData = await sendRequest(
         process.env.REACT_APP_API_URL + "/collection/add",
@@ -37,6 +37,8 @@ const BookList = () => {
           ids_book: bookIds,
           id_user: auth.userId,
           list_name: listName,
+          // add date_achat only if dateObtention is defined
+          ...(dateObtention && { date_achat: dateObtention }),
         }),
         {
           "Content-Type": "application/json",
@@ -56,8 +58,8 @@ const BookList = () => {
     }
   };
 
-  const handleAddToCollection = (bookIds) => {
-    handleAddToList(bookIds, "collection");
+  const handleAddToCollection = (bookIds, dateObtention) => {
+    handleAddToList(bookIds, "collection", dateObtention);
   };
 
   const handleAddToWishlist = (bookIds) => {
@@ -187,6 +189,7 @@ const BookList = () => {
             filterValue={filterValue}
             searchText={searchText}
             handleSearch={handleSearch}
+            handleAdditionToCollection={handleAddToCollection}
           />
         </div>
       )}

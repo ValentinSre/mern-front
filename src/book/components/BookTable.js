@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import PropTypes, { checkPropTypes } from "prop-types";
 import { alpha } from "@material-ui/core/styles";
@@ -23,6 +23,8 @@ import Switch from "@material-ui/core/Switch";
 import PreviewIcon from "@material-ui/icons/Visibility";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import TextField from "@material-ui/core/TextField";
+import DateButton from "./BookDetails/components/DateButton";
+import DateModal from "./BookDetails/components/DateModal";
 
 import CustomButtons from "../../shared/components/UIElements/CustomButtons";
 import IconOnlyButton from "../../shared/components/UIElements/IconOnlyButton";
@@ -160,12 +162,19 @@ function BookTableToolbar(props) {
     handleResetPage,
     searchText,
     handleSearch,
+    handleAdditionToCollection,
   } = props;
 
   const [openFilter, setOpenFilter] = React.useState(false);
+  const [openCollectionModal, setOpenCollectionModal] = useState(false);
+  const [dateObtention, setDateObtention] = useState(null);
 
   const handleOpenFilter = () => {
     setOpenFilter(!openFilter);
+  };
+
+  const handleOpenOwnedModal = () => {
+    setOpenCollectionModal(true);
   };
 
   return (
@@ -201,6 +210,18 @@ function BookTableToolbar(props) {
           {title}
         </Typography>
       )}
+
+      <DateModal
+        open={openCollectionModal}
+        handleClose={() => setOpenCollectionModal(false)}
+        date={dateObtention}
+        label="Date d'achat"
+        title='Quand avez-vous acheté ce(s) livre(s) ?'
+        handleChange={(e) => setDateObtention(e.target.value)}
+        handleSubmit={() =>
+          handleAdditionToCollection(selectedRows, dateObtention)
+        }
+      />
 
       <IconButton onClick={handleOpenFilter}>
         <FilterListIcon />
@@ -282,13 +303,28 @@ function BookTableToolbar(props) {
               borderRadius: "5px",
             }}
           >
-            {actions.map((action) => (
-              <CustomButtons
-                buttonType={action.type}
-                title={action.title}
-                onClick={() => action.handleAction(selectedRows)}
-              />
-            ))}
+            {actions.map((action) =>
+              action.type === "wishlist" ? (
+                <CustomButtons
+                  buttonType={action.type}
+                  title={action.title}
+                  onClick={() => action.handleAction(selectedRows)}
+                />
+              ) : (
+                <DateButton
+                  options={[
+                    {
+                      name: "Je possède",
+                      action: () => action.handleAction(selectedRows),
+                    },
+                    {
+                      name: "Je possède (daté)",
+                      action: handleOpenOwnedModal,
+                    },
+                  ]}
+                />
+              )
+            )}
           </div>
         ) : null}
       </div>
@@ -311,6 +347,7 @@ export default function BookTable({
   filterValue,
   handleSearch,
   searchText,
+  handleAdditionToCollection,
 }) {
   const [order, setOrder] = React.useState(DEFAULT_ORDER);
   const [orderBy, setOrderBy] = React.useState(DEFAULT_ORDER_BY);
@@ -462,6 +499,7 @@ export default function BookTable({
           handleResetPage={() => setPage(0)}
           handleSearch={handleSearch}
           searchText={searchText}
+          handleAdditionToCollection={handleAdditionToCollection}
         />
         <TableContainer>
           <Table

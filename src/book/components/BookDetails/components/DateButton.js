@@ -45,7 +45,7 @@ export default function DateButton({ options }) {
   };
 
   return (
-    <React.Fragment>
+    <div style={{ paddingRight: "10px" }}>
       <ButtonGroup
         variant='contained'
         ref={anchorRef}
@@ -103,6 +103,6 @@ export default function DateButton({ options }) {
           </Grow>
         )}
       </Popper>
-    </React.Fragment>
+    </div>
   );
 }
