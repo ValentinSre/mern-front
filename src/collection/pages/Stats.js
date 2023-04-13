@@ -180,21 +180,14 @@ const Stats = () => {
       });
     }
     boughtBooksByMonthArray.sort((a, b) => {
-      const aDate = a.date.split("/");
-      const bDate = b.date.split("/");
-      if (aDate[1] < bDate[1]) {
-        return -1;
-      } else if (aDate[1] > bDate[1]) {
-        return 1;
-      } else {
-        if (aDate[0] < bDate[0]) {
-          return -1;
-        } else if (aDate[0] > bDate[0]) {
-          return 1;
-        } else {
-          return 0;
-        }
+      const [moisA, anneeA] = a.date.split("/");
+      const [moisB, anneeB] = b.date.split("/");
+
+      if (Number(anneeA) !== Number(anneeB)) {
+        return Number(anneeA) - Number(anneeB);
       }
+
+      return Number(moisA) - Number(moisB);
     });
 
     // Calculate the price of books bought each month since the beginning (AmountEvolution)
@@ -206,21 +199,14 @@ const Stats = () => {
       areaChartArray.push({ date: monthYear, total: total });
     }
     areaChartArray.sort((a, b) => {
-      const aDate = a.date.split("/");
-      const bDate = b.date.split("/");
-      if (aDate[1] < bDate[1]) {
-        return -1;
-      } else if (aDate[1] > bDate[1]) {
-        return 1;
-      } else {
-        if (aDate[0] < bDate[0]) {
-          return -1;
-        } else if (aDate[0] > bDate[0]) {
-          return 1;
-        } else {
-          return 0;
-        }
+      const [moisA, anneeA] = a.date.split("/");
+      const [moisB, anneeB] = b.date.split("/");
+
+      if (Number(anneeA) !== Number(anneeB)) {
+        return Number(anneeA) - Number(anneeB);
       }
+
+      return Number(moisA) - Number(moisB);
     });
 
     // Calculate the number of books read and the number of pages read each month separately (ReadBooksByMonthComparison)
@@ -245,21 +231,14 @@ const Stats = () => {
 
     // reorder the array by date (oldest first) : the date is in the form 'MM/YYYY' in an object
     readBooksByMonthArray.sort((a, b) => {
-      const aDate = a.date.split("/");
-      const bDate = b.date.split("/");
-      if (aDate[1] < bDate[1]) {
-        return -1;
-      } else if (aDate[1] > bDate[1]) {
-        return 1;
-      } else {
-        if (aDate[0] < bDate[0]) {
-          return -1;
-        } else if (aDate[0] > bDate[0]) {
-          return 1;
-        } else {
-          return 0;
-        }
+      const [moisA, anneeA] = a.date.split("/");
+      const [moisB, anneeB] = b.date.split("/");
+
+      if (Number(anneeA) !== Number(anneeB)) {
+        return Number(anneeA) - Number(anneeB);
       }
+
+      return Number(moisA) - Number(moisB);
     });
 
     // Calculate the number of books of each editor and the number of books read of each editor
