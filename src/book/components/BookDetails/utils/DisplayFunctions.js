@@ -136,9 +136,7 @@ const displayTitle = (serie, version, tome, titre) => {
         <h2>
           {serie} {version ? "(v" + version + ")" : null}{" "}
         </h2>
-        <h3>
-          {tome}. {titre}
-        </h3>
+        <h3>{tome ? tome + ". " + titre : titre}</h3>
       </React.Fragment>
     );
   } else {

@@ -88,7 +88,6 @@ const BookDetails = ({ book: initialBook }) => {
   };
 
   const handleAddToList = async (bookIds, listName) => {
-    console.log("there");
     try {
       const requestData = await sendRequest(
         process.env.REACT_APP_API_URL + "/collection/add",
