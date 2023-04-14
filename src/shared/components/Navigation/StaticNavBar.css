@@ -1,0 +1,11 @@
+.static-nav-bar {
+    background-color: #333333;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    position: static;
+    width: 100%;
+    z-index: 1;
+    margin-top: 60px;
+    padding: 0 16px;
+}
