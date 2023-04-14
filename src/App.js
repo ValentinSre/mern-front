@@ -12,11 +12,13 @@ import {
 // import UserPlaces from "./places/pages/UserPlaces";
 // import UpdatePlace from "./places/pages/UpdatePlace";
 import MainNavigation from "./shared/components/Navigation/MainNavigation";
+import NavBar from "./shared/components/Navigation/NavBar";
 import LoadingSpinner from "./shared/components/UIElements/LoadingSpinner";
 import { AuthContext } from "./shared/context/auth-context";
 import { useAuth } from "./shared/hooks/auth-hook";
 import BookList from "./book/pages/BookList";
 import Home from "./Home";
+import MyLibrary from "./MyLibrary";
 import Stats from "./collection/pages/Stats";
 import Wishlist from "./collection/pages/Wishlist";
 
@@ -38,6 +40,18 @@ const App = () => {
         <Route path='/' exact>
           <Home />
         </Route>
+        <Route path='/:id/ma-collection'>
+          <MyLibrary />
+        </Route>
+        <Route path='/:id/ma-wishlist'>
+          <MyLibrary />
+        </Route>
+        <Route path='/:id/mes-sorties'>
+          <MyLibrary />
+        </Route>
+        <Route path='/:id/mes-stats'>
+          <MyLibrary />
+        </Route>
         <Route path='/books' exact>
           <BookList />
         </Route>
@@ -58,13 +72,13 @@ const App = () => {
           <Home />
         </Route>
         <Route path='/:userId/collection' exact>
-          <Collection />
+          <MyLibrary />
         </Route>
         <Route path='/:userId/wishlist' exact>
-          <Wishlist />
+          <MyLibrary />
         </Route>
         <Route path='/:userId/stats' exact>
-          <Stats />
+          <MyLibrary />
         </Route>
         <Route path='/books' exact>
           <BookList />
@@ -87,7 +101,8 @@ const App = () => {
       value={{ isLoggedIn: !!token, token, isAdmin, userId, login, logout }}
     >
       <Router>
-        <MainNavigation />
+        <NavBar />
+
         <main>
           <Suspense
             fallback={
