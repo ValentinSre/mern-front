@@ -191,8 +191,8 @@ const Stats = () => {
     });
 
     // Calculate the price of books bought each month since the beginning (AmountEvolution)
-    let total = 0;
     for (const monthYear in boughtBooksByMonth) {
+      let total = 0;
       boughtBooksByMonth[monthYear].forEach((book) => {
         total += book.prix;
       });
