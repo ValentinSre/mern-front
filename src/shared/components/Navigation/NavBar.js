@@ -152,11 +152,13 @@ const NavBar = () => {
                 </NavLink>
               </MenuItem>
             )}
-            <MenuItem>
-              <div onClick={auth.logout} className='menu-link'>
-                Déconnexion
-              </div>
-            </MenuItem>
+            {auth.isLoggedIn && (
+              <MenuItem>
+                <div onClick={auth.logout} className='menu-link'>
+                  Déconnexion
+                </div>
+              </MenuItem>
+            )}
           </Menu>
         </Toolbar>
       </AppBar>

@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { AppBar, Tabs, Tab } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import { useTheme } from "@material-ui/core/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
-import Collection from "./collection/pages/Collection";
+import Collection from "./collection/pages/DisplayCollection";
 import Wishlist from "./collection/pages/Wishlist";
 // import UpcomingBooks from './UpcomingBooks';
 import Stats from "./collection/pages/Stats";
@@ -23,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     backgroundColor: theme.palette.common.white,
+    width: "100%",
   },
 }));
 
@@ -30,6 +33,9 @@ const MyLibrary = () => {
   const classes = useStyles();
   const location = useLocation();
   const [selectedTab, setSelectedTab] = useState(0);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleTabChange = (event, newValue) => {
     setSelectedTab(newValue);
@@ -64,8 +70,8 @@ const MyLibrary = () => {
           onChange={handleTabChange}
           className={classes.tabs}
           indicatorColor='#fff'
-          centered
-          variant='scrollable'
+          centered={!isMobile}
+          variant={isMobile ? "scrollable" : "standard"}
         >
           <Tab
             component={Link}

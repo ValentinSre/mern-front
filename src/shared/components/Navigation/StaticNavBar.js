@@ -45,14 +45,24 @@ const StaticNavBar = ({ userId }) => {
         ))}
       </div>
       <div style={{ flexGrow: 1 }}></div>
-      <div style={{ marginRight: "20px" }}>
-        <NavLink
-          to={`/${userId}/collection`}
-          style={{ color: "#ffffff", textDecoration: "none" }}
+      {userId ? (
+        <div
+          style={{
+            color: "#ffffff",
+            display: "flex",
+            alignItems: "center",
+            marginRight: "20px",
+            position: "relative",
+          }}
         >
-          <Typography variant='button'>Mes BD</Typography>
-        </NavLink>
-      </div>
+          <NavLink
+            to={`/${userId}/collection`}
+            style={{ color: "#fff", textDecoration: "none" }}
+          >
+            Mes BD
+          </NavLink>
+        </div>
+      ) : null}
     </div>
   );
 };
