@@ -4,13 +4,10 @@ import { useHttpClient } from "../../shared/hooks/http-hook";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import { AuthContext } from "../../shared/context/auth-context";
-import TitleList from "../components/CollectionDisplay/CollectionDisplay";
+import DisplayByBooks from "../components/CollectionDisplay/DisplayByBooks";
 import CollectionFilter from "../components/Filters";
 
-import SerieList from "./SeriesDisplay";
-
-import { ButtonGroup, IconButton } from "@material-ui/core";
-import { FaListUl, FaTh } from "react-icons/fa";
+import DisplayBySeries from "../components/CollectionDisplay/DisplayBySeries";
 
 const DisplayCollection = () => {
   const auth = useContext(AuthContext);
@@ -68,24 +65,37 @@ const DisplayCollection = () => {
   };
 
   const handleSearchBooks = (searchText) => {
-    const collectionFilteredBySearch = originalCollection.filter((book) => {
-      const { titre, auteurs, serie, dessinateurs, editeur, format } = book;
+    const collectionFilteredBySearch = originalCollection.filter((element) => {
       const searchLower = searchText.toLowerCase();
-      return (
-        titre.toLowerCase().includes(searchLower) ||
-        auteurs.some((author) =>
-          author.nom.toLowerCase().includes(searchLower)
-        ) ||
-        (serie && serie.toLowerCase().includes(searchLower)) ||
-        dessinateurs.some((dessinateur) =>
-          dessinateur.nom.toLowerCase().includes(searchLower)
-        ) ||
-        (editeur && editeur.toLowerCase().includes(searchLower)) ||
-        (format && format.toLowerCase().includes(searchLower))
-      );
+
+      if (displayMode === "bySeries") {
+        const { serie } = element;
+
+        return serie && serie.toLowerCase().includes(searchLower);
+      } else {
+        const { titre, serie } = element;
+
+        return (
+          titre.toLowerCase().includes(searchLower) ||
+          (serie && serie.toLowerCase().includes(searchLower))
+        );
+      }
     });
 
     setLoadedCollection(collectionFilteredBySearch);
+  };
+
+  const [checkedValues, setCheckedValues] = React.useState({
+    BD: true,
+    Comics: true,
+    Manga: true,
+  });
+
+  const handleCheckedChange = (event) => {
+    setCheckedValues({
+      ...checkedValues,
+      [event.target.name]: event.target.checked,
+    });
   };
 
   return (
@@ -98,21 +108,9 @@ const DisplayCollection = () => {
       )}
       {!isLoading && loadedCollection && selectedEditeurs && (
         <div className='collection'>
-          <IconButton
-            onClick={() => setDisplayMode("bySeries")}
-            disabled={displayMode === "bySeries"}
-          >
-            <FaListUl />
-          </IconButton>
-          <IconButton
-            onClick={() => setDisplayMode("byBooks")}
-            disabled={displayMode === "byBooks"}
-          >
-            <FaTh />
-          </IconButton>
-
           <CollectionFilter
             collection={loadedCollection}
+            displayMode={displayMode}
             selectedSort={selectedSort}
             selectedGroupment={selectedGroupment}
             editeurs={selectedEditeurs}
@@ -120,13 +118,22 @@ const DisplayCollection = () => {
             handleGroupmentChange={handleGroupmentChange}
             handleEditeursSelection={handleEditeursSelection}
             handleSearchBooks={handleSearchBooks}
+            setDisplayMode={setDisplayMode}
+            setLoadedCollection={setLoadedCollection}
+            checkedValues={checkedValues}
+            handleCheckedChange={handleCheckedChange}
           />
           {displayMode === "bySeries" && (
-            <SerieList loadedCollection={loadedCollection} />
+            <DisplayBySeries
+              collection={loadedCollection}
+              checkedValues={checkedValues}
+              selectedEditeurs={selectedEditeurs}
+            />
           )}
           {displayMode === "byBooks" && (
-            <TitleList
+            <DisplayByBooks
               collection={loadedCollection}
+              checkedValues={checkedValues}
               selectedSort={selectedSort}
               selectedGroupment={selectedGroupment}
               selectedEditeurs={selectedEditeurs}

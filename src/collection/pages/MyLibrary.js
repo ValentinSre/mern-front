@@ -5,10 +5,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useTheme } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
-import Collection from "./collection/pages/DisplayCollection";
-import Wishlist from "./collection/pages/Wishlist";
+import DisplayCollection from "./DisplayCollection";
+import Wishlist from "./Wishlist";
 // import UpcomingBooks from './UpcomingBooks';
-import Stats from "./collection/pages/Stats";
+import Stats from "./Stats";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -63,7 +63,10 @@ const MyLibrary = () => {
   }, [location]);
 
   return (
-    <div>
+    <div style={{ marginTop: "40px" }}>
+      {/* <h1 style={{ padding: "20px", fontFamily: "sans-serif", color: "white" }}>
+        Ma bibliothèque
+      </h1> */}
       <AppBar position='static' className={classes.appBar}>
         <Tabs
           value={selectedTab}
@@ -100,7 +103,7 @@ const MyLibrary = () => {
         </Tabs>
       </AppBar>
       <div className={classes.content}>
-        {selectedTab === 0 && <Collection />}
+        {selectedTab === 0 && <DisplayCollection />}
         {selectedTab === 1 && <Wishlist />}
         {selectedTab === 2 && <p>Mes sorties</p>}
         {selectedTab === 3 && <Stats />}

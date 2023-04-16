@@ -6,24 +6,14 @@ import {
   Switch,
 } from "react-router-dom";
 
-// import Auth from "./user/pages/Auth";
-// import Users from "./user/pages/Users";
-// import NewPlace from "./places/pages/NewPlace";
-// import UserPlaces from "./places/pages/UserPlaces";
-// import UpdatePlace from "./places/pages/UpdatePlace";
-import MainNavigation from "./shared/components/Navigation/MainNavigation";
 import NavBar from "./shared/components/Navigation/NavBar";
 import LoadingSpinner from "./shared/components/UIElements/LoadingSpinner";
 import { AuthContext } from "./shared/context/auth-context";
 import { useAuth } from "./shared/hooks/auth-hook";
 import BookList from "./book/pages/BookList";
 import Home from "./Home";
-import MyLibrary from "./MyLibrary";
-import Stats from "./collection/pages/Stats";
-import Wishlist from "./collection/pages/Wishlist";
+import MyLibrary from "./collection/pages/MyLibrary";
 
-const Users = React.lazy(() => import("./user/pages/Users"));
-const Collection = React.lazy(() => import("./collection/pages/Collection"));
 const NewBook = React.lazy(() => import("./book/pages/NewBook"));
 const Auth = React.lazy(() => import("./user/pages/Auth"));
 const Book = React.lazy(() => import("./book/pages/Book"));

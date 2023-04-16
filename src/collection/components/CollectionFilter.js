@@ -76,12 +76,7 @@ const CollectionFilter = ({
         >
           <MenuItem value={0}>Sans groupement</MenuItem>
           <MenuItem value={1}>Par éditeur</MenuItem>
-          <MenuItem value={2}>Par format</MenuItem>
-          <MenuItem value={3}>Par auteur</MenuItem>
-          <MenuItem value={4}>Par dessinateur</MenuItem>
-          <MenuItem value={5}>Par genre</MenuItem>
-          <MenuItem value={6}>Par année</MenuItem>
-          <MenuItem value={7}>Par type</MenuItem>
+          <MenuItem value={2}>Par type</MenuItem>
         </Select>
       </div>
       <TextField

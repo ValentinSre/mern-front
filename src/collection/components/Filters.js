@@ -5,37 +5,41 @@ import {
   Select,
   Chip,
   TextField,
+  IconButton,
+  FormControlLabel,
+  Checkbox,
+  Paper,
+  InputBase,
 } from "@material-ui/core";
-import { Delete as DeleteIcon, Done as DoneIcon } from "@material-ui/icons";
+import {
+  Delete as DeleteIcon,
+  Done as DoneIcon,
+  Search as SearchIcon,
+} from "@material-ui/icons";
+import { FaListUl, FaTh } from "react-icons/fa";
 
 const CollectionFilter = ({
   selectedSort,
+  collection,
+  displayMode,
   selectedGroupment,
   editeurs,
   handleSortChange,
   handleGroupmentChange,
   handleEditeursSelection,
   handleSearchBooks,
+  setDisplayMode,
+  checkedValues,
+  handleCheckedChange,
+  setLoadedCollection,
 }) => {
-  const DeletableChips = ({ editeurs: editeursAvailability, handleDelete }) => {
-    const editeursName = Object.keys(editeursAvailability);
-    return editeursName.map((name) => (
-      <Chip
-        key={name}
-        label={name}
-        deleteIcon={editeursAvailability[name] ? <DeleteIcon /> : <DoneIcon />}
-        onDelete={() => handleDelete(name)}
-        variant={editeursAvailability[name] ? "default" : "outlined"}
-      />
-    ));
-  };
-
   const [searchText, setSearchText] = React.useState("");
 
   const handleSearch = (event) => {
     setSearchText(event.target.value);
     handleSearchBooks(event.target.value);
   };
+
   return (
     <div
       style={{
@@ -53,25 +57,196 @@ const CollectionFilter = ({
           borderRadius: "5px",
         }}
       >
-        <InputLabel id='label-tri' style={{ paddingBottom: "5px" }}>
-          Tri
-        </InputLabel>
-
-        <Select
-          label='Tri'
-          id='tri-select'
-          value={selectedSort}
-          onChange={handleSortChange}
-          fullWidth
+        <IconButton
+          onClick={() => {
+            setDisplayMode("bySeries");
+            setLoadedCollection(null);
+          }}
+          disabled={displayMode === "bySeries"}
         >
-          <MenuItem value={0}>Par ajout</MenuItem>
-          <MenuItem value={1}>Par titre/série</MenuItem>
-          <MenuItem value={2}>Par prix</MenuItem>
-          <MenuItem value={3}>Par date</MenuItem>
-          <MenuItem value={4}>Par note</MenuItem>
-        </Select>
+          <FaListUl />
+        </IconButton>
+        <IconButton
+          onClick={() => {
+            setDisplayMode("byBooks");
+            setLoadedCollection(null);
+          }}
+          disabled={displayMode === "byBooks"}
+        >
+          <FaTh />
+        </IconButton>
 
-        <div style={{ marginTop: "10px" }}>
+        {displayMode === "bySeries" && (
+          <SeriesFilter
+            collection={collection}
+            checkedValues={checkedValues}
+            handleCheckedChange={handleCheckedChange}
+            handleSearch={handleSearch}
+            editeurs={editeurs}
+            handleDelete={handleEditeursSelection}
+          />
+        )}
+
+        {displayMode === "byBooks" && (
+          <BooksFilter
+            collection={collection}
+            checkedValues={checkedValues}
+            handleCheckedChange={handleCheckedChange}
+            handleSearch={handleSearch}
+            selectedSort={selectedSort}
+            handleSortChange={handleSortChange}
+            selectedGroupment={selectedGroupment}
+            handleGroupmentChange={handleGroupmentChange}
+            editeurs={editeurs}
+            handleDelete={handleEditeursSelection}
+          />
+        )}
+      </div>
+    </div>
+  );
+};
+
+const DeletableChips = ({ editeurs: editeursAvailability, handleDelete }) => {
+  const editeursName = Object.keys(editeursAvailability);
+  return editeursName.map((name) => (
+    <Chip
+      key={name}
+      label={name}
+      deleteIcon={editeursAvailability[name] ? <DeleteIcon /> : <DoneIcon />}
+      onDelete={() => handleDelete(name)}
+      variant={editeursAvailability[name] ? "default" : "outlined"}
+    />
+  ));
+};
+
+const SeriesFilter = ({
+  collection,
+  checkedValues,
+  handleCheckedChange,
+  handleSearch,
+  searchText,
+  editeurs,
+  handleDelete,
+}) => {
+  return (
+    <div>
+      <div>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={checkedValues.BD}
+              onChange={handleCheckedChange}
+              name='BD'
+            />
+          }
+          label='Bande dessinée'
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={checkedValues.Comics}
+              onChange={handleCheckedChange}
+              name='Comics'
+            />
+          }
+          label='Comics'
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={checkedValues.Manga}
+              onChange={handleCheckedChange}
+              name='Manga'
+            />
+          }
+          label='Manga'
+        />
+      </div>
+      <div>
+        <SearchBar
+          searchText={searchText}
+          handleSearch={handleSearch}
+          text='Rechercher une série...'
+        />
+      </div>
+      <div style={{ marginTop: "20px" }}>
+        <DeletableChips editeurs={editeurs} handleDelete={handleDelete} />
+      </div>
+    </div>
+  );
+};
+
+const BooksFilter = ({
+  selectedSort,
+  handleSortChange,
+  selectedGroupment,
+  handleGroupmentChange,
+  checkedValues,
+  handleCheckedChange,
+  handleSearch,
+  searchText,
+  editeurs,
+  handleDelete,
+}) => {
+  return (
+    <div>
+      <div>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={checkedValues.BD}
+              onChange={handleCheckedChange}
+              name='BD'
+            />
+          }
+          label='Bande dessinée'
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={checkedValues.Comics}
+              onChange={handleCheckedChange}
+              name='Comics'
+            />
+          }
+          label='Comics'
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={checkedValues.Manga}
+              onChange={handleCheckedChange}
+              name='Manga'
+            />
+          }
+          label='Manga'
+        />
+      </div>
+      <div
+        style={{
+          marginTop: "10px",
+          display: "flex",
+        }}
+      >
+        <div>
+          <InputLabel id='label-tri' style={{ paddingBottom: "5px" }}>
+            Tri
+          </InputLabel>
+
+          <Select
+            label='Tri'
+            id='tri-select'
+            value={selectedSort}
+            onChange={handleSortChange}
+          >
+            <MenuItem value={0}>Par ajout</MenuItem>
+            <MenuItem value={1}>Par titre/série</MenuItem>
+            <MenuItem value={2}>Par prix</MenuItem>
+            <MenuItem value={3}>Par date</MenuItem>
+            <MenuItem value={4}>Par note</MenuItem>
+          </Select>
+        </div>
+        <div style={{ paddingLeft: "20px" }}>
           <InputLabel id='label-groupement' style={{ paddingBottom: "5px" }}>
             Groupement
           </InputLabel>
@@ -80,34 +255,52 @@ const CollectionFilter = ({
             id='demo-simple-select'
             value={selectedGroupment}
             onChange={handleGroupmentChange}
-            fullWidth
           >
             <MenuItem value={0}>Sans groupement</MenuItem>
             <MenuItem value={1}>Par éditeur</MenuItem>
-            <MenuItem value={2}>Par format</MenuItem>
-            <MenuItem value={3}>Par auteur</MenuItem>
-            <MenuItem value={4}>Par dessinateur</MenuItem>
-            <MenuItem value={5}>Par genre</MenuItem>
-            <MenuItem value={6}>Par année</MenuItem>
-            <MenuItem value={7}>Par type</MenuItem>
+            <MenuItem value={2}>Par type</MenuItem>
           </Select>
         </div>
-        <TextField
-          label='Recherche'
-          variant='outlined'
-          value={searchText}
-          onChange={handleSearch}
-          margin='normal'
-          fullWidth
-          InputLabelProps={{ position: "top" }}
+      </div>
+      <div>
+        <SearchBar
+          searchText={searchText}
+          handleSearch={handleSearch}
+          text='Rechercher un titre...'
         />
-        <DeletableChips
-          editeurs={editeurs}
-          handleDelete={handleEditeursSelection}
-        />
-        {/* <CollectionAutocompletes collection={collection} /> */}
+      </div>
+      <div style={{ marginTop: "20px" }}>
+        <DeletableChips editeurs={editeurs} handleDelete={handleDelete} />
       </div>
     </div>
+  );
+};
+
+const SearchBar = ({ searchText, handleSearch, text }) => {
+  return (
+    <Paper
+      component='form'
+      style={{
+        display: "flex",
+        alignItems: "center",
+        width: "100%",
+        maxWidth: "300px",
+        padding: "2px 4px",
+        height: "35px",
+        marginTop: "10px",
+      }}
+    >
+      <IconButton type='button' sx={{ p: "10px" }} aria-label='search'>
+        <SearchIcon />
+      </IconButton>
+      <InputBase
+        style={{ marginLeft: "8px", flex: 1 }}
+        placeholder={text}
+        inputProps={{ "aria-label": "search google maps" }}
+        value={searchText}
+        onChange={handleSearch}
+      />
+    </Paper>
   );
 };
 

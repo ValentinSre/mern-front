@@ -7,7 +7,7 @@ import { MdRateReview, MdChatBubbleOutline } from "react-icons/md";
 import makeTitle from "../../../../shared/util/makeTitle";
 import Rating from "../../../../shared/components/UIElements/Rating";
 
-import "../CollectionDisplay.css";
+import "../DisplayByBooks.css";
 
 const EXISTING_STYLE = { color: "#45b061", fontSize: "20px" };
 const MISSING_STYLE = { color: "#e74c3c", fontSize: "20px" };

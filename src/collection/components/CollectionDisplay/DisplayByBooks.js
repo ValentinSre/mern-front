@@ -4,7 +4,7 @@ import CollectionInMosaic from "./components/CollectionInMosaic";
 import CollectionInLists from "./components/CollectionInLists";
 import makeTitle from "../../../shared/util/makeTitle";
 
-import "./CollectionDisplay.css";
+import "./DisplayByBooks.css";
 
 // **************************
 // **** Sort explanation ****
@@ -51,11 +51,12 @@ const GROUP_ERROR_MESSAGE = {
   7: "Type non renseigné",
 };
 
-const CollectionDisplay = ({
+const DisplayByBooks = ({
   collection,
-  sort,
-  groupment,
+  selectedSort: sort,
+  selectedGroupment: groupment,
   selectedEditeurs,
+  checkedValues,
 }) => {
   const groupCollection = (collection, groupment) => {
     if (groupment) {
@@ -189,25 +190,45 @@ const CollectionDisplay = ({
     return collection;
   };
 
-  const groupedCollection = groupCollection(collection, groupment);
+  const filteredBooks = collection.filter((book) => {
+    const { type, editeur } = book;
+    return checkedValues[type] && selectedEditeurs[editeur];
+  });
 
-  return !groupment ? (
-    <CollectionInMosaic
-      collection={collection}
-      sort={sort}
-      selectedEditeurs={selectedEditeurs}
-      sortCollection={sortCollection}
-    />
-  ) : (
-    <CollectionInLists
-      collection={collection}
-      sort={sort}
-      groupedCollection={groupedCollection}
-      groupment={groupment}
-      selectedEditeurs={selectedEditeurs}
-      sortCollection={sortCollection}
-    />
+  const nbBooks = filteredBooks.length;
+  const groupedCollection = groupCollection(filteredBooks, groupment);
+
+  return (
+    <div>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <div style={{ marginLeft: "30px", marginBottom: "20px" }}>
+          <strong>{nbBooks} albums</strong> :
+        </div>
+      </div>
+      {!groupment ? (
+        <CollectionInMosaic
+          collection={filteredBooks}
+          sort={sort}
+          selectedEditeurs={selectedEditeurs}
+          sortCollection={sortCollection}
+        />
+      ) : (
+        <CollectionInLists
+          collection={filteredBooks}
+          sort={sort}
+          groupedCollection={groupedCollection}
+          groupment={groupment}
+          selectedEditeurs={selectedEditeurs}
+          sortCollection={sortCollection}
+        />
+      )}
+      {filteredBooks.length === 0 && (
+        <div style={{ textAlign: "center", paddingBottom: "20px" }}>
+          <h3>Aucun album ne correspond à votre sélection</h3>
+        </div>
+      )}
+    </div>
   );
 };
 
-export default CollectionDisplay;
+export default DisplayByBooks;
