@@ -54,7 +54,10 @@ const DisplayBySeries = ({
       </div>
       {filteredSeries.map((serie, index) => (
         <div key={index} className='collection-series'>
-          <div className='series-box'>
+          <div
+            className='series-box'
+            onClick={() => toggleSerieExpansion(index)}
+          >
             {/* div de gauche */}
             <div className='series-box__left'>
               <div className='series-box__left-img'>

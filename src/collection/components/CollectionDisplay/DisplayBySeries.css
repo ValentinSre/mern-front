@@ -42,13 +42,18 @@
 
 @media (max-width: 768px) {
     .series-box__left-info-title {
-        font-size: 15px;
+        font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 10px);
     }
 }
 
 .series-box__right {
     display: flex;
     align-items: center;
+    white-space: nowrap;
+
 }
 
 .series-box__right-editor {
@@ -80,7 +85,8 @@
 
 @media (max-width: 768px) {
     .series-box__right-progress {
-        width: 120px;
+        width: 100px;
+        padding-right: 30px;
     }
 }
 
@@ -112,11 +118,18 @@
 @media (max-width: 768px) {
     .series-box__right-progress__text {
         font-size: 12px;
+        display: none;
     }
 }
 
 .series-box__right-expand {
     margin-left: 10px;
+}
+
+@media (max-width: 410px) {
+    .series-box__right-expand {
+        display: none;
+    }
 }
 
 .book-box {
