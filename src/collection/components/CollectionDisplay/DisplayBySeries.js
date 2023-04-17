@@ -10,6 +10,7 @@ import DateModal from "../../../book/components/BookDetails/components/DateModal
 import { useHttpClient } from "../../../shared/hooks/http-hook";
 
 import "./DisplayBySeries.css";
+import { CiPalette } from "react-icons/ci";
 
 const DisplayBySeries = ({
   collection: series,
@@ -29,11 +30,11 @@ const DisplayBySeries = ({
     }
   };
 
-  const updateBookStatus = (serieIndex, bookIndex, status) => {
+  const updateBookStatus = (serieTitle, bookIndex, status) => {
     setReadBookId(bookIndex);
     setOpenReadModal(true);
     setReadState(status);
-    setSeriesIndex(serieIndex);
+    setSeriesTitle(serieTitle);
   };
 
   const handleBookClick = (bookId) => {
@@ -44,7 +45,7 @@ const DisplayBySeries = ({
   const [readBookId, setReadBookId] = useState(null);
   const [dateLecture, setDateLecture] = useState(null);
   const [readState, setReadState] = useState(false);
-  const [seriesIndex, setSeriesIndex] = useState(null);
+  const [seriesTitle, setSeriesTitle] = useState(null);
 
   const filteredSeries = series.filter((serie) => {
     const { type, editeur } = serie.books[0];
@@ -78,8 +79,9 @@ const DisplayBySeries = ({
       // update the object in the array
       if (success) {
         const newSeries = [...series];
-        // readBookId corresponds to the key 'id_book' in the book object
-        // we need to find the index of the book in the array
+        const seriesIndex = series.findIndex(
+          (serie) => serie.serie === seriesTitle
+        );
         const bookIndex = newSeries[seriesIndex].books.findIndex(
           (book) => book.id_book === readBookId
         );
@@ -88,7 +90,7 @@ const DisplayBySeries = ({
         setOpenReadModal(false);
       }
 
-      setSeriesIndex(null);
+      setSeriesTitle(null);
       setReadBookId(null);
       setDateLecture(null);
       setReadState(false);
@@ -207,7 +209,7 @@ const DisplayBySeries = ({
                     <div>
                       <IconButton
                         onClick={() =>
-                          updateBookStatus(index, book.id_book, !book.lu)
+                          updateBookStatus(serie.serie, book.id_book, !book.lu)
                         }
                         size='medium'
                       >
