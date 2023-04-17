@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { AppBar, Tabs, Tab } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useTheme } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
+import { AuthContext } from "../../shared/context/auth-context";
 import DisplayCollection from "./DisplayCollection";
-import Wishlist from "./Wishlist";
+import Wishlist from "./DisplayWishlist";
 // import UpcomingBooks from './UpcomingBooks';
 import Stats from "./Stats";
 
@@ -30,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const MyLibrary = () => {
+  const auth = useContext(AuthContext);
   const classes = useStyles();
   const location = useLocation();
   const [selectedTab, setSelectedTab] = useState(0);
@@ -44,16 +46,16 @@ const MyLibrary = () => {
   useEffect(() => {
     const path = location.pathname;
     switch (path) {
-      case "/:id/collection":
+      case `/${auth.userId}/collection`:
         setSelectedTab(0);
         break;
-      case "/:id/wishlist":
+      case `/${auth.userId}/wishlist`:
         setSelectedTab(1);
         break;
       case "/:id/mes-sorties":
         setSelectedTab(2);
         break;
-      case "/:id/stats":
+      case `/${auth.userId}/stats`:
         setSelectedTab(3);
         break;
       default:
@@ -78,13 +80,13 @@ const MyLibrary = () => {
         >
           <Tab
             component={Link}
-            to='/:id/collection'
+            to={`/${auth.userId}/collection`}
             label='Mes BD'
             className={selectedTab === 0 ? classes.selectedTab : ""}
           />
           <Tab
             component={Link}
-            to='/:id/wishlist'
+            to={`/${auth.userId}/wishlist`}
             label='Mes souhaits'
             className={selectedTab === 1 ? classes.selectedTab : ""}
           />
@@ -96,7 +98,7 @@ const MyLibrary = () => {
           />
           <Tab
             component={Link}
-            to='/:id/stats'
+            to={`/${auth.userId}/stats`}
             label='Mes statistiques'
             className={selectedTab === 3 ? classes.selectedTab : ""}
           />
