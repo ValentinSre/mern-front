@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { IconButton, Divider, Tooltip } from "@material-ui/core";
 import { ExpandLess, ExpandMore } from "@material-ui/icons";
-import { Done, Clear } from "@material-ui/icons";
-
 import { MdBookmarkAdded, MdBookmarkBorder } from "react-icons/md";
 
+import { AuthContext } from "../../../shared/context/auth-context";
 import Rating from "../../../shared/components/UIElements/Rating";
+import DateModal from "../../../book/components/BookDetails/components/DateModal";
+import { useHttpClient } from "../../../shared/hooks/http-hook";
 
 import "./DisplayBySeries.css";
 
@@ -16,6 +17,8 @@ const DisplayBySeries = ({
   selectedEditeurs,
 }) => {
   const history = useHistory();
+  const auth = useContext(AuthContext);
+  const { sendRequest } = useHttpClient();
   const [expandedSerie, setExpandedSerie] = useState(null);
 
   const toggleSerieExpansion = (index) => {
@@ -27,12 +30,21 @@ const DisplayBySeries = ({
   };
 
   const updateBookStatus = (serieIndex, bookIndex, status) => {
-    console.log("updateBookStatus", serieIndex, bookIndex, status);
+    setReadBookId(bookIndex);
+    setOpenReadModal(true);
+    setReadState(status);
+    setSeriesIndex(serieIndex);
   };
 
   const handleBookClick = (bookId) => {
     history.push(`/book/${bookId}`);
   };
+
+  const [openReadModal, setOpenReadModal] = useState(false);
+  const [readBookId, setReadBookId] = useState(null);
+  const [dateLecture, setDateLecture] = useState(null);
+  const [readState, setReadState] = useState(false);
+  const [seriesIndex, setSeriesIndex] = useState(null);
 
   const filteredSeries = series.filter((serie) => {
     const { type, editeur } = serie.books[0];
@@ -44,6 +56,46 @@ const DisplayBySeries = ({
     (acc, serie) => acc + serie.books.length,
     0
   );
+
+  const handleBookReading = async () => {
+    try {
+      const responseData = await sendRequest(
+        process.env.REACT_APP_API_URL + "/collection/edit",
+        "POST",
+        JSON.stringify({
+          id_book: readBookId,
+          id_user: auth.userId,
+          lu: readState,
+          date_lecture: dateLecture,
+        }),
+        {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + auth.token,
+        }
+      );
+
+      const { success } = responseData;
+      // update the object in the array
+      if (success) {
+        const newSeries = [...series];
+        // readBookId corresponds to the key 'id_book' in the book object
+        // we need to find the index of the book in the array
+        const bookIndex = newSeries[seriesIndex].books.findIndex(
+          (book) => book.id_book === readBookId
+        );
+        newSeries[seriesIndex].books[bookIndex].lu = readState;
+        series = newSeries;
+        setOpenReadModal(false);
+      }
+
+      setSeriesIndex(null);
+      setReadBookId(null);
+      setDateLecture(null);
+      setReadState(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div style={{ width: "90%", margin: "auto" }}>
@@ -155,7 +207,7 @@ const DisplayBySeries = ({
                     <div>
                       <IconButton
                         onClick={() =>
-                          updateBookStatus(index, bookIndex, !book.lu)
+                          updateBookStatus(index, book.id_book, !book.lu)
                         }
                         size='medium'
                       >
@@ -183,6 +235,16 @@ const DisplayBySeries = ({
           <h3>Aucune série ne correspond à votre sélection</h3>
         </div>
       )}
+      <DateModal
+        open={openReadModal}
+        handleClose={() => setOpenReadModal(false)}
+        date={dateLecture}
+        authorizeNoDate
+        label='Date de lecture'
+        title='Quand avez-vous lu ce livre ?'
+        handleChange={(e) => setDateLecture(e.target.value)}
+        handleSubmit={handleBookReading}
+      />
     </div>
   );
 };

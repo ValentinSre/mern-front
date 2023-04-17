@@ -239,11 +239,9 @@ const BooksFilter = ({
             value={selectedSort}
             onChange={handleSortChange}
           >
-            <MenuItem value={0}>Par ajout</MenuItem>
-            <MenuItem value={1}>Par titre/série</MenuItem>
-            <MenuItem value={2}>Par prix</MenuItem>
-            <MenuItem value={3}>Par date</MenuItem>
-            <MenuItem value={4}>Par note</MenuItem>
+            <MenuItem value={0}>Par titre/série</MenuItem>
+            <MenuItem value={1}>Par prix</MenuItem>
+            <MenuItem value={2}>Par note</MenuItem>
           </Select>
         </div>
         <div style={{ paddingLeft: "20px" }}>
@@ -259,6 +257,7 @@ const BooksFilter = ({
             <MenuItem value={0}>Sans groupement</MenuItem>
             <MenuItem value={1}>Par éditeur</MenuItem>
             <MenuItem value={2}>Par type</MenuItem>
+            <MenuItem value={3}>Par état</MenuItem>
           </Select>
         </div>
       </div>

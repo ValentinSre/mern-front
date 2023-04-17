@@ -25,20 +25,16 @@ import "./DisplayByBooks.css";
 // 7: Group by type
 
 const SORT_IDS = {
-  1: "titre",
-  2: "prix",
+  0: "titre",
+  1: "prix",
+  2: "note",
   3: "date_parution",
-  4: "note",
 };
 
 const GROUPMENT_IDS = {
   1: "editeur",
-  2: "format",
-  3: "auteur",
-  4: "dessinateur",
-  5: "genre",
-  6: "annee",
-  7: "type",
+  2: "type",
+  3: "etat",
 };
 
 const GROUP_ERROR_MESSAGE = {
@@ -60,74 +56,24 @@ const DisplayByBooks = ({
 }) => {
   const groupCollection = (collection, groupment) => {
     if (groupment) {
-      // Authors
       if (groupment === 3) {
-        const authors = collection.reduce((acc, book) => {
-          book.auteurs.forEach((author) => {
-            if (!acc.includes(author.nom)) {
-              acc.push(author.nom);
+        const groupedCollection = collection.reduce((acc, book) => {
+          if (book.critique) {
+            if (!acc["Critiqué"]) {
+              acc["Critiqué"] = [];
             }
-          });
-          return acc;
-        }, []);
-
-        const groupedCollection = authors.reduce((acc, author) => {
-          acc[author] = [];
-          collection.forEach((book) => {
-            book.auteurs.forEach((authorBook) => {
-              if (authorBook.nom === author) {
-                acc[author].push(book);
-              }
-            });
-          });
-          return acc;
-        }, {});
-        return groupedCollection;
-      }
-
-      // Illustrators
-      if (groupment === 4) {
-        const illustrators = collection.reduce((acc, book) => {
-          book.dessinateurs.forEach((illustrator) => {
-            if (!acc.includes(illustrator.nom)) {
-              acc.push(illustrator.nom);
+            acc["Critiqué"].push(book);
+          } else if (book.lu) {
+            if (!acc["Lu"]) {
+              acc["Lu"] = [];
             }
-          });
-          return acc;
-        }, []);
-
-        const groupedCollection = illustrators.reduce((acc, illustrator) => {
-          acc[illustrator] = [];
-          collection.forEach((book) => {
-            book.dessinateurs.forEach((illustratorBook) => {
-              if (illustratorBook.nom === illustrator) {
-                acc[illustrator].push(book);
-              }
-            });
-          });
-          return acc;
-        }, {});
-        return groupedCollection;
-      }
-
-      // Year
-      if (groupment === 6) {
-        const years = collection.reduce((acc, book) => {
-          const year = new Date(book.date_parution).getFullYear();
-          if (!acc.includes(year)) {
-            acc.push(year);
+            acc["Lu"].push(book);
+          } else {
+            if (!acc["Non lu"]) {
+              acc["Non lu"] = [];
+            }
+            acc["Non lu"].push(book);
           }
-          return acc;
-        }, []);
-
-        const groupedCollection = years.reduce((acc, year) => {
-          acc[year] = [];
-          collection.forEach((book) => {
-            const bookYear = new Date(book.date_parution).getFullYear();
-            if (bookYear === year) {
-              acc[year].push(book);
-            }
-          });
           return acc;
         }, {});
         return groupedCollection;
@@ -141,7 +87,6 @@ const DisplayByBooks = ({
         acc[key].push(book);
         return acc;
       }, {});
-      console.log(groupedCollection);
       return groupedCollection;
     }
 
@@ -150,17 +95,8 @@ const DisplayByBooks = ({
 
   const sortCollection = (collection, sort) => {
     if (sort) {
-      // tri par date de parution
-      if (sort === 3) {
-        return collection.sort((a, b) => {
-          const dateA = new Date(a[SORT_IDS[sort]]);
-          const dateB = new Date(b[SORT_IDS[sort]]);
-          return dateA < dateB ? -1 : dateA > dateB ? 1 : 0;
-        });
-      }
-
       // tri par note (si note = undefined, on le met à la fin) par ordre décroissant
-      if (sort === 4) {
+      if (sort === 2) {
         return collection.sort((a, b) => {
           if (a[SORT_IDS[sort]] === undefined) {
             return 1;
@@ -177,7 +113,7 @@ const DisplayByBooks = ({
       }
 
       return collection.sort((a, b) => {
-        if (sort === 1) {
+        if (sort === 0) {
           return makeTitle(a) < makeTitle(b) ? -1 : 1;
         }
         return a[SORT_IDS[sort]] < b[SORT_IDS[sort]]

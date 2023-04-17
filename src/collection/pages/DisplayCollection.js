@@ -6,8 +6,9 @@ import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import { AuthContext } from "../../shared/context/auth-context";
 import DisplayByBooks from "../components/CollectionDisplay/DisplayByBooks";
 import CollectionFilter from "../components/Filters";
-
 import DisplayBySeries from "../components/CollectionDisplay/DisplayBySeries";
+
+import "./DisplayCollection.css";
 
 const DisplayCollection = () => {
   const auth = useContext(AuthContext);
@@ -97,6 +98,8 @@ const DisplayCollection = () => {
       [event.target.name]: event.target.checked,
     });
   };
+
+  console.log(loadedCollection);
 
   return (
     <React.Fragment>

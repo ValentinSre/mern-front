@@ -22,6 +22,7 @@ const DateModal = ({
   label,
   title,
   handleChange,
+  authorizeNoDate,
   handleSubmit,
 }) => {
   return (
@@ -47,13 +48,13 @@ const DateModal = ({
               <Button
                 variant='contained'
                 color='primary'
-                disabled={!date}
+                disabled={!date && !authorizeNoDate}
                 onClick={() => {
                   handleSubmit();
                   handleClose();
                 }}
               >
-                Valider
+                Valider {!date && authorizeNoDate && "(sans date)"}
               </Button>
             </div>
           </Typography>
