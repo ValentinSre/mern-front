@@ -281,7 +281,7 @@ const Stats = () => {
     {
       title: "Informations par éditeur",
       component1: <BooksByEditor data={booksByEditeur} />,
-      component1Name: "Livres par éditeur",
+      component1Name: "Proportion par éditeur",
       component2: null,
       component2Name: null,
     },
@@ -306,14 +306,14 @@ const Stats = () => {
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />{" "}
       {isLoading && (
-        <div className='center'>
+        <div className="center">
           <LoadingSpinner />
         </div>
       )}
       {!isLoading && loadedCollection && (
-        <div className='collection'>
-          <div className='collection-stats'>
-            <div className='collection-stats__frame'>
+        <div className="collection">
+          <div className="collection-stats">
+            <div className="collection-stats__frame">
               <EvolutionFrame
                 title={"Nb. de livres possédés"}
                 value={calculateStats().totalPossede}
@@ -328,7 +328,7 @@ const Stats = () => {
               />
             </div>
 
-            <div className='collection-stats__frame'>
+            <div className="collection-stats__frame">
               <EvolutionFrame
                 title={"Prix des livres possédés"}
                 value={calculateStats().totalPrixPossede.toFixed(2) + " €"}
@@ -346,7 +346,7 @@ const Stats = () => {
               />
             </div>
 
-            <div className='collection-stats__frame'>
+            <div className="collection-stats__frame">
               <EvolutionFrame
                 title={"Nb. de livres souhaités"}
                 value={calculateStats().totalSouhaite}
@@ -354,7 +354,7 @@ const Stats = () => {
               />
             </div>
 
-            <div className='collection-stats__frame'>
+            <div className="collection-stats__frame">
               <EvolutionFrame
                 title={"Prix des livres souhaités"}
                 value={calculateStats().totalPrixSouhaite.toFixed(2) + " €"}
@@ -362,7 +362,7 @@ const Stats = () => {
               />
             </div>
 
-            <div className='collection-stats__frame'>
+            <div className="collection-stats__frame">
               <EvolutionFrame
                 title={"Nb. de livres lus"}
                 value={calculateStats().totalLu}
@@ -395,7 +395,7 @@ const Stats = () => {
               />
             </div>
 
-            <div className='collection-stats__frame'>
+            <div className="collection-stats__frame">
               <EvolutionFrame
                 title={"Nb. de livres critiqués"}
                 value={calculateStats().totalCritique}
@@ -408,7 +408,7 @@ const Stats = () => {
               />
             </div>
 
-            <div className='collection-stats__frame'>
+            <div className="collection-stats__frame">
               <EvolutionFrame
                 title={"Nb. de pages cumulées"}
                 value={calculateStats().totalPagesPossede}
@@ -416,7 +416,7 @@ const Stats = () => {
               />
             </div>
 
-            <div className='collection-stats__frame'>
+            <div className="collection-stats__frame">
               <EvolutionFrame
                 title={"Poids total des livres"}
                 value={
@@ -427,8 +427,8 @@ const Stats = () => {
             </div>
           </div>
 
-          <div className='collection-stats_container'>
-            <div className='collection-stats__stepper'>
+          <div className="collection-stats_container">
+            <div className="collection-stats__stepper">
               {collectionStatsData.map((_, index) => (
                 <div
                   key={index}
@@ -439,10 +439,10 @@ const Stats = () => {
                 />
               ))}
             </div>
-            <div className='collection-stats__title'>
+            <div className="collection-stats__title">
               <h2>{title}</h2>
             </div>
-            <div className='collection-stats__components'>
+            <div className="collection-stats__components">
               <h2>{component1Name}</h2>
               {component1}
               {component2 && (
