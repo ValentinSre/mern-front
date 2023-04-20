@@ -71,12 +71,36 @@
     flex-wrap: nowrap;
     overflow-x: auto;
   }
+
+  .month_displayer {
+    margin-top: 5px;
+    font-weight: bolder;
+    color: #fff;
+    text-transform: uppercase;
+  }
   
   .book-calendar-day-books img {
     width: 200px;
     height: 300px;
     object-fit: cover;
     margin-right: 10px;
+  }
+
+  .timelineContent {
+    width: 49%;
+  }
+
+  @media screen and (max-width: 767px) {
+    .timelineContent {
+      width: 46%;
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    .book-calendar-day-books img {
+      width: 100px;
+      height: 150px;
+    }
   }
 
   .book-calendar-day-book {

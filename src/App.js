@@ -30,18 +30,6 @@ const App = () => {
         <Route path='/' exact>
           <Home />
         </Route>
-        <Route path='/:id/ma-collection'>
-          <MyLibrary />
-        </Route>
-        <Route path='/:id/ma-wishlist'>
-          <MyLibrary />
-        </Route>
-        <Route path='/:id/mes-sorties'>
-          <MyLibrary />
-        </Route>
-        <Route path='/:id/mes-stats'>
-          <MyLibrary />
-        </Route>
         <Route path='/books' exact>
           <BookList />
         </Route>
@@ -65,6 +53,9 @@ const App = () => {
           <MyLibrary />
         </Route>
         <Route path='/:userId/wishlist' exact>
+          <MyLibrary />
+        </Route>
+        <Route path='/:userId/releases' exact>
           <MyLibrary />
         </Route>
         <Route path='/:userId/stats' exact>

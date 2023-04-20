@@ -74,19 +74,23 @@ function BookCalendar({ books }) {
   // const [selectedMonth, setSelectedMonth] = useState(releaseMonths[0]);
 
   return (
-    <Timeline align="alternate" style={{ width: "90%" }}>
+    <Timeline align='alternate' style={{ width: "100%" }}>
       {releaseMonths.map((selectedMonth) =>
         datesByMonth[selectedMonth].map((date, index) => (
           <TimelineItem>
             <TimelineOppositeContent>
               {!index && (
-                <Typography variant="body2" style={{ color: "#ffffff" }}>
-                  {months[selectedMonth]}
-                </Typography>
+                <div className='month_displayer'>{months[selectedMonth]}</div>
               )}
             </TimelineOppositeContent>
             <TimelineSeparator>
-              <TimelineDot>
+              <TimelineDot
+                style={{
+                  backgroundColor: "#ffde59",
+                  color: "#000",
+                  fontWeight: "bold",
+                }}
+              >
                 <div>
                   {(new Date(date).getDate() < 10 ? "0" : "") +
                     new Date(date).getDate()}
@@ -94,24 +98,26 @@ function BookCalendar({ books }) {
               </TimelineDot>
               <TimelineConnector />
             </TimelineSeparator>
-            <TimelineContent>
-              <Paper elevation={3} className={classes.paper}>
-                <div className="book-calendar-day-books">
-                  {booksByDate[date].map((book) => (
-                    <div onClick={() => history.push(`/book/${book.id}`)}>
-                      <Tooltip title={makeTitle(book)}>
-                        <div key={book.id}>
-                          <img
-                            key={book.id}
-                            src={book.image}
-                            alt={makeTitle(book)}
-                          />
-                        </div>
-                      </Tooltip>
-                    </div>
-                  ))}
-                </div>
-              </Paper>
+            <TimelineContent className='timelineContent'>
+              <div>
+                <Paper elevation={3} className={classes.paper}>
+                  <div className='book-calendar-day-books'>
+                    {booksByDate[date].map((book) => (
+                      <div onClick={() => history.push(`/book/${book.id}`)}>
+                        <Tooltip title={makeTitle(book)}>
+                          <div key={book.id}>
+                            <img
+                              key={book.id}
+                              src={book.image}
+                              alt={makeTitle(book)}
+                            />
+                          </div>
+                        </Tooltip>
+                      </div>
+                    ))}
+                  </div>
+                </Paper>
+              </div>
             </TimelineContent>
           </TimelineItem>
         ))
@@ -124,8 +130,7 @@ export default BookCalendar;
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    padding: "6px 16px",
-    height: "400px",
+    padding: "5px 10px",
   },
   secondaryTail: {
     backgroundColor: theme.palette.secondary.main,

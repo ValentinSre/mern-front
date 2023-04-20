@@ -14,6 +14,7 @@
     flex-wrap: wrap;
     justify-content: center;
     margin: 2rem 0;
+    padding-top: 50px;
   }
   
   .wishlist-display__books_array {

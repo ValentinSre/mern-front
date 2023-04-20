@@ -8,6 +8,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { AuthContext } from "../../shared/context/auth-context";
 import DisplayCollection from "./DisplayCollection";
 import Wishlist from "./DisplayWishlist";
+import Releases from "./DisplayFutureWishlist";
 // import UpcomingBooks from './UpcomingBooks';
 import Stats from "./Stats";
 
@@ -52,7 +53,7 @@ const MyLibrary = () => {
       case `/${auth.userId}/wishlist`:
         setSelectedTab(1);
         break;
-      case "/:id/mes-sorties":
+      case `/${auth.userId}/releases`:
         setSelectedTab(2);
         break;
       case `/${auth.userId}/stats`:
@@ -92,7 +93,7 @@ const MyLibrary = () => {
           />
           <Tab
             component={Link}
-            to='/:id/mes-sorties'
+            to={`/${auth.userId}/releases`}
             label='Mes sorties'
             className={selectedTab === 2 ? classes.selectedTab : ""}
           />
@@ -107,7 +108,7 @@ const MyLibrary = () => {
       <div className={classes.content}>
         {selectedTab === 0 && <DisplayCollection />}
         {selectedTab === 1 && <Wishlist />}
-        {selectedTab === 2 && <p>Mes sorties</p>}
+        {selectedTab === 2 && <Releases />}
         {selectedTab === 3 && <Stats />}
       </div>
     </div>
