@@ -5,6 +5,21 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import TabPanel from "../../shared/util/TabPanel";
 
+import { makeStyles } from "@material-ui/core/styles";
+import Timeline from "@material-ui/lab/Timeline";
+import TimelineItem from "@material-ui/lab/TimelineItem";
+import TimelineSeparator from "@material-ui/lab/TimelineSeparator";
+import TimelineConnector from "@material-ui/lab/TimelineConnector";
+import TimelineContent from "@material-ui/lab/TimelineContent";
+import TimelineOppositeContent from "@material-ui/lab/TimelineOppositeContent";
+import TimelineDot from "@material-ui/lab/TimelineDot";
+import FastfoodIcon from "@material-ui/icons/Fastfood";
+import LaptopMacIcon from "@material-ui/icons/LaptopMac";
+import HotelIcon from "@material-ui/icons/Hotel";
+import RepeatIcon from "@material-ui/icons/Repeat";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
+
 import makeTitle from "../../shared/util/makeTitle";
 
 import "./BookCalendar.css";
@@ -26,6 +41,7 @@ const months = {
 
 function BookCalendar({ books }) {
   const history = useHistory();
+  const classes = useStyles();
 
   // Group books by release date
   const booksByDate = books.reduce((acc, book) => {
@@ -55,52 +71,63 @@ function BookCalendar({ books }) {
 
   const releaseMonths = Object.keys(datesByMonth);
 
-  const [selectedMonth, setSelectedMonth] = useState(releaseMonths[0]);
+  // const [selectedMonth, setSelectedMonth] = useState(releaseMonths[0]);
 
   return (
-    <div className='book-calendar'>
-      <Tabs
-        className='book-calendar-header'
-        value={selectedMonth}
-        onChange={(event, newValue) => setSelectedMonth(newValue)}
-        centered
-        indicatorColor='amber'
-      >
-        {releaseMonths.map((month) => (
-          <Tab key={month} label={months[month]} value={month} />
-        ))}
-      </Tabs>
-      <TabPanel value={selectedMonth} index={selectedMonth}>
-        {datesByMonth[selectedMonth].map((date) => (
-          <div className='book-calendar-day__div'>
-            <div className='book-calendar-day-label'>
-              {new Date(date).getDate()}
-              {new Date(date).getDate() === 1 ? "er" : null}{" "}
-              {months[selectedMonth]}
-            </div>
-
-            <div key={date} className='book-calendar-day'>
-              <div className='book-calendar-day-books'>
-                {booksByDate[date].map((book) => (
-                  <div onClick={() => history.push(`/book/${book.id}`)}>
-                    <Tooltip title={makeTitle(book)}>
-                      <div key={book.id}>
-                        <img
-                          key={book.id}
-                          src={book.image}
-                          alt={makeTitle(book)}
-                        />
-                      </div>
-                    </Tooltip>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        ))}
-      </TabPanel>
-    </div>
+    <Timeline align="alternate" style={{ width: "90%" }}>
+      {releaseMonths.map((selectedMonth) =>
+        datesByMonth[selectedMonth].map((date, index) => (
+          <TimelineItem>
+            <TimelineOppositeContent>
+              {!index && (
+                <Typography variant="body2" style={{ color: "#ffffff" }}>
+                  {months[selectedMonth]}
+                </Typography>
+              )}
+            </TimelineOppositeContent>
+            <TimelineSeparator>
+              <TimelineDot>
+                <div>
+                  {(new Date(date).getDate() < 10 ? "0" : "") +
+                    new Date(date).getDate()}
+                </div>
+              </TimelineDot>
+              <TimelineConnector />
+            </TimelineSeparator>
+            <TimelineContent>
+              <Paper elevation={3} className={classes.paper}>
+                <div className="book-calendar-day-books">
+                  {booksByDate[date].map((book) => (
+                    <div onClick={() => history.push(`/book/${book.id}`)}>
+                      <Tooltip title={makeTitle(book)}>
+                        <div key={book.id}>
+                          <img
+                            key={book.id}
+                            src={book.image}
+                            alt={makeTitle(book)}
+                          />
+                        </div>
+                      </Tooltip>
+                    </div>
+                  ))}
+                </div>
+              </Paper>
+            </TimelineContent>
+          </TimelineItem>
+        ))
+      )}
+    </Timeline>
   );
 }
 
 export default BookCalendar;
+
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    padding: "6px 16px",
+    height: "400px",
+  },
+  secondaryTail: {
+    backgroundColor: theme.palette.secondary.main,
+  },
+}));
