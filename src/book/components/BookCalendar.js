@@ -13,10 +13,6 @@ import TimelineConnector from "@material-ui/lab/TimelineConnector";
 import TimelineContent from "@material-ui/lab/TimelineContent";
 import TimelineOppositeContent from "@material-ui/lab/TimelineOppositeContent";
 import TimelineDot from "@material-ui/lab/TimelineDot";
-import FastfoodIcon from "@material-ui/icons/Fastfood";
-import LaptopMacIcon from "@material-ui/icons/LaptopMac";
-import HotelIcon from "@material-ui/icons/Hotel";
-import RepeatIcon from "@material-ui/icons/Repeat";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 
@@ -74,13 +70,13 @@ function BookCalendar({ books }) {
   // const [selectedMonth, setSelectedMonth] = useState(releaseMonths[0]);
 
   return (
-    <Timeline align='alternate' style={{ width: "100%" }}>
+    <Timeline align="alternate" style={{ width: "100%" }}>
       {releaseMonths.map((selectedMonth) =>
         datesByMonth[selectedMonth].map((date, index) => (
           <TimelineItem>
             <TimelineOppositeContent>
               {!index && (
-                <div className='month_displayer'>{months[selectedMonth]}</div>
+                <div className="month_displayer">{months[selectedMonth]}</div>
               )}
             </TimelineOppositeContent>
             <TimelineSeparator>
@@ -98,10 +94,10 @@ function BookCalendar({ books }) {
               </TimelineDot>
               <TimelineConnector />
             </TimelineSeparator>
-            <TimelineContent className='timelineContent'>
+            <TimelineContent className="timelineContent">
               <div>
                 <Paper elevation={3} className={classes.paper}>
-                  <div className='book-calendar-day-books'>
+                  <div className="book-calendar-day-books">
                     {booksByDate[date].map((book) => (
                       <div onClick={() => history.push(`/book/${book.id}`)}>
                         <Tooltip title={makeTitle(book)}>

@@ -99,18 +99,16 @@ const DisplayCollection = () => {
     });
   };
 
-  console.log(loadedCollection);
-
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />{" "}
       {isLoading && (
-        <div className='center'>
+        <div className="center">
           <LoadingSpinner />
         </div>
       )}
       {!isLoading && loadedCollection && selectedEditeurs && (
-        <div className='collection'>
+        <div className="collection">
           <CollectionFilter
             collection={loadedCollection}
             displayMode={displayMode}

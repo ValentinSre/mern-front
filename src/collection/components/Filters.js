@@ -17,6 +17,7 @@ import {
   Search as SearchIcon,
 } from "@material-ui/icons";
 import { FaListUl, FaTh } from "react-icons/fa";
+import SearchBar from "../../shared/components/UIElements/SearchBar";
 
 const CollectionFilter = ({
   selectedSort,
@@ -136,37 +137,37 @@ const SeriesFilter = ({
             <Checkbox
               checked={checkedValues.BD}
               onChange={handleCheckedChange}
-              name='BD'
+              name="BD"
             />
           }
-          label='Bande dessinée'
+          label="Bande dessinée"
         />
         <FormControlLabel
           control={
             <Checkbox
               checked={checkedValues.Comics}
               onChange={handleCheckedChange}
-              name='Comics'
+              name="Comics"
             />
           }
-          label='Comics'
+          label="Comics"
         />
         <FormControlLabel
           control={
             <Checkbox
               checked={checkedValues.Manga}
               onChange={handleCheckedChange}
-              name='Manga'
+              name="Manga"
             />
           }
-          label='Manga'
+          label="Manga"
         />
       </div>
       <div>
         <SearchBar
           searchText={searchText}
           handleSearch={handleSearch}
-          text='Rechercher une série...'
+          placeHolder="Rechercher une série..."
         />
       </div>
       <div style={{ marginTop: "20px" }}>
@@ -196,30 +197,30 @@ const BooksFilter = ({
             <Checkbox
               checked={checkedValues.BD}
               onChange={handleCheckedChange}
-              name='BD'
+              name="BD"
             />
           }
-          label='Bande dessinée'
+          label="Bande dessinée"
         />
         <FormControlLabel
           control={
             <Checkbox
               checked={checkedValues.Comics}
               onChange={handleCheckedChange}
-              name='Comics'
+              name="Comics"
             />
           }
-          label='Comics'
+          label="Comics"
         />
         <FormControlLabel
           control={
             <Checkbox
               checked={checkedValues.Manga}
               onChange={handleCheckedChange}
-              name='Manga'
+              name="Manga"
             />
           }
-          label='Manga'
+          label="Manga"
         />
       </div>
       <div
@@ -229,13 +230,13 @@ const BooksFilter = ({
         }}
       >
         <div>
-          <InputLabel id='label-tri' style={{ paddingBottom: "5px" }}>
+          <InputLabel id="label-tri" style={{ paddingBottom: "5px" }}>
             Tri
           </InputLabel>
 
           <Select
-            label='Tri'
-            id='tri-select'
+            label="Tri"
+            id="tri-select"
             value={selectedSort}
             onChange={handleSortChange}
           >
@@ -245,12 +246,12 @@ const BooksFilter = ({
           </Select>
         </div>
         <div style={{ paddingLeft: "20px" }}>
-          <InputLabel id='label-groupement' style={{ paddingBottom: "5px" }}>
+          <InputLabel id="label-groupement" style={{ paddingBottom: "5px" }}>
             Groupement
           </InputLabel>
           <Select
-            label='Groupement'
-            id='demo-simple-select'
+            label="Groupement"
+            id="demo-simple-select"
             value={selectedGroupment}
             onChange={handleGroupmentChange}
           >
@@ -265,7 +266,7 @@ const BooksFilter = ({
         <SearchBar
           searchText={searchText}
           handleSearch={handleSearch}
-          text='Rechercher un titre...'
+          placeHolder="Rechercher un titre..."
         />
       </div>
       <div style={{ marginTop: "20px" }}>
@@ -275,32 +276,32 @@ const BooksFilter = ({
   );
 };
 
-const SearchBar = ({ searchText, handleSearch, text }) => {
-  return (
-    <Paper
-      component='form'
-      style={{
-        display: "flex",
-        alignItems: "center",
-        width: "100%",
-        maxWidth: "300px",
-        padding: "2px 4px",
-        height: "35px",
-        marginTop: "10px",
-      }}
-    >
-      <IconButton type='button' sx={{ p: "10px" }} aria-label='search'>
-        <SearchIcon />
-      </IconButton>
-      <InputBase
-        style={{ marginLeft: "8px", flex: 1 }}
-        placeholder={text}
-        inputProps={{ "aria-label": "search google maps" }}
-        value={searchText}
-        onChange={handleSearch}
-      />
-    </Paper>
-  );
-};
+// const SearchBar = ({ searchText, handleSearch, text }) => {
+//   return (
+//     <Paper
+//       component='form'
+//       style={{
+//         display: "flex",
+//         alignItems: "center",
+//         width: "100%",
+//         maxWidth: "300px",
+//         padding: "2px 4px",
+//         height: "35px",
+//         marginTop: "10px",
+//       }}
+//     >
+//       <IconButton type='button' sx={{ p: "10px" }} aria-label='search'>
+//         <SearchIcon />
+//       </IconButton>
+//       <InputBase
+//         style={{ marginLeft: "8px", flex: 1 }}
+//         placeholder={text}
+//         inputProps={{ "aria-label": "search google maps" }}
+//         value={searchText}
+//         onChange={handleSearch}
+//       />
+//     </Paper>
+//   );
+// };
 
 export default CollectionFilter;

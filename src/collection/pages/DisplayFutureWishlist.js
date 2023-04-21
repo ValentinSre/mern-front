@@ -17,7 +17,7 @@ import { useHttpClient } from "../../shared/hooks/http-hook";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import { AuthContext } from "../../shared/context/auth-context";
-import BookCalendar from "../../book/components/BookCalendar";
+import WishlistCalendar from "../components/WishlistCalendar";
 
 import "./DisplayWishlist.css";
 
@@ -114,50 +114,49 @@ const Wishlist = () => {
     setBookId(bookId);
   };
 
-  console.log(wishlist);
-
   const currentDate = new Date();
+
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />{" "}
       {isLoading && (
-        <div className='center'>
+        <div className="center">
           <LoadingSpinner />
         </div>
       )}
       {!isLoading && wishlist && (
-        <div className='wishlis'>
-          <div className='wishlist__filters'>
+        <div className="wishlist">
+          <div className="wishlist__filters">
             <Grid item xs={12}>
               <FormControlLabel
                 control={
                   <Checkbox
-                    value='20'
+                    value="20"
                     onChange={handleFilterChange}
-                    color='primary'
+                    color="primary"
                   />
                 }
-                label='< 20€'
+                label="< 20€"
               />
               <FormControlLabel
                 control={
                   <Checkbox
-                    value='50'
+                    value="50"
                     onChange={handleFilterChange}
-                    color='primary'
+                    color="primary"
                   />
                 }
-                label='> 20€ et < 50€'
+                label="> 20€ et < 50€"
               />
               <FormControlLabel
                 control={
                   <Checkbox
-                    value='100'
+                    value="100"
                     onChange={handleFilterChange}
-                    color='primary'
+                    color="primary"
                   />
                 }
-                label='> 50€'
+                label="> 50€"
               />
             </Grid>
           </div>
@@ -177,7 +176,7 @@ const Wishlist = () => {
               </h2>
             )}
             <div>
-              <BookCalendar books={filteredBooks} />
+              <WishlistCalendar books={filteredBooks} />
 
               {/* {filteredBooks.map(({date, books}) => (
                   <React.Fragment key={date}>
@@ -241,7 +240,7 @@ const Wishlist = () => {
             date={dateObtention}
             authorizeNoDate
             label="Date d'achat"
-            title='Quand avez-vous acheté ce livre ?'
+            title="Quand avez-vous acheté ce livre ?"
             handleChange={(e) => setDateObtention(e.target.value)}
             handleSubmit={handleAdditionToCollection}
           />

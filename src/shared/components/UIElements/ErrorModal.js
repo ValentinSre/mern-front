@@ -1,13 +1,13 @@
 import React from "react";
 
 import Modal from "./Modal";
-import Button from "../FormElements/Button";
+import Button from "@material-ui/core/Button";
 
 const ErrorModal = (props) => {
   return (
     <Modal
       onCancel={props.onClear}
-      header='Erreur!'
+      header="Erreur!"
       show={!!props.error}
       footer={<Button onClick={props.onClear}>Okay</Button>}
     >

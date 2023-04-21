@@ -1,0 +1,9 @@
+.searchBar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 800px;
+  /* border-radius: 20px; */
+  padding: 2px 4px;
+  height: 35px;
+}

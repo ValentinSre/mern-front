@@ -20,6 +20,8 @@ import SearchIcon from "@material-ui/icons/Search";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import { Link } from "react-router-dom";
 
+import SearchBar from "../UIElements/SearchBar";
+
 import { AuthContext } from "../../context/auth-context";
 import logo from "../../images/logo.png";
 
@@ -42,34 +44,34 @@ const NavBar = () => {
 
   const renderMenuItems = () => {
     return (
-      <div className='menu-items'>
+      <div className="menu-items">
         {auth.isLoggedIn && (
           <React.Fragment>
             <MenuItem>
-              <NavLink to={`/${auth.userId}/collection`} className='menu-link'>
+              <NavLink to={`/${auth.userId}/collection`} className="menu-link">
                 Ma collection
               </NavLink>
             </MenuItem>
             <MenuItem>
-              <NavLink to={`/${auth.userId}/wishlist`} className='menu-link'>
+              <NavLink to={`/${auth.userId}/wishlist`} className="menu-link">
                 Ma wishlist
               </NavLink>
             </MenuItem>
             <MenuItem>
-              <NavLink to={`/${auth.userId}/stats`} className='menu-link'>
+              <NavLink to={`/${auth.userId}/stats`} className="menu-link">
                 Mes statistiques
               </NavLink>
             </MenuItem>
           </React.Fragment>
         )}
         <MenuItem>
-          <NavLink to={`/books`} className='menu-link'>
+          <NavLink to={`/books`} className="menu-link">
             La bibliothèque
           </NavLink>
         </MenuItem>
         {auth.isAdmin && (
           <MenuItem>
-            <NavLink to='/book/new' className='menu-link'>
+            <NavLink to="/book/new" className="menu-link">
               Ajouter un livre
             </NavLink>
           </MenuItem>
@@ -80,7 +82,7 @@ const NavBar = () => {
 
   return (
     <React.Fragment>
-      <AppBar position='fixed' style={{ backgroundColor: "#ffde59" }}>
+      <AppBar position="fixed" style={{ backgroundColor: "#ffde59" }}>
         <Toolbar
           style={{
             display: "flex",
@@ -90,13 +92,14 @@ const NavBar = () => {
         >
           <img
             src={logo}
-            alt='WebVerse'
-            className='logo'
+            alt="WebVerse"
+            className="logo"
             onClick={() => history.push("/")}
           />
 
-          <div className='searchBarWrapper'>
-            <Paper component='form' className='searchBar'>
+          <div className="searchBarWrapper">
+            <SearchBar placeHolder="Rechercher un album, une série, un auteur..." />
+            {/* <Paper component='form' className='searchBar'>
               <IconButton type='button' sx={{ p: "10px" }} aria-label='search'>
                 <SearchIcon />
               </IconButton>
@@ -105,30 +108,30 @@ const NavBar = () => {
                 placeholder='Rechercher un album, une série, un auteur...'
                 inputProps={{ "aria-label": "search google maps" }}
               />
-            </Paper>
+            </Paper> */}
           </div>
 
           <div style={{ display: "flex", alignItems: "center" }}>
-            <Link to='/suggestion'>
-              <Tooltip title='Suggérer un contenu'>
-                <IconButton edge='end' color='inherit'>
+            <Link to="/suggestion">
+              <Tooltip title="Suggérer un contenu">
+                <IconButton edge="end" color="inherit">
                   <FaDice style={{ color: "#fff" }} />
                 </IconButton>
               </Tooltip>
             </Link>
             <IconButton
-              edge='end'
-              aria-label='account of current user'
-              aria-controls='menu-appbar'
-              aria-haspopup='true'
+              edge="end"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
               onClick={handleMenuOpen}
-              color='inherit'
+              color="inherit"
             >
               <AccountCircle />
             </IconButton>
           </div>
           <Menu
-            id='menu-appbar'
+            id="menu-appbar"
             anchorEl={anchorEl}
             anchorOrigin={{
               vertical: "bottom",
@@ -147,14 +150,14 @@ const NavBar = () => {
             <Divider />
             {!auth.isLoggedIn && (
               <MenuItem>
-                <NavLink to='/auth' className='menu-link'>
+                <NavLink to="/auth" className="menu-link">
                   Se connecter
                 </NavLink>
               </MenuItem>
             )}
             {auth.isLoggedIn && (
               <MenuItem>
-                <div onClick={auth.logout} className='menu-link'>
+                <div onClick={auth.logout} className="menu-link">
                   Déconnexion
                 </div>
               </MenuItem>
