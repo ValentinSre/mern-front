@@ -5,18 +5,13 @@ import { NavLink } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
-  Typography,
   IconButton,
   Menu,
   MenuItem,
-  TextField,
-  Paper,
-  InputBase,
   Divider,
   Tooltip,
 } from "@material-ui/core";
 import { FaDice } from "react-icons/fa";
-import SearchIcon from "@material-ui/icons/Search";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import { Link } from "react-router-dom";
 
@@ -99,16 +94,6 @@ const NavBar = () => {
 
           <div className="searchBarWrapper">
             <SearchBar placeHolder="Rechercher un album, une série, un auteur..." />
-            {/* <Paper component='form' className='searchBar'>
-              <IconButton type='button' sx={{ p: "10px" }} aria-label='search'>
-                <SearchIcon />
-              </IconButton>
-              <InputBase
-                style={{ marginLeft: "8px", flex: 1 }}
-                placeholder='Rechercher un album, une série, un auteur...'
-                inputProps={{ "aria-label": "search google maps" }}
-              />
-            </Paper> */}
           </div>
 
           <div style={{ display: "flex", alignItems: "center" }}>

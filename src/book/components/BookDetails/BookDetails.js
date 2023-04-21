@@ -27,12 +27,14 @@ import {
   displaySubtitle,
   displayTitle,
   displayType,
-  MONTHS,
 } from "./utils/DisplayFunctions";
+import variables from "../../../shared/util/variables";
 import DateButton from "./components/DateButton";
 import DateModal from "./components/DateModal";
 
 import "./BookDetails.css";
+
+const { shortMonths: MONTHS } = variables;
 
 const BookDetails = ({ book: initialBook }) => {
   const auth = useContext(AuthContext);
@@ -220,7 +222,7 @@ const BookDetails = ({ book: initialBook }) => {
 
     if (possede && !lu) {
       return (
-        <div className='book-collection__buttons'>
+        <div className="book-collection__buttons">
           <DateButton
             options={[
               { name: "Marquer comme lu", action: handleBookReading },
@@ -236,28 +238,28 @@ const BookDetails = ({ book: initialBook }) => {
 
     return (
       auth.token && (
-        <div className='book-collection'>
-          <div className='book-collection__review'>
+        <div className="book-collection">
+          <div className="book-collection__review">
             <form onSubmit={(event) => handleSubmitReview(event)}>
               <div style={{ display: "flex", alignItems: "center" }}>
-                <div className='book-collection__review__rating'>
+                <div className="book-collection__review__rating">
                   <p>Ma note</p>
                   <Rating
                     value={rating}
                     onChange={(e) => setRating(parseFloat(e.target.value))}
                     precision={0.5}
-                    size='large'
+                    size="large"
                   />
                 </div>
                 <TextField
-                  label='Lien Twitter'
-                  variant='outlined'
+                  label="Lien Twitter"
+                  variant="outlined"
                   value={twitterLink}
                   onChange={(e) => setTwitterLink(e.target.value)}
                   InputProps={{
                     startAdornment: (
-                      <InputAdornment position='start'>
-                        <Tooltip title='Voir sur Twitter'>
+                      <InputAdornment position="start">
+                        <Tooltip title="Voir sur Twitter">
                           <IconButton
                             onClick={() => {
                               window.location.href = twitterLink;
@@ -284,9 +286,9 @@ const BookDetails = ({ book: initialBook }) => {
                 margin='normal'
               /> */}
               <Button
-                type='submit'
-                variant='contained'
-                color='primary'
+                type="submit"
+                variant="contained"
+                color="primary"
                 style={{ marginTop: "10px", marginLeft: "15px" }}
               >
                 Valider
@@ -302,8 +304,8 @@ const BookDetails = ({ book: initialBook }) => {
 
   return (
     <div>
-      <div className='book-container'>
-        <div className='book-image' style={{ position: "relative" }}>
+      <div className="book-container">
+        <div className="book-image" style={{ position: "relative" }}>
           <img
             src={image}
             alt={titre}
@@ -328,7 +330,7 @@ const BookDetails = ({ book: initialBook }) => {
                   " " +
                   date.getFullYear()
                 }
-                size='large'
+                size="large"
                 style={{
                   backgroundColor: "#ffde59",
                   color: "black",
@@ -343,10 +345,10 @@ const BookDetails = ({ book: initialBook }) => {
             </div>
           )}
         </div>
-        <div className='book-details'>
+        <div className="book-details">
           <div>
             {displayTitle(serie, version, tome, titre)}
-            <p className='book-details__major-info'>
+            <p className="book-details__major-info">
               {displayType(type)} de{" "}
               <span onClick={() => setShowArtistDetails(!showArtistDetails)}>
                 {displayArtists(auteurs, dessinateurs)}{" "}
@@ -359,7 +361,7 @@ const BookDetails = ({ book: initialBook }) => {
               chez {editeur} - {new Date(date_parution).getFullYear()}
             </p>
             {showArtistDetails && (
-              <p className='book-details__minor-info'>
+              <p className="book-details__minor-info">
                 {displayArtists(auteurs, dessinateurs, true)}
               </p>
             )}
@@ -378,8 +380,8 @@ const BookDetails = ({ book: initialBook }) => {
         open={openReadModal}
         handleClose={() => setOpenReadModal(false)}
         date={dateLecture}
-        label='Date de lecture'
-        title='Quand avez-vous lu ce livre ?'
+        label="Date de lecture"
+        title="Quand avez-vous lu ce livre ?"
         handleChange={(e) => setDateLecture(e.target.value)}
         handleSubmit={handleBookReading}
       />
@@ -388,21 +390,21 @@ const BookDetails = ({ book: initialBook }) => {
         handleClose={() => setOpenCollectionModal(false)}
         date={dateObtention}
         label="Date d'achat"
-        title='Quand avez-vous acheté ce livre ?'
+        title="Quand avez-vous acheté ce livre ?"
         handleChange={(e) => setDateObtention(e.target.value)}
         handleSubmit={handleAdditionToCollection}
       />
       {auth.isAdmin && (
         <React.Fragment>
-          <div className='book-details__admin'>
+          <div className="book-details__admin">
             <CustomButtons
-              buttonType='edit'
-              title='Modifier'
+              buttonType="edit"
+              title="Modifier"
               onClick={handleBookEdition}
             />
             <CustomButtons
-              buttonType='delete'
-              title='Supprimer'
+              buttonType="delete"
+              title="Supprimer"
               onClick={handleBookDeletion}
             />
           </div>

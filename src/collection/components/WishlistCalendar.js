@@ -46,48 +46,76 @@ function WishlistCalendar({ books }) {
 
   const [selectedMonth, setSelectedMonth] = useState(releaseMonths[0]);
 
+  // Calculate the price for each month
+  const pricesByMonth = releaseMonths.reduce((acc, month) => {
+    const prices = datesByMonth[month].reduce((acc, date) => {
+      const books = booksByDate[date];
+      const price = books.reduce((acc, book) => {
+        const { prix } = book;
+        return acc + prix;
+      }, 0);
+      return acc + price;
+    }, 0);
+    acc[month] = prices;
+    return acc;
+  }, {});
+
   return (
     <div className="wishlist-calendar">
-      <Tabs
-        className="wishlist-calendar-header"
-        value={selectedMonth}
-        onChange={(event, newValue) => setSelectedMonth(newValue)}
-        centered
-        indicatorColor="primary"
-      >
-        {releaseMonths.map((month) => (
-          <Tab key={month} label={months[month]} value={month} />
-        ))}
-      </Tabs>
-      <TabPanel value={selectedMonth} index={selectedMonth}>
-        {datesByMonth[selectedMonth].map((date) => (
-          <div className="wishlist-calendar-day__div">
-            <div className="wishlist-calendar-day-label">
-              {new Date(date).getDate()}
-              {new Date(date).getDate() === 1 ? "er" : null}{" "}
-              {months[selectedMonth]}
-            </div>
-
-            <div key={date} className="wishlist-calendar-day">
-              <div className="wishlist-calendar-day-books">
-                {booksByDate[date].map((book) => (
-                  <div onClick={() => history.push(`/book/${book.id}`)}>
-                    <Tooltip title={makeTitle(book)}>
-                      <div key={book.id}>
-                        <img
-                          key={book.id}
-                          src={book.image}
-                          alt={makeTitle(book)}
-                        />
-                      </div>
-                    </Tooltip>
-                  </div>
-                ))}
+      {books && books.length > 0 && (
+        <React.Fragment>
+          <Tabs
+            className="wishlist-calendar-header"
+            value={selectedMonth}
+            onChange={(event, newValue) => setSelectedMonth(newValue)}
+            centered
+            style={{
+              color: "#000",
+              fontWeight: "bolder",
+            }}
+            indicatorColor="#ffde59"
+          >
+            {releaseMonths.map((month) => (
+              <Tab key={month} label={months[month]} value={month} />
+            ))}
+          </Tabs>
+          <TabPanel value={selectedMonth} index={selectedMonth}>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <div style={{ marginLeft: "30px", marginBottom: "20px" }}>
+                Dépenses prévues du mois :{" "}
+                <strong>{pricesByMonth[selectedMonth].toFixed(2)}€</strong>
               </div>
             </div>
-          </div>
-        ))}
-      </TabPanel>
+            {datesByMonth[selectedMonth].map((date) => (
+              <div className="wishlist-calendar-day__div">
+                <div className="wishlist-calendar-day-label">
+                  {new Date(date).getDate()}
+                  {new Date(date).getDate() === 1 ? "er" : null}{" "}
+                  {months[selectedMonth]}
+                </div>
+
+                <div key={date} className="wishlist-calendar-day">
+                  <div className="wishlist-calendar-day-books">
+                    {booksByDate[date].map((book) => (
+                      <div onClick={() => history.push(`/book/${book.id}`)}>
+                        <Tooltip title={makeTitle(book)}>
+                          <div key={book.id}>
+                            <img
+                              key={book.id}
+                              src={book.image}
+                              alt={makeTitle(book)}
+                            />
+                          </div>
+                        </Tooltip>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </TabPanel>
+        </React.Fragment>
+      )}
     </div>
   );
 }

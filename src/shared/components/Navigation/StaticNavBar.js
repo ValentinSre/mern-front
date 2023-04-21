@@ -10,7 +10,7 @@ const StaticNavBar = ({ userId }) => {
   const categories = ["BD", "Comics", "Manga"];
 
   return (
-    <div className='static-nav-bar'>
+    <div className="static-nav-bar">
       <div style={{ marginLeft: "20px", display: "flex" }}>
         {categories.map((category) => (
           <Tooltip title={`Cadre ${category}`} key={category}>

@@ -6,21 +6,9 @@ import { CiBookmark } from "react-icons/ci";
 
 import CustomButtons from "../../../../shared/components/UIElements/CustomButtons";
 import DateButton from "../components/DateButton";
+import variables from "../../../../shared/util/variables";
 
-const MONTHS = {
-  1: "janv.",
-  2: "fév.",
-  3: "mars",
-  4: "avril",
-  5: "mai",
-  6: "juin",
-  7: "juil.",
-  8: "août",
-  9: "sept.",
-  10: "oct.",
-  11: "nov.",
-  12: "déc.",
-};
+const { shortMonths: MONTHS } = variables;
 
 const displayArtists = (auteurs, dessinateurs, details) => {
   const auteursNames = auteurs.map((auteur) => auteur.nom);
@@ -48,13 +36,13 @@ const displayArtists = (auteurs, dessinateurs, details) => {
       {auteursNames.map((auteur) => (
         <span key={auteur}>
           {" "}
-          {auteur} <span className='artist-function'>(Scénario)</span>
+          {auteur} <span className="artist-function">(Scénario)</span>
         </span>
       ))}
       {dessinateursNames.map((dessinateur) => (
         <span key={dessinateur}>
           {" "}
-          {dessinateur} <span className='artist-function'>(Dessin)</span>
+          {dessinateur} <span className="artist-function">(Dessin)</span>
         </span>
       ))}
     </p>
@@ -70,7 +58,7 @@ const displayButton = ({
   handleOpenCollectionModal,
 }) => {
   return (
-    <div className='book-collection__buttons'>
+    <div className="book-collection__buttons">
       <DateButton
         options={[
           {
@@ -84,8 +72,8 @@ const displayButton = ({
         ]}
       />
       <CustomButtons
-        buttonType='wishlist'
-        title='Ajouter à ma wishlist'
+        buttonType="wishlist"
+        title="Ajouter à ma wishlist"
         disabled={souhaite || possede}
         onClick={() => handleAdditionToWishlist(bookId)}
       />
@@ -100,25 +88,25 @@ const displaySubtitle = (genre, date_parution, format) => {
   const year = date.getFullYear();
 
   return (
-    <div className='book-subtitle'>
+    <div className="book-subtitle">
       <p>
-        <Tooltip title='Genre' style={{ marginRight: "30px" }}>
+        <Tooltip title="Genre" style={{ marginRight: "30px" }}>
           <span>
             <CiBookmark /> {genre}
           </span>
         </Tooltip>
-        <Tooltip title='Parution' style={{ marginRight: "30px" }}>
+        <Tooltip title="Parution" style={{ marginRight: "30px" }}>
           <span>
             <BsCalendarWeek />{" "}
-            <span className='book-subtitle__short-date'>
+            <span className="book-subtitle__short-date">
               {month + "/" + year + " ("}
             </span>
             <span>{day + " " + MONTHS[month + 1] + " " + year}</span>
-            <span className='book-subtitle__short-date'>)</span>
+            <span className="book-subtitle__short-date">)</span>
           </span>
         </Tooltip>
         {format && (
-          <Tooltip title='Format'>
+          <Tooltip title="Format">
             <span>
               <ImBook /> {format}
             </span>
@@ -163,5 +151,4 @@ export {
   displaySubtitle,
   displayTitle,
   displayType,
-  MONTHS,
 };

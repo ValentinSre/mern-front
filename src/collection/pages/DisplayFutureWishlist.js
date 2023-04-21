@@ -23,47 +23,9 @@ import "./DisplayWishlist.css";
 
 const Wishlist = () => {
   const auth = useContext(AuthContext);
-  const history = useHistory();
+
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [wishlist, setWishlist] = useState();
-
-  const [openCollectionModal, setOpenCollectionModal] = useState(false);
-  const [dateObtention, setDateObtention] = useState(null);
-  const [bookId, setBookId] = useState(null);
-
-  const handleAdditionToCollection = () => {
-    handleAddToList([bookId], "collection");
-  };
-
-  const handleAddToList = async (bookIds, listName) => {
-    try {
-      const requestData = await sendRequest(
-        process.env.REACT_APP_API_URL + "/collection/add",
-        "POST",
-        JSON.stringify({
-          ids_book: bookIds,
-          id_user: auth.userId,
-          list_name: listName,
-          date_achat: dateObtention,
-        }),
-        {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + auth.token,
-        }
-      );
-
-      const { success } = requestData;
-      const bookId = bookIds[0];
-      if (success) {
-        // remove book from wishlist
-        setWishlist(wishlist.filter((book) => book.id_book !== bookId));
-        // close modal
-        setOpenCollectionModal(false);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   const fetchWishlists = async () => {
     try {
@@ -93,6 +55,7 @@ const Wishlist = () => {
     }
   };
 
+  console.log(wishlist);
   const filteredBooks = priceFilter.length
     ? wishlist.filter((book) => {
         if (priceFilter.includes("20")) {
@@ -107,14 +70,6 @@ const Wishlist = () => {
         return false;
       })
     : wishlist;
-
-  const handleButton = (bookId) => {
-    setOpenCollectionModal(true);
-    setDateObtention(null);
-    setBookId(bookId);
-  };
-
-  const currentDate = new Date();
 
   return (
     <React.Fragment>
@@ -177,73 +132,8 @@ const Wishlist = () => {
             )}
             <div>
               <WishlistCalendar books={filteredBooks} />
-
-              {/* {filteredBooks.map(({date, books}) => (
-                  <React.Fragment key={date}>
-                    <div className='wishlist-display__date'>{date}</div>
-                    {books.map((book) => (
-                      <div key={book.id} className='wishlist-display__book'>
-                        <div
-                          style={{ position: "relative" }}
-                          onClick={() => history.push(`/book/${book.id_book}`)}
-                        >
-                          <img src={book.image} alt={book.titre} />
-                          {new Date(book.date_parution) < currentDate && (
-                            <Badge color='primary' badgeContent='✓' />
-                          )}
-                        </div>
-                        <div
-                          className='wishlist-display__info-title'
-                          onClick={() => history.push(`/book/${book.id_book}`)}
-                        >
-                          <h3>{book.titre}</h3>
-                          {book.tome && <span>Tome {book.tome}</span>}
-                        </div>
-                        <div className='wishlist-display__info-price'>
-                          <h3>{book.prix.toFixed(2)}€</h3>
-                        </div>
-                        <div className='wishlist-display__actions'>
-                          <Button
-                            variant='outlined'
-                            style={{
-                              height: "30px",
-                              marginTop: "10px",
-                              margin: "auto",
-                            }}
-                            fullWidth
-                            startIcon={<CheckIcon />}
-                            onClick={() => handleButton(book.id_book)}
-                          >
-                            Acheté
-                          </Button>
-                        </div>
-                        <Divider />
-                        <div
-                          className='wishlist-display__info-serie'
-                          onClick={() => history.push(`/book/${book.id_book}`)}
-                        >
-                          {book.serie ? (
-                            <h4>{book.serie}</h4>
-                          ) : (
-                            <h4>{book.titre}</h4>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </React.Fragment>
-                ))} */}
             </div>
           </div>
-          <DateModal
-            open={openCollectionModal}
-            handleClose={() => setOpenCollectionModal(false)}
-            date={dateObtention}
-            authorizeNoDate
-            label="Date d'achat"
-            title="Quand avez-vous acheté ce livre ?"
-            handleChange={(e) => setDateObtention(e.target.value)}
-            handleSubmit={handleAdditionToCollection}
-          />
         </div>
       )}
     </React.Fragment>

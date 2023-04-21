@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import Tooltip from "@material-ui/core/Tooltip";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import TabPanel from "../../shared/util/TabPanel";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Timeline from "@material-ui/lab/Timeline";
@@ -14,26 +11,13 @@ import TimelineContent from "@material-ui/lab/TimelineContent";
 import TimelineOppositeContent from "@material-ui/lab/TimelineOppositeContent";
 import TimelineDot from "@material-ui/lab/TimelineDot";
 import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
 
 import makeTitle from "../../shared/util/makeTitle";
+import variables from "../../shared/util/variables";
 
 import "./BookCalendar.css";
 
-const months = {
-  1: "Janvier",
-  2: "Février",
-  3: "Mars",
-  4: "Avril",
-  5: "Mai",
-  6: "Juin",
-  7: "Juillet",
-  8: "Août",
-  9: "Septembre",
-  10: "Octobre",
-  11: "Novembre",
-  12: "Décembre",
-};
+const { months } = variables;
 
 function BookCalendar({ books }) {
   const history = useHistory();

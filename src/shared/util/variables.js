@@ -13,6 +13,20 @@ const variables = {
     11: "Novembre",
     12: "Décembre",
   },
+  shortMonths: {
+    1: "janv.",
+    2: "fév.",
+    3: "mars",
+    4: "avril",
+    5: "mai",
+    6: "juin",
+    7: "juil.",
+    8: "août",
+    9: "sept.",
+    10: "oct.",
+    11: "nov.",
+    12: "déc.",
+  },
 };
 
 export default variables;

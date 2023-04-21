@@ -1,10 +1,11 @@
 .wishlist-calendar {
   border-radius: 10px;
-  background-color: #fff;
+  background-color: #fbfbfb;
   overflow: auto;
   margin-bottom: 20px;
   margin: auto;
   margin-top: 20px;
+  border: 1px solid #ccc;
 }
 
 @media (max-width: 767px) {
@@ -24,7 +25,7 @@
 .wishlist-calendar-header {
   border-top-right-radius: 10px;
   border-top-left-radius: 10px;
-  background-color: #0cc0df;
+  background-color: #c6ab40;
   color: white;
   font-size: 15px;
   font-weight: bold;
