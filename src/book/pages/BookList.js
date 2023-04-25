@@ -135,18 +135,23 @@ const BookList = () => {
     if (loadedBooks) {
       const results = loadedBooks.filter(
         (book) =>
-          book.titre.toLowerCase().includes(searchText.toLowerCase()) ||
+          (book.titre &&
+            book.titre.toLowerCase().includes(searchText.toLowerCase())) ||
           (book.serie &&
             book.serie.toLowerCase().includes(searchText.toLowerCase())) ||
           (book.editeur &&
             book.editeur.toLowerCase().includes(searchText.toLowerCase())) ||
           (book.format &&
             book.format.toLowerCase().includes(searchText.toLowerCase())) ||
-          book.auteurs.some((auteur) =>
-            auteur.nom.toLowerCase().includes(searchText.toLowerCase())
+          book.auteurs.some(
+            (auteur) =>
+              auteur.nom &&
+              auteur.nom.toLowerCase().includes(searchText.toLowerCase())
           ) ||
-          book.dessinateurs.some((dessinateur) =>
-            dessinateur.nom.toLowerCase().includes(searchText.toLowerCase())
+          book.dessinateurs.some(
+            (dessinateur) =>
+              dessinateur.nom &&
+              dessinateur.nom.toLowerCase().includes(searchText.toLowerCase())
           )
       );
 
@@ -173,16 +178,16 @@ const BookList = () => {
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />{" "}
       {isLoading && (
-        <div className='center'>
+        <div className="center">
           <LoadingSpinner />
         </div>
       )}
       {!isLoading && loadedBooks && (
-        <div className='book-list'>
+        <div className="book-list">
           <BookTable
             headCells={headCells}
             rows={filteredBooks}
-            title='Tous les livres'
+            title="Tous les livres"
             actions={actions}
             checkbox={auth.isLoggedIn}
             handleChangeFilter={handleChangeFilter}
