@@ -7,9 +7,8 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import { AuthContext } from "../../shared/context/auth-context";
 import DisplayCollection from "./DisplayCollection";
-import Wishlist from "./DisplayWishlist";
-import Releases from "./DisplayFutureWishlist";
-// import UpcomingBooks from './UpcomingBooks';
+import DisplayWishlist from "./DisplayWishlist";
+import DisplayReleases from "./DisplayFutureWishlist";
 import Stats from "./Stats";
 
 const useStyles = makeStyles((theme) => ({
@@ -63,52 +62,52 @@ const MyLibrary = () => {
         setSelectedTab(0);
         break;
     }
-  }, [location]);
+  }, [location, auth.userId]);
 
   return (
     <div style={{ marginTop: "40px" }}>
       {/* <h1 style={{ padding: "20px", fontFamily: "sans-serif", color: "white" }}>
         Ma bibliothèque
       </h1> */}
-      <AppBar position='static' className={classes.appBar}>
+      <AppBar position="static" className={classes.appBar}>
         <Tabs
           value={selectedTab}
           onChange={handleTabChange}
           className={classes.tabs}
-          indicatorColor='#fff'
+          indicatorColor="#fff"
           centered={!isMobile}
           variant={isMobile ? "scrollable" : "standard"}
         >
           <Tab
             component={Link}
             to={`/${auth.userId}/collection`}
-            label='Mes BD'
+            label="Mes BD"
             className={selectedTab === 0 ? classes.selectedTab : ""}
           />
           <Tab
             component={Link}
             to={`/${auth.userId}/wishlist`}
-            label='Mes souhaits'
+            label="Mes souhaits"
             className={selectedTab === 1 ? classes.selectedTab : ""}
           />
           <Tab
             component={Link}
             to={`/${auth.userId}/releases`}
-            label='Mes sorties'
+            label="Mes sorties"
             className={selectedTab === 2 ? classes.selectedTab : ""}
           />
           <Tab
             component={Link}
             to={`/${auth.userId}/stats`}
-            label='Mes statistiques'
+            label="Mes statistiques"
             className={selectedTab === 3 ? classes.selectedTab : ""}
           />
         </Tabs>
       </AppBar>
       <div className={classes.content}>
         {selectedTab === 0 && <DisplayCollection />}
-        {selectedTab === 1 && <Wishlist />}
-        {selectedTab === 2 && <Releases />}
+        {selectedTab === 1 && <DisplayWishlist />}
+        {selectedTab === 2 && <DisplayReleases />}
         {selectedTab === 3 && <Stats />}
       </div>
     </div>

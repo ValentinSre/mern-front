@@ -1,21 +1,14 @@
 import React from "react";
 import {
+  Chip,
+  Checkbox,
   InputLabel,
   MenuItem,
   Select,
-  Chip,
-  TextField,
   IconButton,
   FormControlLabel,
-  Checkbox,
-  Paper,
-  InputBase,
 } from "@material-ui/core";
-import {
-  Delete as DeleteIcon,
-  Done as DoneIcon,
-  Search as SearchIcon,
-} from "@material-ui/icons";
+import { Delete as DeleteIcon, Done as DoneIcon } from "@material-ui/icons";
 import { FaListUl, FaTh } from "react-icons/fa";
 import SearchBar from "../../shared/components/UIElements/SearchBar";
 
@@ -53,7 +46,6 @@ const CollectionFilter = ({
       <div
         style={{
           padding: "20px",
-          // margin: "10px",
           border: "1px solid #ccc",
           borderRadius: "5px",
         }}
@@ -84,6 +76,7 @@ const CollectionFilter = ({
             handleCheckedChange={handleCheckedChange}
             handleSearch={handleSearch}
             editeurs={editeurs}
+            searchText={searchText}
             handleDelete={handleEditeursSelection}
           />
         )}
@@ -95,6 +88,7 @@ const CollectionFilter = ({
             handleCheckedChange={handleCheckedChange}
             handleSearch={handleSearch}
             selectedSort={selectedSort}
+            searchText={searchText}
             handleSortChange={handleSortChange}
             selectedGroupment={selectedGroupment}
             handleGroupmentChange={handleGroupmentChange}
@@ -173,7 +167,7 @@ const SeriesFilter = ({
           label="Roman"
         />
       </div>
-      <div>
+      <div style={{ marginTop: "20px" }}>
         <SearchBar
           searchText={searchText}
           handleSearch={handleSearch}
@@ -282,7 +276,7 @@ const BooksFilter = ({
           </Select>
         </div>
       </div>
-      <div>
+      <div style={{ marginTop: "20px" }}>
         <SearchBar
           searchText={searchText}
           handleSearch={handleSearch}
@@ -295,33 +289,5 @@ const BooksFilter = ({
     </div>
   );
 };
-
-// const SearchBar = ({ searchText, handleSearch, text }) => {
-//   return (
-//     <Paper
-//       component='form'
-//       style={{
-//         display: "flex",
-//         alignItems: "center",
-//         width: "100%",
-//         maxWidth: "300px",
-//         padding: "2px 4px",
-//         height: "35px",
-//         marginTop: "10px",
-//       }}
-//     >
-//       <IconButton type='button' sx={{ p: "10px" }} aria-label='search'>
-//         <SearchIcon />
-//       </IconButton>
-//       <InputBase
-//         style={{ marginLeft: "8px", flex: 1 }}
-//         placeholder={text}
-//         inputProps={{ "aria-label": "search google maps" }}
-//         value={searchText}
-//         onChange={handleSearch}
-//       />
-//     </Paper>
-//   );
-// };
 
 export default CollectionFilter;

@@ -2,14 +2,11 @@ import React from "react";
 import { BsStarFill, BsStarHalf, BsStar } from "react-icons/bs";
 import "./Rating.css";
 
-function Star(props) {}
-
 export default function Rating(props) {
   const { rating, size, real } = props;
   const stars = [];
 
   const realRating = real ? rating : 0;
-  // const color = props.real ? "#f8e825" : "#ccc";
 
   const color = real
     ? rating >= 3.5
@@ -29,5 +26,5 @@ export default function Rating(props) {
     }
   }
 
-  return <div className='rating'>{stars}</div>;
+  return <div className="rating">{stars}</div>;
 }

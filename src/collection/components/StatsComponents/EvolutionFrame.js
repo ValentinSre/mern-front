@@ -1,7 +1,6 @@
 import React from "react";
 import ArrowDownIcon from "@heroicons/react/24/solid/ArrowDownIcon";
 import ArrowUpIcon from "@heroicons/react/24/solid/ArrowUpIcon";
-import CurrencyDollarIcon from "@heroicons/react/24/solid/CurrencyDollarIcon";
 import {
   Avatar,
   Card,
@@ -50,11 +49,11 @@ const EvolutionFrame = (props) => {
               alignItems: "flex-start",
             }}
           >
-            <Typography color='text.secondary' variant='overline'>
+            <Typography color="text.secondary" variant="overline">
               {title}
             </Typography>
 
-            <Typography variant='h4'>{value}</Typography>
+            <Typography variant="h4">{value}</Typography>
           </div>
 
           <Avatar
@@ -86,19 +85,19 @@ const EvolutionFrame = (props) => {
                 justifyContent: "flex-start",
               }}
             >
-              <SvgIcon style={color} fontSize='small'>
+              <SvgIcon style={color} fontSize="small">
                 {positive ? <ArrowUpIcon /> : <ArrowDownIcon />}
               </SvgIcon>
 
               <Typography
                 style={{ ...color, marginLeft: 5, fontSize: 15 }}
-                variant='body2'
+                variant="body2"
               >
                 {difference}%
               </Typography>
             </div>
 
-            <Typography color='text.secondary' variant='caption'>
+            <Typography color="text.secondary" variant="caption">
               {comparisonPhrase}
             </Typography>
           </div>
@@ -106,7 +105,7 @@ const EvolutionFrame = (props) => {
 
         {percentage && (
           <Box sx={{ mt: 3 }}>
-            <LinearProgress value={percentage} variant='determinate' />
+            <LinearProgress value={percentage} variant="determinate" />
           </Box>
         )}
       </CardContent>

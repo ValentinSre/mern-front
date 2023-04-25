@@ -40,7 +40,7 @@ const DisplayCollection = () => {
 
   useEffect(() => {
     fetchBooks();
-  }, [sendRequest, auth.userId, displayMode]);
+  }, [sendRequest, auth.userId, displayMode, fetchBooks]);
 
   const loadEditeurs = (editeurs) => {
     const editeursObj = {};

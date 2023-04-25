@@ -5,9 +5,7 @@ import {
   FormControlLabel,
   Grid,
   Badge,
-  Typography,
   Divider,
-  Box,
   Button,
 } from "@material-ui/core";
 import { Check as CheckIcon } from "@material-ui/icons";
@@ -54,9 +52,7 @@ const Wishlist = () => {
       const { success } = requestData;
       const bookId = bookIds[0];
       if (success) {
-        // remove book from wishlist
         setWishlist(wishlist.filter((book) => book.id_book !== bookId));
-        // close modal
         setOpenCollectionModal(false);
       }
     } catch (err) {
@@ -79,7 +75,7 @@ const Wishlist = () => {
 
   useEffect(() => {
     fetchWishlists();
-  }, [sendRequest, auth.userId]);
+  }, [sendRequest, auth.userId, fetchWishlists]);
 
   const [priceFilter, setPriceFilter] = useState([]);
 
@@ -118,43 +114,43 @@ const Wishlist = () => {
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />{" "}
       {isLoading && (
-        <div className='center'>
+        <div className="center">
           <LoadingSpinner />
         </div>
       )}
       {!isLoading && wishlist && (
-        <div className='wishlist'>
-          <div className='wishlist__filters'>
+        <div className="wishlist">
+          <div className="wishlist__filters">
             <Grid item xs={12}>
               <FormControlLabel
                 control={
                   <Checkbox
-                    value='20'
+                    value="20"
                     onChange={handleFilterChange}
-                    color='primary'
+                    color="primary"
                   />
                 }
-                label='< 20€'
+                label="< 20€"
               />
               <FormControlLabel
                 control={
                   <Checkbox
-                    value='50'
+                    value="50"
                     onChange={handleFilterChange}
-                    color='primary'
+                    color="primary"
                   />
                 }
-                label='> 20€ et < 50€'
+                label="> 20€ et < 50€"
               />
               <FormControlLabel
                 control={
                   <Checkbox
-                    value='100'
+                    value="100"
                     onChange={handleFilterChange}
-                    color='primary'
+                    color="primary"
                   />
                 }
-                label='> 50€'
+                label="> 50€"
               />
             </Grid>
           </div>
@@ -168,38 +164,38 @@ const Wishlist = () => {
                 €
               </div>
             )}
-            <div className='wishlist-display'>
+            <div className="wishlist-display">
               {!filteredBooks.length && (
                 <h2 style={{ paddingLeft: "20px" }}>
                   Aucun livre dans cette wishlist
                 </h2>
               )}
-              <div className='wishlist-display__books_array'>
+              <div className="wishlist-display__books_array">
                 {filteredBooks.map((book) => (
-                  <div key={book.id} className='wishlist-display__book'>
+                  <div key={book.id} className="wishlist-display__book">
                     <div
                       style={{ position: "relative" }}
                       onClick={() => history.push(`/book/${book.id_book}`)}
                     >
                       <img src={book.image} alt={book.titre} />
                       {new Date(book.date_parution) < currentDate && (
-                        <Badge color='primary' badgeContent='✓' />
+                        <Badge color="primary" badgeContent="✓" />
                       )}
                     </div>
 
                     <div
-                      className='wishlist-display__info-title'
+                      className="wishlist-display__info-title"
                       onClick={() => history.push(`/book/${book.id_book}`)}
                     >
                       <h3>{book.titre}</h3>
                       {book.tome && <span>Tome {book.tome}</span>}
                     </div>
-                    <div className='wishlist-display__info-price'>
+                    <div className="wishlist-display__info-price">
                       <h3>{book.prix.toFixed(2)}€</h3>
                     </div>
-                    <div className='wishlist-display__actions'>
+                    <div className="wishlist-display__actions">
                       <Button
-                        variant='outlined'
+                        variant="outlined"
                         style={{
                           height: "30px",
                           marginTop: "10px",
@@ -214,7 +210,7 @@ const Wishlist = () => {
                     </div>
                     <Divider />
                     <div
-                      className='wishlist-display__info-serie'
+                      className="wishlist-display__info-serie"
                       onClick={() => history.push(`/book/${book.id_book}`)}
                     >
                       {book.serie ? (
@@ -234,7 +230,7 @@ const Wishlist = () => {
             date={dateObtention}
             authorizeNoDate
             label="Date d'achat"
-            title='Quand avez-vous acheté ce livre ?'
+            title="Quand avez-vous acheté ce livre ?"
             handleChange={(e) => setDateObtention(e.target.value)}
             handleSubmit={handleAdditionToCollection}
           />

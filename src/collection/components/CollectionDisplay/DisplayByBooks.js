@@ -6,24 +6,6 @@ import makeTitle from "../../../shared/util/makeTitle";
 
 import "./DisplayByBooks.css";
 
-// **************************
-// **** Sort explanation ****
-// **************************
-// 1: Sort by title
-// 2: Sort by price
-// 3: Sort by date
-
-// **************************
-// **** Grpt explanation ****
-// **************************
-// 1: Group by editor
-// 2: Group by format
-// 3: Group by author
-// 4: Group by illustrator
-// 5: Group by genre
-// 6: Group by year
-// 7: Group by type
-
 const SORT_IDS = {
   0: "titre",
   1: "prix",
@@ -35,16 +17,6 @@ const GROUPMENT_IDS = {
   1: "editeur",
   2: "type",
   3: "etat",
-};
-
-const GROUP_ERROR_MESSAGE = {
-  1: "Éditeur non renseigné",
-  2: "Sans format",
-  3: "Auteur non renseigné",
-  4: "Dessinateur non renseigné",
-  5: "Genre non renseigné",
-  6: "Année non renseignée",
-  7: "Type non renseigné",
 };
 
 const DisplayByBooks = ({

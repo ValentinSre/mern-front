@@ -1,5 +1,5 @@
 import React from "react";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip } from "recharts";
 
 const BooksByEditor = ({ data }) => {
   return (
@@ -12,14 +12,13 @@ const BooksByEditor = ({ data }) => {
         left: 20,
         bottom: 5,
       }}
-      layout='vertical'
+      layout="vertical"
       barSize={10} // définir la largeur des barres
     >
-      <XAxis type='number' />
-      <YAxis dataKey='editeur' type='category' />
+      <XAxis type="number" />
+      <YAxis dataKey="editeur" type="category" />
       <Tooltip />
-      <Bar dataKey='total' stackId='a' fill='#ffde59' />
-      {/* <Bar dataKey='lu' stackId='a' fill='#82ca9d' /> */}
+      <Bar dataKey="total" stackId="a" fill="#ffde59" />
     </BarChart>
   );
 };

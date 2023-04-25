@@ -1,5 +1,4 @@
 import React, { useContext, useState, useEffect } from "react";
-import { useHistory, useParams } from "react-router-dom";
 import Dialog from "@material-ui/core/Dialog";
 import Button from "@material-ui/core/Button";
 

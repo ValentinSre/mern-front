@@ -1,13 +1,13 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-import { Typography, IconButton, Tooltip } from "@material-ui/core";
+import { Tooltip } from "@material-ui/core";
 import { BsFillCaretDownFill } from "react-icons/bs";
 
 import "./StaticNavBar.css";
 
 const StaticNavBar = ({ userId }) => {
-  const categories = ["BD", "Comics", "Manga"];
+  const categories = []; // ["BD", "Comics", "Manga"];
 
   return (
     <div className="static-nav-bar">

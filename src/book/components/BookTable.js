@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import PropTypes, { checkPropTypes } from "prop-types";
+import PropTypes from "prop-types";
 import { alpha } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Table from "@material-ui/core/Table";
@@ -17,7 +17,6 @@ import Paper from "@material-ui/core/Paper";
 import Checkbox from "@material-ui/core/Checkbox";
 import IconButton from "@material-ui/core/IconButton";
 import { FormControl, RadioGroup, Radio } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import PreviewIcon from "@material-ui/icons/Visibility";
@@ -88,9 +87,9 @@ function BookTableHead(props) {
     <TableHead>
       <TableRow>
         {checkbox && (
-          <TableCell padding='checkbox'>
+          <TableCell padding="checkbox">
             <Checkbox
-              color='primary'
+              color="primary"
               indeterminate={numSelected > 0 && numSelected < rowCount}
               checked={rowCount > 0 && numSelected === rowCount}
               onChange={onSelectAllClick}
@@ -100,10 +99,10 @@ function BookTableHead(props) {
             />
           </TableCell>
         )}
-        <TableCell padding='see'></TableCell>
+        <TableCell padding="see"></TableCell>
         {!displayImage && (
           <TableCell>
-            <IconOnlyButton icon='image' title='Image' />
+            <IconOnlyButton icon="image" title="Image" />
           </TableCell>
         )}
         {headCells.map((headCell) => (
@@ -122,13 +121,13 @@ function BookTableHead(props) {
               {headCell.label}
               {orderBy === headCell.id ? (
                 <Box
-                  component='span'
+                  component="span"
                   style={{
                     position: "absolute",
                     top: "-9999px",
                     left: "-9999px",
                   }}
-                  aria-hidden='true'
+                  aria-hidden="true"
                 >
                   {order === "desc" ? "sorted descending" : "sorted ascending"}
                 </Box>
@@ -194,18 +193,18 @@ function BookTableToolbar(props) {
       {numSelected > 0 ? (
         <Typography
           sx={{ flex: "1 1 100%" }}
-          color='inherit'
-          variant='subtitle1'
-          component='div'
+          color="inherit"
+          variant="subtitle1"
+          component="div"
         >
           {numSelected} sélectionné(s)
         </Typography>
       ) : (
         <Typography
           sx={{ flex: "1 1 100%" }}
-          variant='h6'
-          id='tableTitle'
-          component='div'
+          variant="h6"
+          id="tableTitle"
+          component="div"
         >
           {title}
         </Typography>
@@ -216,7 +215,7 @@ function BookTableToolbar(props) {
         handleClose={() => setOpenCollectionModal(false)}
         date={dateObtention}
         label="Date d'achat"
-        title='Quand avez-vous acheté ce(s) livre(s) ?'
+        title="Quand avez-vous acheté ce(s) livre(s) ?"
         handleChange={(e) => setDateObtention(e.target.value)}
         handleSubmit={() =>
           handleAdditionToCollection(selectedRows, dateObtention)
@@ -226,7 +225,7 @@ function BookTableToolbar(props) {
       <IconButton onClick={handleOpenFilter}>
         <FilterListIcon />
       </IconButton>
-      <div className='filter-container'>
+      <div className="filter-container">
         {openFilter && (
           <React.Fragment>
             <FormControl>
@@ -245,8 +244,8 @@ function BookTableToolbar(props) {
                 {" "}
                 <RadioGroup
                   row
-                  aria-labelledby='test'
-                  name='test'
+                  aria-labelledby="test"
+                  name="test"
                   value={filterValue}
                   // execute la fonction handleChangeFilter et lui passe en paramètre l'event
                   onChange={(event) => {
@@ -256,35 +255,35 @@ function BookTableToolbar(props) {
                   }}
                 >
                   <FormControlLabel
-                    value='all'
+                    value="all"
                     control={<Radio />}
-                    label='Tout'
+                    label="Tout"
                   />
                   <FormControlLabel
-                    value='collection'
+                    value="collection"
                     control={<Radio />}
-                    label='Collection'
+                    label="Collection"
                   />
                   <FormControlLabel
-                    value='wishlist'
+                    value="wishlist"
                     control={<Radio />}
-                    label='Wishlist'
+                    label="Wishlist"
                   />
                   <FormControlLabel
-                    value='none'
+                    value="none"
                     control={<Radio />}
-                    label='Autres'
+                    label="Autres"
                   />
                 </RadioGroup>
               </div>
             </FormControl>
 
             <TextField
-              label='Recherche'
-              variant='outlined'
+              label="Recherche"
+              variant="outlined"
               value={searchText}
               onChange={handleSearch}
-              margin='normal'
+              margin="normal"
               InputLabelProps={{ position: "top" }}
             />
           </React.Fragment>
@@ -395,7 +394,7 @@ export default function BookTable({
 
       setVisibleRows(updatedRows);
     },
-    [order, orderBy, page, rowsPerPage]
+    [order, orderBy, page, rowsPerPage, rows]
   );
 
   const handleSelectAllClick = (event) => {
@@ -505,7 +504,7 @@ export default function BookTable({
           <Table
             stickyHeader
             sx={{ minWidth: 750 }}
-            aria-labelledby='tableTitle'
+            aria-labelledby="tableTitle"
             size={dense ? "small" : "large"}
           >
             <BookTableHead
@@ -529,7 +528,7 @@ export default function BookTable({
                       <TableRow
                         hover
                         onClick={(event) => handleClick(event, row._id)}
-                        role='checkbox'
+                        role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
                         key={row.name}
@@ -537,9 +536,9 @@ export default function BookTable({
                         sx={{ cursor: "pointer" }}
                       >
                         {checkbox && (
-                          <TableCell padding='checkbox'>
+                          <TableCell padding="checkbox">
                             <Checkbox
-                              color='primary'
+                              color="primary"
                               checked={isItemSelected}
                               inputProps={{
                                 "aria-labelledby": labelId,
@@ -547,7 +546,7 @@ export default function BookTable({
                             />
                           </TableCell>
                         )}
-                        <TableCell padding='see'>
+                        <TableCell padding="see">
                           <IconButton
                             key={row._id}
                             onClick={() => openPreview(row._id)}
@@ -599,9 +598,9 @@ export default function BookTable({
         </TableContainer>
         <TablePagination
           rowsPerPageOptions={[25, 50, 100]}
-          component='div'
+          component="div"
           count={rows.length}
-          labelRowsPerPage='Éléments par page'
+          labelRowsPerPage="Éléments par page"
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={(event, newPage) =>
@@ -611,7 +610,7 @@ export default function BookTable({
         />
         <FormControlLabel
           control={<Switch checked={dense} onChange={handleChangeDense} />}
-          label='Condensé'
+          label="Condensé"
           style={{ marginLeft: "1rem", marginBottom: "1rem" }}
         />
       </Paper>

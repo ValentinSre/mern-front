@@ -292,7 +292,7 @@ const Stats = () => {
       setCurrentIndex((currentIndex + 1) % collectionStatsData.length);
     }, 60000);
     return () => clearInterval(intervalId);
-  }, [currentIndex]);
+  }, [currentIndex, fetchStats, collectionStatsData.length]);
 
   const handleTabClick = (index) => {
     setSelectedIndex(index);
