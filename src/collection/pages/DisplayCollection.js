@@ -90,6 +90,7 @@ const DisplayCollection = () => {
     BD: true,
     Comics: true,
     Manga: true,
+    Roman: true,
   });
 
   const handleCheckedChange = (event) => {

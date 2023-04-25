@@ -162,6 +162,16 @@ const SeriesFilter = ({
           }
           label="Manga"
         />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={checkedValues.Roman}
+              onChange={handleCheckedChange}
+              name="Roman"
+            />
+          }
+          label="Roman"
+        />
       </div>
       <div>
         <SearchBar
@@ -221,6 +231,16 @@ const BooksFilter = ({
             />
           }
           label="Manga"
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={checkedValues.Roman}
+              onChange={handleCheckedChange}
+              name="Roman"
+            />
+          }
+          label="Roman"
         />
       </div>
       <div
