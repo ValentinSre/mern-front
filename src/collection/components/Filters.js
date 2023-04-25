@@ -1,7 +1,6 @@
 import React from "react";
 import {
   Chip,
-  Checkbox,
   InputLabel,
   MenuItem,
   Select,
@@ -11,6 +10,7 @@ import {
 import { Delete as DeleteIcon, Done as DoneIcon } from "@material-ui/icons";
 import { FaListUl, FaTh } from "react-icons/fa";
 import SearchBar from "../../shared/components/UIElements/SearchBar";
+import Checkbox from "../../shared/components/UIElements/ThemedCheckbox";
 
 const CollectionFilter = ({
   selectedSort,

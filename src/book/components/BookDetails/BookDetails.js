@@ -7,8 +7,6 @@ import { CiBookmark } from "react-icons/ci";
 import Rating from "@material-ui/lab/Rating";
 import {
   Button,
-  Modal,
-  Box,
   Chip,
   Tooltip,
   TextField,
@@ -160,7 +158,6 @@ const BookDetails = ({ book: initialBook }) => {
 
   const handleCloseEditDialog = () => {
     setOpenEditDialog(false);
-    history.push("/books");
   };
 
   const handleBookDeletion = async () => {
