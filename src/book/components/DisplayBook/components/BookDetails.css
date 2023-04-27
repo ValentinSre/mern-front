@@ -1,0 +1,64 @@
+.book-details {
+  background-color: #f3f3f3;
+  padding: 20px;
+  margin-bottom: 20px;
+  color: #000;
+}
+
+.book-details__container {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+  position: relative;
+}
+
+.book-details__image {
+  width: 300px;
+  margin-right: 10px;
+}
+
+.book-details__image img {
+  width: 300px;
+  height: auto;
+  object-fit: cover;
+}
+
+.book-details__actions .MuiButtonBase-root.MuiIconButton-root {
+  display: block;
+  color: #222;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+.book-details__info {
+  padding-top: 0;
+  margin-top: 0;
+  margin-left: 60px;
+}
+
+.book-details__title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  margin-top: 20px;
+  margin-left: 5px;
+}
+
+.book-details__artists {
+  margin-bottom: 10px;
+  margin-top: 20px;
+  margin-left: 15px;
+  font-size: 1.1rem;
+}
+
+.book-details__artists-details {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.book-details__artists-category {
+  margin-left: 8px;
+  margin-right: 4px;
+  font-weight: bold;
+}

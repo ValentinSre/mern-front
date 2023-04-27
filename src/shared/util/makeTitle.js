@@ -1,9 +1,25 @@
 export default function makeTitle(book) {
-  return book.serie
-    ? book.version
-      ? book.serie + " (v" + book.version + ") " + book.tome
-        ? "T" + book.tome + " - " + book.titre
-        : " - " + book.titre
-      : book.serie + " T" + book.tome + " - " + book.titre
-    : book.titre;
+  const { serie, version, tome, titre } = book;
+  let realTitle = "";
+
+  if (serie) {
+    realTitle += serie;
+    if (version) {
+      realTitle += ` (v${version})`;
+    }
+    if (tome) {
+      realTitle += tome < 10 ? ` T0${tome}` : ` T${tome}`;
+    }
+
+    if (
+      !titre.toLowerCase().includes("volume") &&
+      !titre.toLowerCase().includes("tome")
+    ) {
+      realTitle += ` : ${titre}`;
+    }
+  } else {
+    realTitle += titre;
+  }
+
+  return realTitle;
 }

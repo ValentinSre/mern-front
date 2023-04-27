@@ -9,7 +9,7 @@ import { useState } from "react";
 
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
-import BookDetails from "../components/BookDetails/BookDetails";
+import BookDetails from "../components/DisplayBook/DisplayBook";
 
 const Book = () => {
   const auth = useContext(AuthContext);
@@ -34,7 +34,7 @@ const Book = () => {
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />
       {isLoading && (
-        <div className='center'>
+        <div className="center">
           <LoadingSpinner />
         </div>
       )}
