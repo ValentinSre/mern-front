@@ -42,30 +42,30 @@ const NavBar = () => {
       <div className="menu-items">
         {auth.isLoggedIn && (
           <React.Fragment>
-            <MenuItem>
+            <MenuItem onClick={handleCloseMenuOnClick}>
               <NavLink to={`/${auth.userId}/collection`} className="menu-link">
                 Ma collection
               </NavLink>
             </MenuItem>
-            <MenuItem>
+            <MenuItem onClick={handleCloseMenuOnClick}>
               <NavLink to={`/${auth.userId}/wishlist`} className="menu-link">
                 Ma wishlist
               </NavLink>
             </MenuItem>
-            <MenuItem>
+            <MenuItem onClick={handleCloseMenuOnClick}>
               <NavLink to={`/${auth.userId}/stats`} className="menu-link">
                 Mes statistiques
               </NavLink>
             </MenuItem>
           </React.Fragment>
         )}
-        <MenuItem>
+        <MenuItem onClick={handleCloseMenuOnClick}>
           <NavLink to={`/books`} className="menu-link">
             La bibliothèque
           </NavLink>
         </MenuItem>
         {auth.isAdmin && (
-          <MenuItem>
+          <MenuItem onClick={handleCloseMenuOnClick}>
             <NavLink to="/book/new" className="menu-link">
               Ajouter un livre
             </NavLink>
@@ -73,6 +73,10 @@ const NavBar = () => {
         )}
       </div>
     );
+  };
+
+  const handleCloseMenuOnClick = () => {
+    handleMenuClose();
   };
 
   return (
@@ -134,14 +138,14 @@ const NavBar = () => {
             {renderMenuItems()}
             <Divider />
             {!auth.isLoggedIn && (
-              <MenuItem>
+              <MenuItem onClick={handleCloseMenuOnClick}>
                 <NavLink to="/auth" className="menu-link">
                   Se connecter
                 </NavLink>
               </MenuItem>
             )}
             {auth.isLoggedIn && (
-              <MenuItem>
+              <MenuItem onClick={handleCloseMenuOnClick}>
                 <div onClick={auth.logout} className="menu-link">
                   Déconnexion
                 </div>
