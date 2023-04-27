@@ -75,7 +75,7 @@ const Wishlist = () => {
 
   useEffect(() => {
     fetchWishlists();
-  }, [sendRequest, auth.userId, fetchWishlists]);
+  }, [sendRequest, auth.userId]);
 
   const [priceFilter, setPriceFilter] = useState([]);
 
