@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { useHttpClient } from "../../../shared/hooks/http-hook";
 import { AuthContext } from "../../../shared/context/auth-context";
 import BookDetails from "./components/BookDetails";
+import BookReview from "./components/BookReview";
 import DateModal from "../../../shared/components/UIElements/DateModal";
 
 import "./DisplayBook.css";
@@ -57,8 +58,6 @@ const DisplayBook = ({ book: initialBook }) => {
 
       const { success } = responseData;
       if (success) {
-        // update the object in the array
-        // update read_dates by adding the new date to the array
         if (dateLecture) {
           setBook({
             ...book,
@@ -127,6 +126,7 @@ const DisplayBook = ({ book: initialBook }) => {
         handleWishlist={handleAddToWishlist}
         handleRead={handleOpenReadModal}
       />
+      <BookReview book={book} />
     </React.Fragment>
   );
 };
