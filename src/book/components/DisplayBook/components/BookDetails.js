@@ -35,7 +35,9 @@ const BookDetails = ({
           <Tooltip title="Je l'ai !" placement='top'>
             <span>
               <IconButton onClick={handleCollection} disabled={possede}>
-                <MdAddTask />
+                <MdAddTask
+                  style={{ color: book.possede ? "#4caf50" : "#000" }}
+                />
               </IconButton>
             </span>
           </Tooltip>
@@ -45,13 +47,17 @@ const BookDetails = ({
                 onClick={handleWishlist}
                 disabled={possede || souhaite}
               >
-                <MdOutlineAddShoppingCart />
+                <MdOutlineAddShoppingCart
+                  style={{ color: book.souhaite ? "#4caf50" : "#000" }}
+                />
               </IconButton>
             </span>
           </Tooltip>
           <Tooltip title="J'ai lu !" placement='top'>
             <IconButton onClick={handleRead}>
-              <MdOutlineBookmarkAdded />
+              <MdOutlineBookmarkAdded
+                style={{ color: book.lu ? "#4caf50" : "#000" }}
+              />
             </IconButton>
           </Tooltip>
         </div>
