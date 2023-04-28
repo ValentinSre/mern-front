@@ -42,7 +42,6 @@ const DisplayCollection = () => {
     fetchBooks();
   }, [sendRequest, auth.userId, displayMode]);
 
-  console.log(loadedCollection);
   const loadEditeurs = (editeurs) => {
     const editeursObj = {};
     for (const editeur of editeurs) {
@@ -105,12 +104,12 @@ const DisplayCollection = () => {
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />{" "}
       {isLoading && (
-        <div className="center">
+        <div className='center'>
           <LoadingSpinner />
         </div>
       )}
       {!isLoading && loadedCollection && selectedEditeurs && (
-        <div className="collection">
+        <div className='collection'>
           <CollectionFilter
             collection={loadedCollection}
             displayMode={displayMode}

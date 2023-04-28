@@ -14,33 +14,43 @@ import { TbPencil } from "react-icons/tb";
 
 import Breadcrumb from "../../../../shared/components/UIElements/Breadcrumb";
 import makeTitle from "../../../../shared/util/makeTitle";
+import variables from "../../../../shared/util/variables";
 
 const BookDetails = ({
   book,
   handleCollection,
   handleWishlist,
-  handleReadlist,
+  handleRead,
 }) => {
+  const { possede, souhaite, lu } = book;
+
   return (
-    <div className="book-details">
+    <div className='book-details'>
       <Breadcrumb page={makeTitle(book)} />
-      <div className="book-details__container">
-        <div className="book-details__image">
+      <div className='book-details__container'>
+        <div className='book-details__image'>
           <img src={book.image} alt={book.titre} />
         </div>
-        <div className="book-details__actions">
-          <Tooltip title="Je l'ai !" placement="top">
-            <IconButton>
-              <MdAddTask />
-            </IconButton>
+        <div className='book-details__actions'>
+          <Tooltip title="Je l'ai !" placement='top'>
+            <span>
+              <IconButton onClick={handleCollection} disabled={possede}>
+                <MdAddTask />
+              </IconButton>
+            </span>
           </Tooltip>
-          <Tooltip title="Je le veux !" placement="top">
-            <IconButton>
-              <MdOutlineAddShoppingCart />
-            </IconButton>
+          <Tooltip title='Je le veux !' placement='top'>
+            <span>
+              <IconButton
+                onClick={handleWishlist}
+                disabled={possede || souhaite}
+              >
+                <MdOutlineAddShoppingCart />
+              </IconButton>
+            </span>
           </Tooltip>
-          <Tooltip title="J'ai lu !" placement="top">
-            <IconButton>
+          <Tooltip title="J'ai lu !" placement='top'>
+            <IconButton onClick={handleRead}>
               <MdOutlineBookmarkAdded />
             </IconButton>
           </Tooltip>
@@ -52,17 +62,25 @@ const BookDetails = ({
 };
 
 const BookDetailsInfo = ({ book }) => {
-  const { auteurs, dessinateurs } = book;
+  const { genre, format, planches, editeur, type, poids, tome, date_parution } =
+    book;
+  const { shortMonths } = variables;
+
+  const date = new Date(date_parution);
+  const day = date.getDate();
+  const month = shortMonths[date.getMonth() + 1];
+  const year = date.getFullYear();
+  const dateParution = `${day} ${month} ${year}`;
 
   return (
-    <div className="book-details__info">
-      <div className="books-details__badges">
+    <div className='book-details__info'>
+      <div className='books-details__badges'>
         <Chip
           icon={
             book.lu ? (
-              <BsPatchCheckFill color="white" />
+              <BsPatchCheckFill color='white' />
             ) : (
-              <BsPatchPlus color="white" />
+              <BsPatchPlus color='white' />
             )
           }
           label={book.lu ? "Livre lu" : "Livre à lire"}
@@ -71,10 +89,10 @@ const BookDetailsInfo = ({ book }) => {
             color: "white",
             fontWeight: "bold",
           }}
-          variant="outlined"
+          variant='outlined'
         />
         <Chip
-          icon={<MdCollectionsBookmark color="white" />}
+          icon={<MdCollectionsBookmark color='white' />}
           label={book.serie ? "Série" : "Histoire complète"}
           style={{
             backgroundColor: book.serie ? "#2196f3" : "#ffde59",
@@ -82,11 +100,45 @@ const BookDetailsInfo = ({ book }) => {
             fontWeight: "bold",
             marginLeft: "5px",
           }}
-          variant="outlined"
+          variant='outlined'
         />
       </div>
-      <div className="book-details__title">{makeTitle(book)}</div>
+      <div className='book-details__title'>{makeTitle(book)}</div>
       <BookArtists book={book} />
+      <div className='book-details__description'>
+        <h2>À propos de cet ouvrage :</h2>
+        <div className='book-details__description-grid'>
+          <div className='book-details__description-grid__category'>
+            <p>Catégorie :</p>
+            <p>Genre :</p>
+          </div>
+          <div>
+            <p>{type ? type : "Non définie"}</p>
+            <p>{genre ? genre : "Non défini"}</p>
+          </div>
+        </div>
+      </div>
+      <div className='book-details__description'>
+        <h2>Caractéristiques :</h2>
+        <div className='book-details__description-grid'>
+          <div className='book-details__description-grid__category'>
+            <p>Éditeur :</p>
+            <p>Format :</p>
+            {tome && <p>Tome :</p>}
+            <p>Date de parution :</p>
+            <p>Nb. de pages :</p>
+            <p>Poids :</p>
+          </div>
+          <div>
+            <p>{editeur ? editeur : "Non défini"}</p>
+            <p>{format ? format : "Non défini"}</p>
+            {tome && <p>{tome}</p>}
+            <p>{date_parution ? dateParution : "Non définie"}</p>
+            <p>{planches ? planches : "Non défini"}</p>
+            <p>{poids ? poids + " gr" : "Non défini"}</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
@@ -95,11 +147,11 @@ const BookArtists = ({ book }) => {
   const { auteurs, dessinateurs } = book;
 
   return (
-    <div className="book-details__artists">
+    <div className='book-details__artists'>
       {auteurs && (
-        <div className="book-details__artists-details">
+        <div className='book-details__artists-details'>
           <RxChatBubble size={18} />
-          <span className="book-details__artists-category">Scénario :</span>
+          <span className='book-details__artists-category'>Scénario :</span>
           {auteurs.length < 2 ? (
             <span>{auteurs[0].nom}</span>
           ) : (
@@ -114,10 +166,10 @@ const BookArtists = ({ book }) => {
         </div>
       )}
 
-      {dessinateurs && (
-        <div className="book-details__artists-details">
+      {dessinateurs && !!dessinateurs.length && (
+        <div className='book-details__artists-details'>
           <TbPencil size={18} />
-          <span className="book-details__artists-category">Dessin :</span>
+          <span className='book-details__artists-category'>Dessin :</span>
           {dessinateurs.length < 2 ? (
             <span>{dessinateurs[0].nom}</span>
           ) : (

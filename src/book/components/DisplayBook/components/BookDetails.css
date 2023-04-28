@@ -48,7 +48,7 @@
   margin-bottom: 10px;
   margin-top: 20px;
   margin-left: 15px;
-  font-size: 1.1rem;
+  font-size: 14px;
 }
 
 .book-details__artists-details {
@@ -60,5 +60,31 @@
 .book-details__artists-category {
   margin-left: 8px;
   margin-right: 4px;
+  font-weight: bold;
+}
+
+.book-details__description {
+  margin-top: 10px;
+  margin-left: 5px;
+}
+
+.book-details__description h2 {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 1px;
+  margin-top: 20px;
+  margin-left: 5px;
+}
+
+.book-details__description-grid {
+  display: grid;
+  margin-left: 15px;
+  grid-template-columns: 200px 200px;
+  grid-gap: 10px;
+  line-height: 8px;
+  font-size: 10px;
+}
+
+.book-details__description-grid__category {
   font-weight: bold;
 }
