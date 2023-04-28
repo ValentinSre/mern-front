@@ -56,8 +56,21 @@ const DisplayBook = ({ book: initialBook }) => {
       );
 
       const { success } = responseData;
-      if (success)
-        setBook({ ...book, lu: true, date_lecture: new Date(dateLecture) });
+      if (success) {
+        // update the object in the array
+        // update read_dates by adding the new date to the array
+        if (dateLecture) {
+          setBook({
+            ...book,
+            lu: true,
+            read_dates: book.read_dates
+              ? [...book.read_dates, new Date(dateLecture)]
+              : [new Date(dateLecture)],
+          });
+        } else {
+          setBook({ ...book, lu: true });
+        }
+      }
     } catch (err) {
       console.log(err);
     }
