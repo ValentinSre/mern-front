@@ -88,3 +88,61 @@
 .book-details__description-grid__category {
   font-weight: bold;
 }
+
+/* for mobile */
+@media (max-width: 600px) {
+  .book-details__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .book-details__image {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5px;
+  }
+  
+  .book-details__image img {
+    width: 300px;
+    height: auto;
+  }
+  
+  .book-details__actions {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .book-details__actions .MuiButtonBase-root.MuiIconButton-root {
+    font-size: 40px;
+    margin-right: 10px;
+    margin-left: 10px;
+  }
+  
+  .book-details__info {
+    margin-left: 10px;
+    margin-top: 10px
+  }
+  
+  .book-details__description {
+    margin-bottom: 20px;
+    margin-left: 30px;
+  }
+  
+  .book-details__description-grid {
+    display: grid;
+    grid-template-columns: 150px 150px;
+    gap: 10px;
+    font-size: 11px
+  }
+  
+  .book-details__description-grid__category {
+    font-weight: bold;
+  }
+
+  .book-details__artists {
+    display: none;
+  }
+}
+
