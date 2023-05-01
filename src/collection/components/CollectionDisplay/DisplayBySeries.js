@@ -189,7 +189,7 @@ const DisplayBySeries = ({
                       onClick={() => handleBookClick(book.id_book)}
                     >
                       <div className='book-box__left-title'>{book.titre}</div>
-                      {book.tome && (
+                      {book.tome !== undefined && (
                         <div className='book-box__left-tome'>
                           Tome {book.tome}
                         </div>
