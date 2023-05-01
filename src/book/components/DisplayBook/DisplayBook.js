@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import { useHttpClient } from "../../../shared/hooks/http-hook";
@@ -6,15 +7,19 @@ import { AuthContext } from "../../../shared/context/auth-context";
 import BookDetails from "./components/BookDetails";
 import BookReview from "./components/BookReview";
 import DateModal from "../../../shared/components/UIElements/DateModal";
+import CustomButtons from "../../../shared/components/UIElements/CustomButtons";
+import EditBookDialog from "./components/EditBookDialog";
 
 import "./DisplayBook.css";
 
 const DisplayBook = ({ book: initialBook }) => {
+  const history = useHistory();
   const auth = useContext(AuthContext);
   const { sendRequest } = useHttpClient();
   const [book, setBook] = useState(initialBook);
 
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
+  const [openEditDialog, setOpenEditDialog] = useState(false);
   const [dateObtention, setDateObtention] = useState(book.date_achat);
   const [openReadModal, setOpenReadModal] = useState(false);
   const [dateLecture, setDateLecture] = useState(book.date_lecture);
@@ -98,6 +103,32 @@ const DisplayBook = ({ book: initialBook }) => {
       console.log(err);
     }
   };
+
+  const handleBookEdition = () => {
+    setOpenEditDialog(true);
+  };
+
+  const handleCloseEditDialog = () => {
+    setOpenEditDialog(false);
+  };
+
+  const handleBookDeletion = async () => {
+    const bookId = book.id;
+
+    try {
+      await sendRequest(
+        process.env.REACT_APP_API_URL + "/book/" + bookId,
+        "DELETE",
+        null,
+        {
+          Authorization: "Bearer " + auth.token,
+        }
+      );
+
+      history.push("/books");
+    } catch (err) {}
+  };
+
   return (
     <React.Fragment>
       <DateModal
@@ -127,6 +158,27 @@ const DisplayBook = ({ book: initialBook }) => {
         handleRead={handleOpenReadModal}
       />
       <BookReview book={book} />
+      <EditBookDialog
+        open={openEditDialog}
+        handleCloseDialog={handleCloseEditDialog}
+        book={book}
+      />
+      {auth.isAdmin && (
+        <React.Fragment>
+          <div className='book-details__admin'>
+            <CustomButtons
+              buttonType='edit'
+              title='Modifier'
+              onClick={handleBookEdition}
+            />
+            <CustomButtons
+              buttonType='delete'
+              title='Supprimer'
+              onClick={handleBookDeletion}
+            />
+          </div>
+        </React.Fragment>
+      )}
     </React.Fragment>
   );
 };
