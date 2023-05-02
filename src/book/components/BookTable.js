@@ -22,8 +22,7 @@ import Switch from "@material-ui/core/Switch";
 import PreviewIcon from "@material-ui/icons/Visibility";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import TextField from "@material-ui/core/TextField";
-import DateButton from "./BookDetails/components/DateButton";
-import DateModal from "./BookDetails/components/DateModal";
+import DateModal from "../../shared/components/UIElements/DateModal";
 
 import CustomButtons from "../../shared/components/UIElements/CustomButtons";
 import IconOnlyButton from "../../shared/components/UIElements/IconOnlyButton";
@@ -153,8 +152,6 @@ function BookTableToolbar(props) {
   const {
     numSelected,
     selected: selectedRows,
-    title,
-    actions,
     filterValue,
     handleChangeFilter,
     handleResetOrderBy,
@@ -162,6 +159,7 @@ function BookTableToolbar(props) {
     searchText,
     handleSearch,
     handleAdditionToCollection,
+    handleAdditionToWishlist,
   } = props;
 
   const [openFilter, setOpenFilter] = React.useState(false);
@@ -172,9 +170,25 @@ function BookTableToolbar(props) {
     setOpenFilter(!openFilter);
   };
 
-  const handleOpenOwnedModal = () => {
+  const handleOpenCollectionModal = () => {
+    setDateObtention(null);
     setOpenCollectionModal(true);
   };
+
+  const actions = [
+    {
+      type: "collection",
+      title: "Je possède",
+      handleAction: handleOpenCollectionModal,
+      disabled: ["possede"],
+    },
+    {
+      type: "wishlist",
+      title: "Je souhaite",
+      handleAction: handleAdditionToWishlist,
+      disabled: ["possede", "souhaite"],
+    },
+  ];
 
   return (
     <Toolbar
@@ -206,7 +220,7 @@ function BookTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          {title}
+          Tous les livres
         </Typography>
       )}
 
@@ -214,8 +228,9 @@ function BookTableToolbar(props) {
         open={openCollectionModal}
         handleClose={() => setOpenCollectionModal(false)}
         date={dateObtention}
+        authorizeNoDate
         label="Date d'achat"
-        title="Quand avez-vous acheté ce(s) livre(s) ?"
+        title="Quand avez-vous acheté ce livre ?"
         handleChange={(e) => setDateObtention(e.target.value)}
         handleSubmit={() =>
           handleAdditionToCollection(selectedRows, dateObtention)
@@ -247,7 +262,6 @@ function BookTableToolbar(props) {
                   aria-labelledby="test"
                   name="test"
                   value={filterValue}
-                  // execute la fonction handleChangeFilter et lui passe en paramètre l'event
                   onChange={(event) => {
                     handleChangeFilter(event);
                     handleResetOrderBy();
@@ -256,22 +270,22 @@ function BookTableToolbar(props) {
                 >
                   <FormControlLabel
                     value="all"
-                    control={<Radio />}
+                    control={<Radio style={{ color: "#ffde59" }} />}
                     label="Tout"
                   />
                   <FormControlLabel
                     value="collection"
-                    control={<Radio />}
+                    control={<Radio style={{ color: "#ffde59" }} />}
                     label="Collection"
                   />
                   <FormControlLabel
                     value="wishlist"
-                    control={<Radio />}
+                    control={<Radio style={{ color: "#ffde59" }} />}
                     label="Wishlist"
                   />
                   <FormControlLabel
                     value="none"
-                    control={<Radio />}
+                    control={<Radio style={{ color: "#ffde59" }} />}
                     label="Autres"
                   />
                 </RadioGroup>
@@ -302,28 +316,13 @@ function BookTableToolbar(props) {
               borderRadius: "5px",
             }}
           >
-            {actions.map((action) =>
-              action.type === "wishlist" ? (
-                <CustomButtons
-                  buttonType={action.type}
-                  title={action.title}
-                  onClick={() => action.handleAction(selectedRows)}
-                />
-              ) : (
-                <DateButton
-                  options={[
-                    {
-                      name: "Je possède",
-                      action: () => action.handleAction(selectedRows),
-                    },
-                    {
-                      name: "Je possède (daté)",
-                      action: handleOpenOwnedModal,
-                    },
-                  ]}
-                />
-              )
-            )}
+            {actions.map((action) => (
+              <CustomButtons
+                buttonType={action.type}
+                title={action.title}
+                onClick={() => action.handleAction(selectedRows)}
+              />
+            ))}
           </div>
         ) : null}
       </div>
@@ -339,14 +338,13 @@ BookTableToolbar.propTypes = {
 export default function BookTable({
   rows,
   headCells,
-  title,
-  actions,
   checkbox,
   handleChangeFilter,
   filterValue,
   handleSearch,
   searchText,
   handleAdditionToCollection,
+  handleAdditionToWishlist,
 }) {
   const [order, setOrder] = React.useState(DEFAULT_ORDER);
   const [orderBy, setOrderBy] = React.useState(DEFAULT_ORDER_BY);
@@ -490,8 +488,6 @@ export default function BookTable({
         <BookTableToolbar
           numSelected={selected.length}
           selected={selected}
-          title={title}
-          actions={actions}
           filterValue={filterValue}
           handleChangeFilter={handleChangeFilter}
           handleResetOrderBy={() => setOrderBy(null)}
@@ -499,6 +495,7 @@ export default function BookTable({
           handleSearch={handleSearch}
           searchText={searchText}
           handleAdditionToCollection={handleAdditionToCollection}
+          handleAdditionToWishlist={handleAdditionToWishlist}
         />
         <TableContainer>
           <Table

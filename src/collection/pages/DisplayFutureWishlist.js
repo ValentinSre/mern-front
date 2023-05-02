@@ -11,7 +11,7 @@ import {
   Button,
 } from "@material-ui/core";
 import { Check as CheckIcon } from "@material-ui/icons";
-import DateModal from "../../book/components/BookDetails/components/DateModal";
+import DateModal from "../../shared/components/UIElements/DateModal";
 
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useMemo, useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 
 import { useHttpClient } from "../../shared/hooks/http-hook";
@@ -66,21 +66,6 @@ const BookList = () => {
     handleAddToList(bookIds, "wishlist");
   };
 
-  const actions = [
-    {
-      type: "collection",
-      title: "Je possède",
-      handleAction: handleAddToCollection,
-      disabled: ["possede"],
-    },
-    {
-      type: "wishlist",
-      title: "Je souhaite",
-      handleAction: handleAddToWishlist,
-      disabled: ["possede", "souhaite"],
-    },
-  ];
-
   const headCells = [
     {
       id: "serie",
@@ -129,9 +114,8 @@ const BookList = () => {
   const [filteredBooks, setFilteredBooks] = useState([]);
 
   const [searchText, setSearchText] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
 
-  useEffect(() => {
+  useMemo(() => {
     if (loadedBooks) {
       const results = loadedBooks.filter(
         (book) =>
@@ -142,17 +126,7 @@ const BookList = () => {
           (book.editeur &&
             book.editeur.toLowerCase().includes(searchText.toLowerCase())) ||
           (book.format &&
-            book.format.toLowerCase().includes(searchText.toLowerCase())) ||
-          book.auteurs.some(
-            (auteur) =>
-              auteur.nom &&
-              auteur.nom.toLowerCase().includes(searchText.toLowerCase())
-          ) ||
-          book.dessinateurs.some(
-            (dessinateur) =>
-              dessinateur.nom &&
-              dessinateur.nom.toLowerCase().includes(searchText.toLowerCase())
-          )
+            book.format.toLowerCase().includes(searchText.toLowerCase()))
       );
 
       // Calculate filteredBooks whenever loadedBooks or filterValue changes
@@ -187,14 +161,13 @@ const BookList = () => {
           <BookTable
             headCells={headCells}
             rows={filteredBooks}
-            title="Tous les livres"
-            actions={actions}
             checkbox={auth.isLoggedIn}
             handleChangeFilter={handleChangeFilter}
             filterValue={filterValue}
             searchText={searchText}
             handleSearch={handleSearch}
             handleAdditionToCollection={handleAddToCollection}
+            handleAdditionToWishlist={handleAddToWishlist}
           />
         </div>
       )}
