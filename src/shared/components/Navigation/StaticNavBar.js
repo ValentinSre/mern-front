@@ -1,65 +1,58 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-import { Tooltip } from "@material-ui/core";
+import { Tooltip, Chip } from "@material-ui/core";
 import { BsFillCaretDownFill } from "react-icons/bs";
+import { ImBooks } from "react-icons/im";
 
 import "./StaticNavBar.css";
 
 const StaticNavBar = ({ userId }) => {
-  const categories = []; // ["BD", "Comics", "Manga"];
+  const categories = ["BD", "Comics", "Manga", "Roman"];
 
   return (
     <div className="static-nav-bar">
       <div style={{ marginLeft: "20px", display: "flex" }}>
         {categories.map((category) => (
           <Tooltip title={`Cadre ${category}`} key={category}>
-            <div
-              style={{
-                color: "#ffffff",
-                display: "flex",
-                alignItems: "center",
-                marginRight: "20px",
-                position: "relative",
-              }}
-            >
+            <div className="static-nav-bar__category">
               <NavLink
                 to={`/category/${category.toLowerCase()}`}
-                style={{
-                  color: "#ffffff",
-                  textDecoration: "none",
-                  marginRight: "5px",
-                }}
+                className="static-nav-bar__category-link"
               >
                 {category}
               </NavLink>
-              <BsFillCaretDownFill
-                style={{
-                  color: "#ffffff",
-                  fontSize: "12px",
-                  marginLeft: "5px",
-                }}
-              />
+              <BsFillCaretDownFill className="static-nav-bar__category-icon" />
             </div>
           </Tooltip>
         ))}
       </div>
       <div style={{ flexGrow: 1 }}></div>
       {userId ? (
-        <div
-          style={{
-            color: "#ffffff",
-            display: "flex",
-            alignItems: "center",
-            marginRight: "20px",
-            position: "relative",
-          }}
-        >
+        <div className="static-nav-bar__collection">
           <NavLink
             to={`/${userId}/collection`}
             style={{ color: "#fff", textDecoration: "none" }}
           >
-            Mes BD
+            <Chip
+              icon={
+                <ImBooks
+                  color="black"
+                  size="18px"
+                  style={{ marginLeft: "10px" }}
+                />
+              }
+              label="Ma biblio"
+              style={{
+                backgroundColor: "white",
+                color: "black",
+                fontSize: "12px",
+                borderRadius: "8px",
+                fontWeight: "bold",
+                border: "1px solid black",
+              }}
+              variant="outlined"
+            />
           </NavLink>
         </div>
       ) : null}
