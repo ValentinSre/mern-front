@@ -28,7 +28,13 @@
 .static-nav-bar__category-icon {
   color: #ffffff;
   font-size: 10px;
-  margin-right: 3px;
+  margin-right: 15px;
+}
+
+@media screen and (max-width: 600px) {
+  .static-nav-bar__category-icon {
+    margin-right: 4px;
+  }
 }
 
 .static-nav-bar__collection {
