@@ -81,7 +81,7 @@ const MyLibrary = () => {
           <Tab
             component={Link}
             to={`/${auth.userId}/collection`}
-            label="Mes BD"
+            label="Mes livres"
             className={selectedTab === 0 ? classes.selectedTab : ""}
           />
           <Tab

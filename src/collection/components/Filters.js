@@ -7,6 +7,7 @@ import {
   IconButton,
   FormControlLabel,
 } from "@material-ui/core";
+import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import { Delete as DeleteIcon, Done as DoneIcon } from "@material-ui/icons";
 import { FaListUl, FaTh } from "react-icons/fa";
 import SearchBar from "../../shared/components/UIElements/SearchBar";
@@ -29,6 +30,13 @@ const CollectionFilter = ({
 }) => {
   const [searchText, setSearchText] = React.useState("");
 
+  const handleDisplayMode = (event, newDisplayMode) => {
+    if (newDisplayMode !== null) {
+      setDisplayMode(newDisplayMode);
+      setLoadedCollection(null);
+    }
+  };
+
   const handleSearch = (event) => {
     setSearchText(event.target.value);
     handleSearchBooks(event.target.value);
@@ -43,6 +51,20 @@ const CollectionFilter = ({
         marginBottom: "20px",
       }}
     >
+      <ToggleButtonGroup
+        value={displayMode}
+        exclusive
+        onChange={handleDisplayMode}
+        aria-label="device"
+        style={{ marginBottom: "10px" }}
+      >
+        <ToggleButton value="bySeries" aria-label="bySeries">
+          <FaListUl />
+        </ToggleButton>
+        <ToggleButton value="byBooks" aria-label="byBooks">
+          <FaTh />
+        </ToggleButton>
+      </ToggleButtonGroup>
       <div
         style={{
           padding: "20px",
@@ -50,25 +72,6 @@ const CollectionFilter = ({
           borderRadius: "5px",
         }}
       >
-        <IconButton
-          onClick={() => {
-            setDisplayMode("bySeries");
-            setLoadedCollection(null);
-          }}
-          disabled={displayMode === "bySeries"}
-        >
-          <FaListUl />
-        </IconButton>
-        <IconButton
-          onClick={() => {
-            setDisplayMode("byBooks");
-            setLoadedCollection(null);
-          }}
-          disabled={displayMode === "byBooks"}
-        >
-          <FaTh />
-        </IconButton>
-
         {displayMode === "bySeries" && (
           <SeriesFilter
             collection={collection}
