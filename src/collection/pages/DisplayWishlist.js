@@ -8,8 +8,9 @@ import {
   Divider,
   Button,
 } from "@material-ui/core";
-import { Check as CheckIcon } from "@material-ui/icons";
 import DateModal from "../../shared/components/UIElements/DateModal";
+import { BsCartCheckFill } from "react-icons/bs";
+import { MdDeleteSweep } from "react-icons/md";
 
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
@@ -103,13 +104,28 @@ const Wishlist = () => {
       })
     : wishlist;
 
-  const handleButton = (bookId) => {
+  const handleBuyButton = (bookId) => {
     setOpenCollectionModal(true);
     setDateObtention(null);
     setBookId(bookId);
   };
 
+  const handleDeleteButton = async (bookId) => {
+    try {
+      const responseData = await sendRequest(
+        `${process.env.REACT_APP_API_URL}/collection/wishlist/${auth.userId}/${bookId}`,
+        "DELETE",
+        null,
+        { Authorization: "Bearer " + auth.token }
+      );
+
+      if (responseData.success)
+        setWishlist(wishlist.filter((book) => book.id_book !== bookId));
+    } catch (err) {}
+  };
+
   const currentDate = new Date();
+
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />{" "}
@@ -193,19 +209,38 @@ const Wishlist = () => {
                     <div className="wishlist-display__info-price">
                       <h3>{book.prix.toFixed(2)}€</h3>
                     </div>
-                    <div className="wishlist-display__actions">
+                    <div className="wishlist-display__actions_buy">
                       <Button
                         variant="outlined"
                         style={{
                           height: "30px",
                           marginTop: "10px",
                           margin: "auto",
+                          backgroundColor: "#06b87f",
+                          color: "white",
                         }}
                         fullWidth
-                        startIcon={<CheckIcon />}
-                        onClick={() => handleButton(book.id_book)}
+                        startIcon={<BsCartCheckFill />}
+                        onClick={() => handleBuyButton(book.id_book)}
                       >
                         Acheté
+                      </Button>
+                    </div>
+                    <div className="wishlist-display__actions_delete">
+                      <Button
+                        variant="contained"
+                        style={{
+                          height: "30px",
+                          marginTop: "10px",
+                          margin: "auto",
+                          backgroundColor: "#cb1515",
+                          color: "white",
+                        }}
+                        fullWidth
+                        startIcon={<MdDeleteSweep />}
+                        onClick={() => handleDeleteButton(book.id_book)}
+                      >
+                        Retirer
                       </Button>
                     </div>
                     <Divider />
