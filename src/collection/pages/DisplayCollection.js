@@ -2,11 +2,11 @@ import React, { useEffect, useState, useContext } from "react";
 
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
-import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import { AuthContext } from "../../shared/context/auth-context";
 import DisplayByBooks from "../components/CollectionDisplay/DisplayByBooks";
 import CollectionFilter from "../components/Filters";
 import DisplayBySeries from "../components/CollectionDisplay/DisplayBySeries";
+import LoadingCollection from "../components/CollectionDisplay/LoadingCollection";
 
 import "./DisplayCollection.css";
 
@@ -104,12 +104,12 @@ const DisplayCollection = () => {
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />{" "}
       {isLoading && (
-        <div className='center'>
-          <LoadingSpinner />
+        <div className="collection">
+          <LoadingCollection displayMode={displayMode} />
         </div>
       )}
       {!isLoading && loadedCollection && selectedEditeurs && (
-        <div className='collection'>
+        <div className="collection">
           <CollectionFilter
             collection={loadedCollection}
             displayMode={displayMode}

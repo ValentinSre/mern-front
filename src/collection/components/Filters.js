@@ -12,6 +12,7 @@ import { Delete as DeleteIcon, Done as DoneIcon } from "@material-ui/icons";
 import { FaListUl, FaTh } from "react-icons/fa";
 import SearchBar from "../../shared/components/UIElements/SearchBar";
 import Checkbox from "../../shared/components/UIElements/ThemedCheckbox";
+import { Skeleton } from "@material-ui/lab";
 
 const CollectionFilter = ({
   selectedSort,
@@ -27,6 +28,7 @@ const CollectionFilter = ({
   checkedValues,
   handleCheckedChange,
   setLoadedCollection,
+  loading,
 }) => {
   const [searchText, setSearchText] = React.useState("");
 
@@ -81,6 +83,7 @@ const CollectionFilter = ({
             editeurs={editeurs}
             searchText={searchText}
             handleDelete={handleEditeursSelection}
+            loading={loading}
           />
         )}
 
@@ -97,6 +100,7 @@ const CollectionFilter = ({
             handleGroupmentChange={handleGroupmentChange}
             editeurs={editeurs}
             handleDelete={handleEditeursSelection}
+            loading={loading}
           />
         )}
       </div>
@@ -125,6 +129,7 @@ const SeriesFilter = ({
   searchText,
   editeurs,
   handleDelete,
+  loading,
 }) => {
   return (
     <div>
@@ -178,6 +183,15 @@ const SeriesFilter = ({
         />
       </div>
       <div style={{ marginTop: "20px" }}>
+        {loading && (
+          <Skeleton
+            animation="wave"
+            height={50}
+            width="100%"
+            style={{ marginBottom: 6 }}
+          />
+        )}
+
         <DeletableChips editeurs={editeurs} handleDelete={handleDelete} />
       </div>
     </div>
@@ -195,6 +209,7 @@ const BooksFilter = ({
   searchText,
   editeurs,
   handleDelete,
+  loading,
 }) => {
   return (
     <div>
@@ -287,6 +302,14 @@ const BooksFilter = ({
         />
       </div>
       <div style={{ marginTop: "20px" }}>
+        {loading && (
+          <Skeleton
+            animation="wave"
+            height={50}
+            width="100%"
+            style={{ marginBottom: 6 }}
+          />
+        )}
         <DeletableChips editeurs={editeurs} handleDelete={handleDelete} />
       </div>
     </div>
