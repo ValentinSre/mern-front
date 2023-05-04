@@ -41,25 +41,6 @@ const NavBar = () => {
   const renderMenuItems = () => {
     return (
       <div className="menu-items">
-        {auth.isLoggedIn && (
-          <React.Fragment>
-            <MenuItem onClick={handleCloseMenuOnClick}>
-              <NavLink to={`/${auth.userId}/collection`} className="menu-link">
-                Ma collection
-              </NavLink>
-            </MenuItem>
-            <MenuItem onClick={handleCloseMenuOnClick}>
-              <NavLink to={`/${auth.userId}/wishlist`} className="menu-link">
-                Ma wishlist
-              </NavLink>
-            </MenuItem>
-            <MenuItem onClick={handleCloseMenuOnClick}>
-              <NavLink to={`/${auth.userId}/stats`} className="menu-link">
-                Mes statistiques
-              </NavLink>
-            </MenuItem>
-          </React.Fragment>
-        )}
         <MenuItem onClick={handleCloseMenuOnClick}>
           <NavLink to={`/books`} className="menu-link">
             La bibliothèque
@@ -71,6 +52,32 @@ const NavBar = () => {
               Ajouter un livre
             </NavLink>
           </MenuItem>
+        )}
+        {auth.isLoggedIn && (
+          <React.Fragment>
+            <Divider />
+
+            <MenuItem onClick={handleCloseMenuOnClick}>
+              <NavLink to={`/${auth.userId}/collection`} className="menu-link">
+                Ma collection
+              </NavLink>
+            </MenuItem>
+            <MenuItem onClick={handleCloseMenuOnClick}>
+              <NavLink to={`/${auth.userId}/wishlist`} className="menu-link">
+                Ma wishlist
+              </NavLink>
+            </MenuItem>
+            <MenuItem onClick={handleCloseMenuOnClick}>
+              <NavLink to={`/${auth.userId}/releases`} className="menu-link">
+                Mes sorties
+              </NavLink>
+            </MenuItem>
+            <MenuItem onClick={handleCloseMenuOnClick}>
+              <NavLink to={`/${auth.userId}/stats`} className="menu-link">
+                Mes statistiques
+              </NavLink>
+            </MenuItem>
+          </React.Fragment>
         )}
       </div>
     );
