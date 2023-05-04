@@ -38,10 +38,14 @@ const Auth = () => {
             "Content-Type": "application/json",
           }
         );
+
+        console.log(responseData);
+
         auth.login(
           responseData.userId,
           responseData.token,
-          responseData.isAdmin
+          responseData.isAdmin,
+          responseData.name
         );
       } catch (err) {}
     } else {
@@ -56,7 +60,12 @@ const Auth = () => {
           formData
         );
 
-        auth.login(responseData.userId, responseData.token);
+        auth.login(
+          responseData.userId,
+          responseData.token,
+          false,
+          responseData.name
+        );
       } catch (err) {}
     }
   };

@@ -9,8 +9,10 @@ import {
   Menu,
   MenuItem,
   Divider,
+  Avatar,
   Tooltip,
 } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import { FaDice } from "react-icons/fa";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import { Link } from "react-router-dom";
@@ -24,8 +26,19 @@ import StaticNavBar from "./StaticNavBar";
 
 import "./NavBar.css";
 
+const useStyles = makeStyles((theme) => ({
+  small: {
+    width: theme.spacing(3),
+    height: theme.spacing(3),
+    fontSize: "0.8rem",
+    color: "#ffde59",
+    backgroundColor: "#fff",
+  },
+}));
+
 const NavBar = () => {
   const history = useHistory();
+  const classes = useStyles();
   const auth = useContext(AuthContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const [searchText, setSearchText] = useState("");
@@ -133,7 +146,13 @@ const NavBar = () => {
               onClick={handleMenuOpen}
               color="inherit"
             >
-              <AccountCircle />
+              {auth.isLoggedIn ? (
+                <Avatar className={classes.small}>
+                  {auth.name ? auth.name.charAt(0) : "u"}
+                </Avatar>
+              ) : (
+                <AccountCircle />
+              )}
             </IconButton>
           </div>
           <Menu

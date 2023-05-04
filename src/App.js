@@ -20,7 +20,7 @@ const Auth = React.lazy(() => import("./user/pages/Auth"));
 const Book = React.lazy(() => import("./book/pages/Book"));
 
 const App = () => {
-  const { userId, isAdmin, token, login, logout } = useAuth();
+  const { userId, isAdmin, token, name, login, logout } = useAuth();
 
   let routes;
 
@@ -86,7 +86,15 @@ const App = () => {
 
   return (
     <AuthContext.Provider
-      value={{ isLoggedIn: !!token, token, isAdmin, userId, login, logout }}
+      value={{
+        isLoggedIn: !!token,
+        token,
+        isAdmin,
+        userId,
+        name,
+        login,
+        logout,
+      }}
     >
       <Router>
         <NavBar />
