@@ -13,6 +13,7 @@ import { useAuth } from "./shared/hooks/auth-hook";
 import BookList from "./book/pages/BookList";
 import Home from "./Home";
 import MyLibrary from "./collection/pages/MyLibrary";
+import SearchBooks from "./book/pages/SearchBooks";
 
 const NewBook = React.lazy(() => import("./book/pages/NewBook"));
 const Auth = React.lazy(() => import("./user/pages/Auth"));
@@ -27,52 +28,58 @@ const App = () => {
   if (!token) {
     routes = (
       <Switch>
-        <Route path='/' exact>
+        <Route path="/" exact>
           <Home />
         </Route>
-        <Route path='/books' exact>
+        <Route path="/books" exact>
           <BookList />
         </Route>
-        <Route path='/book/:id' exact>
+        <Route path="/book/:id" exact>
           <Book />
         </Route>
-        <Route path='/auth' exact>
+        <Route path="/auth" exact>
           <Auth />
         </Route>
-        <Redirect to='/' />
+        <Route path="/search" exact>
+          <SearchBooks />
+        </Route>
+        <Redirect to="/" />
       </Switch>
     );
   } else {
     // Logged in
     routes = (
       <Switch>
-        <Route path='/' exact>
+        <Route path="/" exact>
           <Home />
         </Route>
-        <Route path='/:userId/collection' exact>
+        <Route path="/search" exact>
+          <SearchBooks />
+        </Route>
+        <Route path="/:userId/collection" exact>
           <MyLibrary />
         </Route>
-        <Route path='/:userId/wishlist' exact>
+        <Route path="/:userId/wishlist" exact>
           <MyLibrary />
         </Route>
-        <Route path='/:userId/releases' exact>
+        <Route path="/:userId/releases" exact>
           <MyLibrary />
         </Route>
-        <Route path='/:userId/stats' exact>
+        <Route path="/:userId/stats" exact>
           <MyLibrary />
         </Route>
-        <Route path='/books' exact>
+        <Route path="/books" exact>
           <BookList />
         </Route>
         {isAdmin && (
-          <Route path='/book/new' exact>
+          <Route path="/book/new" exact>
             <NewBook />
           </Route>
         )}
-        <Route path='/book/:id' exact>
+        <Route path="/book/:id" exact>
           <Book />
         </Route>
-        <Redirect to='/' />
+        <Redirect to="/" />
       </Switch>
     );
   }
@@ -87,7 +94,7 @@ const App = () => {
         <main>
           <Suspense
             fallback={
-              <div className='center'>
+              <div className="center">
                 <LoadingSpinner />
               </div>
             }

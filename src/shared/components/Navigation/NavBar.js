@@ -28,6 +28,7 @@ const NavBar = () => {
   const history = useHistory();
   const auth = useContext(AuthContext);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [searchText, setSearchText] = useState("");
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -79,6 +80,10 @@ const NavBar = () => {
     handleMenuClose();
   };
 
+  const handleSearch = (event) => {
+    setSearchText(event.target.value);
+  };
+
   return (
     <React.Fragment>
       <AppBar position="fixed" style={{ backgroundColor: "#ffde59" }}>
@@ -97,7 +102,12 @@ const NavBar = () => {
           />
 
           <div className="searchBarWrapper">
-            <SearchBar placeHolder="Rechercher un album, une série, un auteur..." />
+            <SearchBar
+              placeHolder="Rechercher un album, une série, un auteur..."
+              searchText={searchText}
+              handleSearch={handleSearch}
+              globalSearch
+            />
           </div>
 
           <div style={{ display: "flex", alignItems: "center" }}>

@@ -326,7 +326,6 @@ function BookTableToolbar(props) {
           </div>
         ) : null}
       </div>
-      {/* {openFilter && <SearchBar />} */}
     </Toolbar>
   );
 }
