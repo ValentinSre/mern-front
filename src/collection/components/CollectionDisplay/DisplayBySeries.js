@@ -103,7 +103,10 @@ const DisplayBySeries = ({
     <div style={{ width: "90%", margin: "auto" }}>
       <div style={{ display: "flex", alignItems: "center" }}>
         <div style={{ marginRight: "10px", marginBottom: "20px" }}>
-          <strong>{nbSeries} séries</strong> / {nbBooks} albums :
+          <strong>
+            {nbSeries === 1 ? nbSeries + " série" : nbSeries + " séries"}
+          </strong>{" "}
+          / {nbBooks === 1 ? nbBooks + " album" : nbBooks + " albums"} :
         </div>
       </div>
       {filteredSeries.map((serie, index) => (

@@ -121,7 +121,7 @@ const Wishlist = () => {
         )}
         {!isLoading && wishlist && (
           <React.Fragment>
-            {filteredBooks.length && (
+            {filteredBooks.length !== 0 && (
               <div style={{ marginLeft: "10px", marginTop: "20px" }}>
                 <strong>{filteredBooks.length} albums</strong> / total :{" "}
                 {filteredBooks
@@ -131,7 +131,7 @@ const Wishlist = () => {
               </div>
             )}
             <div>
-              {!filteredBooks.length && (
+              {filteredBooks.length === 0 && (
                 <h2 style={{ paddingLeft: "20px" }}>
                   Aucun livre dans cette wishlist
                 </h2>

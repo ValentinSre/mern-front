@@ -110,7 +110,10 @@ const DisplayByBooks = ({
     <div>
       <div style={{ display: "flex", alignItems: "center" }}>
         <div style={{ marginLeft: "30px", marginBottom: "20px" }}>
-          <strong>{nbBooks} albums</strong> :
+          <strong>
+            {nbBooks === 1 ? nbBooks + " album" : nbBooks + " albums"}{" "}
+          </strong>{" "}
+          :
         </div>
       </div>
       {!groupment ? (
