@@ -1,21 +1,9 @@
 import React, { useEffect, useState, useContext } from "react";
-import { useHistory } from "react-router-dom";
-import {
-  Checkbox,
-  FormControlLabel,
-  Grid,
-  Badge,
-  Typography,
-  Divider,
-  Box,
-  Button,
-} from "@material-ui/core";
-import { Check as CheckIcon } from "@material-ui/icons";
-import DateModal from "../../shared/components/UIElements/DateModal";
+import { Checkbox, FormControlLabel, Grid } from "@material-ui/core";
+import { Skeleton } from "@material-ui/lab";
 
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
-import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import { AuthContext } from "../../shared/context/auth-context";
 import WishlistCalendar from "../components/WishlistCalendar";
 
@@ -55,7 +43,6 @@ const Wishlist = () => {
     }
   };
 
-  console.log(wishlist);
   const filteredBooks = priceFilter.length
     ? wishlist.filter((book) => {
         if (priceFilter.includes("20")) {
@@ -74,68 +61,88 @@ const Wishlist = () => {
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />{" "}
-      {isLoading && (
-        <div className="center">
-          <LoadingSpinner />
+      <div className="wishlist">
+        <div className="wishlist__filters">
+          <Grid item xs={12}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  value="20"
+                  onChange={handleFilterChange}
+                  color="primary"
+                />
+              }
+              label="< 20€"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  value="50"
+                  onChange={handleFilterChange}
+                  color="primary"
+                />
+              }
+              label="> 20€ et < 50€"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  value="100"
+                  onChange={handleFilterChange}
+                  color="primary"
+                />
+              }
+              label="> 50€"
+            />
+          </Grid>
         </div>
-      )}
-      {!isLoading && wishlist && (
-        <div className="wishlist">
-          <div className="wishlist__filters">
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    value="20"
-                    onChange={handleFilterChange}
-                    color="primary"
-                  />
-                }
-                label="< 20€"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    value="50"
-                    onChange={handleFilterChange}
-                    color="primary"
-                  />
-                }
-                label="> 20€ et < 50€"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    value="100"
-                    onChange={handleFilterChange}
-                    color="primary"
-                  />
-                }
-                label="> 50€"
-              />
-            </Grid>
-          </div>
-          {filteredBooks.length && (
-            <div style={{ marginLeft: "10px", marginTop: "20px" }}>
-              <strong>{filteredBooks.length} albums</strong> / total :{" "}
-              {filteredBooks
-                .reduce((acc, book) => acc + book.prix, 0)
-                .toFixed(2)}
-              €
+        {isLoading && (
+          <React.Fragment>
+            <div style={{ paddingLeft: "5px" }}>
+              <Skeleton variant="rect" width={"20%"} height={20} />
             </div>
-          )}
-          <div>
-            {!filteredBooks.length && (
-              <h2 style={{ paddingLeft: "20px" }}>
-                Aucun livre dans cette wishlist
-              </h2>
+            <div
+              style={{
+                paddingLeft: "5px",
+                paddingTop: "25px",
+                marginLeft: "auto",
+                marginRight: "auto",
+                width: "70%",
+              }}
+            >
+              <Skeleton
+                variant="rect"
+                width={"100%"}
+                height={500}
+                style={{ borderRadius: "10px" }}
+              />
+            </div>
+          </React.Fragment>
+        )}
+        {!isLoading && wishlist && (
+          <React.Fragment>
+            {filteredBooks.length && (
+              <div style={{ marginLeft: "10px", marginTop: "20px" }}>
+                <strong>{filteredBooks.length} albums</strong> / total :{" "}
+                {filteredBooks
+                  .reduce((acc, book) => acc + book.prix, 0)
+                  .toFixed(2)}
+                €
+              </div>
             )}
             <div>
-              <WishlistCalendar books={filteredBooks} />
+              {!filteredBooks.length && (
+                <h2 style={{ paddingLeft: "20px" }}>
+                  Aucun livre dans cette wishlist
+                </h2>
+              )}
+              <div>
+                <WishlistCalendar books={filteredBooks} />
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          </React.Fragment>
+        )}
+      </div>
     </React.Fragment>
   );
 };

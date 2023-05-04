@@ -8,13 +8,13 @@ import {
   Divider,
   Button,
 } from "@material-ui/core";
+import { Skeleton } from "@material-ui/lab";
 import DateModal from "../../shared/components/UIElements/DateModal";
 import { BsCartCheckFill } from "react-icons/bs";
 import { MdDeleteSweep } from "react-icons/md";
 
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
-import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import { AuthContext } from "../../shared/context/auth-context";
 
 import "./DisplayWishlist.css";
@@ -129,148 +129,171 @@ const Wishlist = () => {
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />{" "}
-      {isLoading && (
-        <div className="center">
-          <LoadingSpinner />
+      <div className="wishlist">
+        <div className="wishlist__filters">
+          <Grid item xs={12}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  value="20"
+                  onChange={handleFilterChange}
+                  color="primary"
+                />
+              }
+              label="< 20€"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  value="50"
+                  onChange={handleFilterChange}
+                  color="primary"
+                />
+              }
+              label="> 20€ et < 50€"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  value="100"
+                  onChange={handleFilterChange}
+                  color="primary"
+                />
+              }
+              label="> 50€"
+            />
+          </Grid>
         </div>
-      )}
-      {!isLoading && wishlist && (
-        <div className="wishlist">
-          <div className="wishlist__filters">
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    value="20"
-                    onChange={handleFilterChange}
-                    color="primary"
-                  />
-                }
-                label="< 20€"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    value="50"
-                    onChange={handleFilterChange}
-                    color="primary"
-                  />
-                }
-                label="> 20€ et < 50€"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    value="100"
-                    onChange={handleFilterChange}
-                    color="primary"
-                  />
-                }
-                label="> 50€"
-              />
-            </Grid>
-          </div>
-          <Grid container spacing={2}>
-            {filteredBooks.length && (
-              <div style={{ marginLeft: "10px", marginTop: "20px" }}>
-                <strong>{filteredBooks.length} albums</strong> / total :{" "}
-                {filteredBooks
-                  .reduce((acc, book) => acc + book.prix, 0)
-                  .toFixed(2)}
-                €
-              </div>
-            )}
-            <div className="wishlist-display">
-              {!filteredBooks.length && (
-                <h2 style={{ paddingLeft: "20px" }}>
-                  Aucun livre dans cette wishlist
-                </h2>
-              )}
-              <div className="wishlist-display__books_array">
-                {filteredBooks.map((book) => (
-                  <div key={book.id} className="wishlist-display__book">
-                    <div
-                      style={{ position: "relative" }}
-                      onClick={() => history.push(`/book/${book.id_book}`)}
-                    >
-                      <img src={book.image} alt={book.titre} />
-                      {new Date(book.date_parution) < currentDate && (
-                        <Badge color="primary" badgeContent="✓" />
-                      )}
-                    </div>
-
-                    <div
-                      className="wishlist-display__info-title"
-                      onClick={() => history.push(`/book/${book.id_book}`)}
-                    >
-                      <h3>{book.titre}</h3>
-                      {book.tome && <span>Tome {book.tome}</span>}
-                    </div>
-                    <div className="wishlist-display__info-price">
-                      <h3>{book.prix.toFixed(2)}€</h3>
-                    </div>
-                    <div className="wishlist-display__actions_buy">
-                      <Button
-                        variant="outlined"
-                        style={{
-                          height: "30px",
-                          marginTop: "10px",
-                          margin: "auto",
-                          backgroundColor: "#06b87f",
-                          color: "white",
-                        }}
-                        fullWidth
-                        startIcon={<BsCartCheckFill />}
-                        onClick={() => handleBuyButton(book.id_book)}
-                      >
-                        Acheté
-                      </Button>
-                    </div>
-                    <div className="wishlist-display__actions_delete">
-                      <Button
-                        variant="contained"
-                        style={{
-                          height: "30px",
-                          marginTop: "10px",
-                          margin: "auto",
-                          backgroundColor: "#cb1515",
-                          color: "white",
-                        }}
-                        fullWidth
-                        startIcon={<MdDeleteSweep />}
-                        onClick={() => handleDeleteButton(book.id_book)}
-                      >
-                        Retirer
-                      </Button>
-                    </div>
-                    <Divider />
-                    <div
-                      className="wishlist-display__info-serie"
-                      onClick={() => history.push(`/book/${book.id_book}`)}
-                    >
-                      {book.serie ? (
-                        <h4>{book.serie}</h4>
-                      ) : (
-                        <h4>{book.titre}</h4>
-                      )}
-                    </div>
-                  </div>
-                ))}
+        {isLoading && (
+          <React.Fragment>
+            <div style={{ paddingLeft: "5px", paddingTop: "15px" }}>
+              <Skeleton variant="rect" width={"20%"} height={20} />
+            </div>
+            <div
+              style={{
+                paddingTop: "70px",
+              }}
+            >
+              <div
+                style={{
+                  display: "grid",
+                  gridGap: "2rem",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+                }}
+              >
+                <Skeleton variant="rect" height={200} />
+                <Skeleton variant="rect" height={200} />
+                <Skeleton variant="rect" height={200} />
+                <Skeleton variant="rect" height={200} />
+                <Skeleton variant="rect" height={200} />
               </div>
             </div>
-          </Grid>
-          <DateModal
-            open={openCollectionModal}
-            handleClose={() => setOpenCollectionModal(false)}
-            date={dateObtention}
-            authorizeNoDate
-            label="Date d'achat"
-            title="Quand avez-vous acheté ce livre ?"
-            handleChange={(e) => setDateObtention(e.target.value)}
-            handleSubmit={handleAdditionToCollection}
-          />
-        </div>
-      )}
+          </React.Fragment>
+        )}
+        {!isLoading && wishlist && (
+          <React.Fragment>
+            <Grid container spacing={2}>
+              {filteredBooks.length && (
+                <div style={{ marginLeft: "10px", marginTop: "20px" }}>
+                  <strong>{filteredBooks.length} albums</strong> / total :{" "}
+                  {filteredBooks
+                    .reduce((acc, book) => acc + book.prix, 0)
+                    .toFixed(2)}
+                  €
+                </div>
+              )}
+              <div className="wishlist-display">
+                {!filteredBooks.length && (
+                  <h2 style={{ paddingLeft: "20px" }}>
+                    Aucun livre dans cette wishlist
+                  </h2>
+                )}
+                <div className="wishlist-display__books_array">
+                  {filteredBooks.map((book) => (
+                    <div key={book.id} className="wishlist-display__book">
+                      <div
+                        style={{ position: "relative" }}
+                        onClick={() => history.push(`/book/${book.id_book}`)}
+                      >
+                        <img src={book.image} alt={book.titre} />
+                        {new Date(book.date_parution) < currentDate && (
+                          <Badge color="primary" badgeContent="✓" />
+                        )}
+                      </div>
+
+                      <div
+                        className="wishlist-display__info-title"
+                        onClick={() => history.push(`/book/${book.id_book}`)}
+                      >
+                        <h3>{book.titre}</h3>
+                        {book.tome && <span>Tome {book.tome}</span>}
+                      </div>
+                      <div className="wishlist-display__info-price">
+                        <h3>{book.prix.toFixed(2)}€</h3>
+                      </div>
+                      <div className="wishlist-display__actions_buy">
+                        <Button
+                          variant="outlined"
+                          style={{
+                            height: "30px",
+                            marginTop: "10px",
+                            margin: "auto",
+                            backgroundColor: "#06b87f",
+                            color: "white",
+                          }}
+                          fullWidth
+                          startIcon={<BsCartCheckFill />}
+                          onClick={() => handleBuyButton(book.id_book)}
+                        >
+                          Acheté
+                        </Button>
+                      </div>
+                      <div className="wishlist-display__actions_delete">
+                        <Button
+                          variant="contained"
+                          style={{
+                            height: "30px",
+                            marginTop: "10px",
+                            margin: "auto",
+                            backgroundColor: "#cb1515",
+                            color: "white",
+                          }}
+                          fullWidth
+                          startIcon={<MdDeleteSweep />}
+                          onClick={() => handleDeleteButton(book.id_book)}
+                        >
+                          Retirer
+                        </Button>
+                      </div>
+                      <Divider />
+                      <div
+                        className="wishlist-display__info-serie"
+                        onClick={() => history.push(`/book/${book.id_book}`)}
+                      >
+                        {book.serie ? (
+                          <h4>{book.serie}</h4>
+                        ) : (
+                          <h4>{book.titre}</h4>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </Grid>
+            <DateModal
+              open={openCollectionModal}
+              handleClose={() => setOpenCollectionModal(false)}
+              date={dateObtention}
+              authorizeNoDate
+              label="Date d'achat"
+              title="Quand avez-vous acheté ce livre ?"
+              handleChange={(e) => setDateObtention(e.target.value)}
+              handleSubmit={handleAdditionToCollection}
+            />
+          </React.Fragment>
+        )}
+      </div>
     </React.Fragment>
   );
 };
