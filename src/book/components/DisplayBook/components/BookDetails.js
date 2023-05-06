@@ -15,6 +15,7 @@ import { TbPencil } from "react-icons/tb";
 import Breadcrumb from "../../../../shared/components/UIElements/Breadcrumb";
 import makeTitle from "../../../../shared/util/makeTitle";
 import variables from "../../../../shared/util/variables";
+import BookReview from "./BookReview";
 
 const BookDetails = ({
   book,
@@ -63,6 +64,7 @@ const BookDetails = ({
         </div>
         <BookDetailsInfo book={book} />
       </div>
+      <BookReview book={book} />
     </div>
   );
 };

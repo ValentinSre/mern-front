@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 import { useHttpClient } from "../../../shared/hooks/http-hook";
 import { AuthContext } from "../../../shared/context/auth-context";
 import BookDetails from "./components/BookDetails";
-import BookReview from "./components/BookReview";
 import DateModal from "../../../shared/components/UIElements/DateModal";
 import CustomButtons from "../../../shared/components/UIElements/CustomButtons";
 import EditBookDialog from "./components/EditBookDialog";
@@ -157,7 +156,6 @@ const DisplayBook = ({ book: initialBook }) => {
         handleWishlist={handleAddToWishlist}
         handleRead={handleOpenReadModal}
       />
-      <BookReview book={book} />
       <EditBookDialog
         open={openEditDialog}
         handleCloseDialog={handleCloseEditDialog}
