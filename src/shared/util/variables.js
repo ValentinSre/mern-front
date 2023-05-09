@@ -27,6 +27,13 @@ const variables = {
     11: "nov.",
     12: "déc.",
   },
+  listNames: {
+    valiant: "Univers Valiant",
+    starwars: "Star Wars",
+    asterix: "Astérix",
+    hicomics: "HiComics",
+    "404comics": "404 Comics",
+  },
 };
 
 export default variables;

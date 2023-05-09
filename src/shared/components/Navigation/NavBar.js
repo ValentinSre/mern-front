@@ -59,6 +59,11 @@ const NavBar = () => {
             La bibliothèque
           </NavLink>
         </MenuItem>
+        <MenuItem onClick={handleCloseMenuOnClick}>
+          <NavLink to={`/lists`} className="menu-link">
+            Les listes
+          </NavLink>
+        </MenuItem>
         {auth.isAdmin && (
           <MenuItem onClick={handleCloseMenuOnClick}>
             <NavLink to="/book/new" className="menu-link">

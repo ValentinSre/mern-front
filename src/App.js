@@ -10,10 +10,11 @@ import NavBar from "./shared/components/Navigation/NavBar";
 import LoadingSpinner from "./shared/components/UIElements/LoadingSpinner";
 import { AuthContext } from "./shared/context/auth-context";
 import { useAuth } from "./shared/hooks/auth-hook";
-import BookList from "./book/pages/BookList";
+import BookLibrary from "./book/pages/BookLibrary";
 import Home from "./Home";
 import MyLibrary from "./collection/pages/MyLibrary";
 import SearchBooks from "./book/pages/SearchBooks";
+import BooksLists from "./book/pages/BooksLists";
 
 const NewBook = React.lazy(() => import("./book/pages/NewBook"));
 const Auth = React.lazy(() => import("./user/pages/Auth"));
@@ -32,7 +33,7 @@ const App = () => {
           <Home />
         </Route>
         <Route path="/books" exact>
-          <BookList />
+          <BookLibrary />
         </Route>
         <Route path="/book/:id" exact>
           <Book />
@@ -43,6 +44,10 @@ const App = () => {
         <Route path="/search" exact>
           <SearchBooks />
         </Route>
+        <Route path="/lists" exact>
+          <BooksLists />
+        </Route>
+
         <Redirect to="/" />
       </Switch>
     );
@@ -55,6 +60,9 @@ const App = () => {
         </Route>
         <Route path="/search" exact>
           <SearchBooks />
+        </Route>
+        <Route path="/lists" exact>
+          <BooksLists />
         </Route>
         <Route path="/:userId/collection" exact>
           <MyLibrary />
@@ -69,7 +77,7 @@ const App = () => {
           <MyLibrary />
         </Route>
         <Route path="/books" exact>
-          <BookList />
+          <BookLibrary />
         </Route>
         {isAdmin && (
           <Route path="/book/new" exact>

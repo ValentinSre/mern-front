@@ -1,0 +1,124 @@
+.books-lists {
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  background-color: #fff;
+  padding: 0 20px;
+}
+
+.books-lists__category {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  justify-content: space-between;
+}
+
+.books-lists__category h2 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-right: 10px;
+}
+
+.books-lists__category h3 {
+  font-size: 11px;
+  color: #000;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.books-lists__list {
+  display: flex;
+  overflow-x: auto;
+  padding: 5px;
+}
+
+.books-lists__list-book {
+  position: relative;
+  margin-right: 15px;
+}
+
+.books-lists__list-book img {
+  width: 100px;
+  border-radius: 5px;
+}
+
+.books-lists__list-badge {
+  position: absolute;
+  top: -8px;
+  right: 3px;
+}
+
+.books-lists__footer {
+  margin-bottom: 20px;
+}
+
+.books-list__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.books-list__list-book {
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.books-list__list-book img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.books-list__list-book.possede img {
+  filter: brightness(0.5);
+}
+
+.books-list__list-book.possede:hover img {
+  filter: brightness(1);
+  transform: scale(1.1);
+}
+
+.books-list__list-book.non-possede:hover img {
+  transform: scale(1.1);
+}
+
+.books-list__back {
+  padding-top: 20px;
+  font-size: 12px;
+}
+
+.books-list__category {
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+  padding-left: 20px;
+  padding-bottom: 10px;
+}
+
+.books-list__category h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-right: 10px;
+}
+
+.books-list__stats {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.books-list__stats-phone {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .books-list__stats {
+    display: none;
+  }
+
+  .books-list__stats-phone {
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+  }
+}

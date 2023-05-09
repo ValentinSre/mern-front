@@ -7,9 +7,9 @@ import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import { AuthContext } from "../../shared/context/auth-context";
 import BookTable from "../components/BookTable";
 
-import "./BookList.css";
+import "./BookLibrary.css";
 
-const BookList = () => {
+const BookLibrary = () => {
   const auth = useContext(AuthContext);
   const history = useHistory();
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
@@ -175,4 +175,4 @@ const BookList = () => {
   );
 };
 
-export default BookList;
+export default BookLibrary;
