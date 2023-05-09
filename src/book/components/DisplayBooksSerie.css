@@ -1,0 +1,30 @@
+.display-books-serie_container {
+    background-color: white;
+    padding-top: 2px;
+    padding-right: 30px;
+    padding-left: 30px;
+    padding-bottom: 20px;
+}
+
+.display-books-serie_container h2 {
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.display-books-serie {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    margin-bottom: 20px;
+}
+
+.display-books-serie__book {
+    margin-right: 10px;
+}
+
+.display-books-serie__book img {
+    width: 200px;
+    border-radius: 8px;
+    margin-right: 20px;
+}

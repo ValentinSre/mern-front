@@ -10,6 +10,7 @@ import { useState } from "react";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import BookDetails from "../components/DisplayBook/DisplayBook";
+import BooksSerie from "../components/DisplayBooksSerie";
 
 const Book = () => {
   const auth = useContext(AuthContext);
@@ -30,15 +31,19 @@ const Book = () => {
     fetchBook();
   }, [sendRequest, bookId, auth.userId]);
 
+  console.log(loadedBook);
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />
       {isLoading && (
-        <div className="center">
+        <div className='center'>
           <LoadingSpinner />
         </div>
       )}
       {!isLoading && loadedBook && <BookDetails book={loadedBook} />}
+      {!isLoading && loadedBook && loadedBook.booksSerie && (
+        <BooksSerie booksSerie={loadedBook.booksSerie} />
+      )}
     </React.Fragment>
   );
 };
