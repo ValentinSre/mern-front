@@ -77,28 +77,28 @@ const BookReview = ({ book }) => {
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-            <div className='book-collection__review'>
+            <div className="book-collection__review">
               <form onSubmit={(event) => handleSubmitReview(event)}>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <div className='book-collection__review__rating'>
+                <div className="book-collection__review-twitter">
+                  <div className="book-collection__review__rating">
                     <p>Ma note</p>
                     <Rating
                       value={rating}
                       onChange={(e) => setRating(parseFloat(e.target.value))}
                       precision={0.5}
-                      size='large'
+                      size="large"
                       style={{ color: "#ffde59" }}
                     />
                   </div>
                   <TextField
-                    label='Lien Twitter'
-                    variant='outlined'
+                    label="Lien Twitter"
+                    variant="outlined"
                     value={twitterLink}
                     onChange={(e) => setTwitterLink(e.target.value)}
                     InputProps={{
                       startAdornment: (
-                        <InputAdornment position='start'>
-                          <Tooltip title='Voir sur Twitter'>
+                        <InputAdornment position="start">
+                          <Tooltip title="Voir sur Twitter">
                             <IconButton
                               onClick={() => {
                                 window.location.href = twitterLink;
@@ -125,8 +125,8 @@ const BookReview = ({ book }) => {
           margin='normal'
         /> */}
                 <Button
-                  type='submit'
-                  variant='contained'
+                  type="submit"
+                  variant="contained"
                   style={{
                     marginTop: "10px",
                     marginLeft: "15px",
