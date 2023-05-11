@@ -25,6 +25,7 @@ import logo from "../../images/logo.png";
 import StaticNavBar from "./StaticNavBar";
 
 import "./NavBar.css";
+import { LeakAdd } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   small: {
@@ -78,6 +79,11 @@ const NavBar = () => {
             <MenuItem onClick={handleCloseMenuOnClick}>
               <NavLink to={`/${auth.userId}/collection`} className="menu-link">
                 Ma collection
+              </NavLink>
+            </MenuItem>
+            <MenuItem onClick={handleCloseMenuOnClick}>
+              <NavLink to={`/${auth.userId}/readlist`} className="menu-link">
+                Mes lectures
               </NavLink>
             </MenuItem>
             <MenuItem onClick={handleCloseMenuOnClick}>

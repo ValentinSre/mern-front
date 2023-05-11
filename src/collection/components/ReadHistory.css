@@ -1,0 +1,30 @@
+.display_month {
+  margin-top: 5px;
+  font-weight: bolder;
+  color: #000;
+  text-transform: uppercase;
+}
+
+.timeline_content {
+  width: 49%;
+}
+
+@media screen and (max-width: 767px) {
+  .timeline_content {
+    width: 46%;
+  }
+}
+
+.read-history__day-books {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+
+.read-history__day-books img {
+  width: 150px;
+  height: 230px;
+  object-fit: cover;
+  margin-right: 10px;
+  border-radius: 5px;
+}

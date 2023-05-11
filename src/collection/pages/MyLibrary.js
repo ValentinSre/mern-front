@@ -7,6 +7,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import { AuthContext } from "../../shared/context/auth-context";
 import DisplayCollection from "./DisplayCollection";
+import DisplayReadlist from "./DisplayReadlist";
 import DisplayWishlist from "./DisplayWishlist";
 import DisplayReleases from "./DisplayFutureWishlist";
 import Stats from "./Stats";
@@ -49,14 +50,17 @@ const MyLibrary = () => {
       case `/${auth.userId}/collection`:
         setSelectedTab(0);
         break;
-      case `/${auth.userId}/wishlist`:
+      case `/${auth.userId}/readlist`:
         setSelectedTab(1);
         break;
-      case `/${auth.userId}/releases`:
+      case `/${auth.userId}/wishlist`:
         setSelectedTab(2);
         break;
-      case `/${auth.userId}/stats`:
+      case `/${auth.userId}/releases`:
         setSelectedTab(3);
+        break;
+      case `/${auth.userId}/stats`:
+        setSelectedTab(4);
         break;
       default:
         setSelectedTab(0);
@@ -86,29 +90,36 @@ const MyLibrary = () => {
           />
           <Tab
             component={Link}
+            to={`/${auth.userId}/readlist`}
+            label="Mes lectures"
+            className={selectedTab === 1 ? classes.selectedTab : ""}
+          />
+          <Tab
+            component={Link}
             to={`/${auth.userId}/wishlist`}
             label="Mes souhaits"
-            className={selectedTab === 1 ? classes.selectedTab : ""}
+            className={selectedTab === 2 ? classes.selectedTab : ""}
           />
           <Tab
             component={Link}
             to={`/${auth.userId}/releases`}
             label="Mes sorties"
-            className={selectedTab === 2 ? classes.selectedTab : ""}
+            className={selectedTab === 3 ? classes.selectedTab : ""}
           />
           <Tab
             component={Link}
             to={`/${auth.userId}/stats`}
             label="Mes statistiques"
-            className={selectedTab === 3 ? classes.selectedTab : ""}
+            className={selectedTab === 4 ? classes.selectedTab : ""}
           />
         </Tabs>
       </AppBar>
       <div className={classes.content}>
         {selectedTab === 0 && <DisplayCollection />}
-        {selectedTab === 1 && <DisplayWishlist />}
-        {selectedTab === 2 && <DisplayReleases />}
-        {selectedTab === 3 && <Stats />}
+        {selectedTab === 1 && <DisplayReadlist />}
+        {selectedTab === 2 && <DisplayWishlist />}
+        {selectedTab === 3 && <DisplayReleases />}
+        {selectedTab === 4 && <Stats />}
       </div>
     </div>
   );

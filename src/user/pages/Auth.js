@@ -39,8 +39,6 @@ const Auth = () => {
           }
         );
 
-        console.log(responseData);
-
         auth.login(
           responseData.userId,
           responseData.token,

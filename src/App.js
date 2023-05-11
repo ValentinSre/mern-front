@@ -67,6 +67,9 @@ const App = () => {
         <Route path="/:userId/collection" exact>
           <MyLibrary />
         </Route>
+        <Route path="/:userId/readlist" exact>
+          <MyLibrary />
+        </Route>
         <Route path="/:userId/wishlist" exact>
           <MyLibrary />
         </Route>
