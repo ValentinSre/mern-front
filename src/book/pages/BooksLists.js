@@ -17,7 +17,13 @@ const BooksLists = (props) => {
   const auth = useContext(AuthContext);
   const history = useHistory();
   const { sendRequest, isLoading } = useHttpClient();
-  const [lists, setLists] = useState();
+  const [lists, setLists] = useState({
+    valiantBooks: [],
+    starWarsBooks: [],
+    asterixBooks: [],
+    hiComicsBooks: [],
+    qcqBooks: [],
+  });
   const queryParams = queryString.parse(window.location.search);
   const [selectedListParam, setSelectedListParam] = useState(
     queryParams.name || null
@@ -72,8 +78,7 @@ const BooksLists = (props) => {
 
   return (
     <React.Fragment>
-      {isLoading && <div className="center">Loading...</div>}
-      {!isLoading && lists && !selectedListParam && (
+      {!selectedListParam && (
         <div className="books-lists">
           <LineList
             listName="Univers Valiant"
@@ -81,6 +86,7 @@ const BooksLists = (props) => {
             handleDetails={handleDetails}
             userLogged={auth.isLoggedIn}
             queryParam="valiant"
+            loading={isLoading}
           />
           <Divider />
           <LineList
@@ -89,31 +95,38 @@ const BooksLists = (props) => {
             handleDetails={handleDetails}
             userLogged={auth.isLoggedIn}
             queryParam="starwars"
+            loading={isLoading}
           />
+          <Divider />
           <LineList
             listName="Astérix"
             booksList={lists.asterixBooks}
             handleDetails={handleDetails}
             userLogged={auth.isLoggedIn}
             queryParam="asterix"
+            loading={isLoading}
           />
+          <Divider />
           <LineList
             listName="HiComics"
             booksList={lists.hiComicsBooks}
             handleDetails={handleDetails}
             userLogged={auth.isLoggedIn}
             queryParam="hicomics"
+            loading={isLoading}
           />
+          <Divider />
           <LineList
             listName="404 Comics"
             booksList={lists.qcqBooks}
             handleDetails={handleDetails}
             userLogged={auth.isLoggedIn}
             queryParam="404comics"
+            loading={isLoading}
           />
         </div>
       )}
-      {!isLoading && lists && selectedListParam && (
+      {selectedListParam && (
         <div className="books-lists">
           <MosaicList
             listName={listNames[selectedListParam]}

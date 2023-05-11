@@ -1,11 +1,11 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 
-import { Tooltip, IconButton, Badge, Chip, Button } from "@material-ui/core";
-import { ZoomIn as ZoomInIcon } from "@material-ui/icons";
+import { Tooltip, Badge, Chip } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
 import makeTitle from "../../shared/util/makeTitle";
+import { Skeleton } from "@material-ui/lab";
 
 const CustomBadge = withStyles((theme) => ({
   badge: {
@@ -37,6 +37,7 @@ const LineList = ({
   handleDetails,
   userLogged,
   queryParam,
+  loading,
 }) => {
   const history = useHistory();
 
@@ -56,25 +57,53 @@ const LineList = ({
         onClick={() => handleDetails(queryParam)}
       >
         <h2 style={{ marginRight: 10 }}>{listName}</h2>
-        <h3>{booksList.length} livres</h3>
+        {loading ? (
+          <Skeleton
+            variant="text"
+            width={50}
+            height={25}
+            style={{ borderRadius: "5px" }}
+          />
+        ) : (
+          <h3>{booksList.length} livres</h3>
+        )}
       </div>
       <div className="books-lists__list">
-        {booksList.map((book) => (
-          <Tooltip
-            title={makeTitle(book)}
-            key={book._id}
-            onClick={() => history.push(`book/${book._id}`)}
-          >
-            <div className="books-lists__list-book">
-              <img src={book.image} alt={book.title} />
-              {book.possede && (
-                <div className="books-lists__list-badge">
-                  <CustomBadge color="default" badgeContent="✓" />
-                </div>
-              )}
-            </div>
-          </Tooltip>
-        ))}
+        {loading && (
+          <React.Fragment>
+            {Array.from(new Array(15)).map((item, index) => (
+              <div
+                className="books-lists__list-book"
+                key={index}
+                style={{ paddingBottom: "10px" }}
+              >
+                <Skeleton
+                  variant="rect"
+                  width={100}
+                  height={140}
+                  style={{ borderRadius: "5px" }}
+                />
+              </div>
+            ))}
+          </React.Fragment>
+        )}
+        {!loading &&
+          booksList.map((book) => (
+            <Tooltip
+              title={makeTitle(book)}
+              key={book._id}
+              onClick={() => history.push(`book/${book._id}`)}
+            >
+              <div className="books-lists__list-book">
+                <img src={book.image} alt={book.title} />
+                {book.possede && (
+                  <div className="books-lists__list-badge">
+                    <CustomBadge color="default" badgeContent="✓" />
+                  </div>
+                )}
+              </div>
+            </Tooltip>
+          ))}
       </div>
       <div className="books-lists__footer">
         {userLogged && <PercentageBadge percentage={percentageOwned} />}
