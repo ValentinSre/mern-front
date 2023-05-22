@@ -18,6 +18,7 @@ const BooksLists = (props) => {
   const history = useHistory();
   const { sendRequest, isLoading } = useHttpClient();
   const [lists, setLists] = useState({
+    pokemonBooks: [],
     valiantBooks: [],
     starWarsBooks: [],
     asterixBooks: [],
@@ -68,6 +69,7 @@ const BooksLists = (props) => {
     setSelectedListParam(list);
     const listsMap = {
       valiant: lists.valiantBooks,
+      pokemon: lists.pokemonBooks,
       starwars: lists.starWarsBooks,
       asterix: lists.asterixBooks,
       hicomics: lists.hiComicsBooks,
@@ -113,6 +115,15 @@ const BooksLists = (props) => {
             handleDetails={handleDetails}
             userLogged={auth.isLoggedIn}
             queryParam="hicomics"
+            loading={isLoading}
+          />
+          <Divider />
+          <LineList
+            listName="Pokémon"
+            booksList={lists.pokemonBooks}
+            handleDetails={handleDetails}
+            userLogged={auth.isLoggedIn}
+            queryParam="pokemon"
             loading={isLoading}
           />
           <Divider />
