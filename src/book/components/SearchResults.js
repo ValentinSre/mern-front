@@ -4,6 +4,35 @@ import makeTitle from "../../shared/util/makeTitle";
 
 import "./SearchResults.css";
 
+const DisplayResultCategory = ({ titles, series, artists }) => {
+  if (titles) {
+    const nbTitles = titles.length;
+    return nbTitles > 1 ? (
+      <h2>{nbTitles} albums correspondant à la recherche</h2>
+    ) : (
+      <h2>{nbTitles} album correspondant à la recherche</h2>
+    );
+  }
+
+  if (series) {
+    const nbSeries = series.length;
+    return nbSeries > 1 ? (
+      <h2>{nbSeries} séries correspondant à la recherche</h2>
+    ) : (
+      <h2>{nbSeries} série correspondant à la recherche</h2>
+    );
+  }
+
+  if (artists) {
+    const nbArtists = artists.length;
+    return nbArtists > 1 ? (
+      <h2>{nbArtists} artistes correspondant à la recherche</h2>
+    ) : (
+      <h2>{nbArtists} artiste correspondant à la recherche</h2>
+    );
+  }
+};
+
 const SearchResults = ({ titles, series, artists }) => {
   const history = useHistory();
   return (
@@ -12,7 +41,7 @@ const SearchResults = ({ titles, series, artists }) => {
 
       {titles.length > 0 && (
         <section className="search-results-section">
-          <h2>{titles.length} albums correspondant à la recherche</h2>
+          {DisplayResultCategory({ titles })}
           <ul className="search-results-list">
             {titles.map((title) => (
               <li
@@ -28,7 +57,7 @@ const SearchResults = ({ titles, series, artists }) => {
 
       {series.length > 0 && (
         <section className="search-results-section">
-          <h2>{series.length} séries correspondant à la recherche</h2>
+          {DisplayResultCategory({ series })}
           <ul className="search-results-list">
             {series.map((serie) => (
               <li key={serie.id}>
@@ -41,7 +70,7 @@ const SearchResults = ({ titles, series, artists }) => {
 
       {artists.length > 0 && (
         <section className="search-results-section">
-          <h2>{artists.length} artistes correspondant à la recherche</h2>
+          {DisplayResultCategory({ artists })}
           <ul className="search-results-list">
             {artists.map((artist) => (
               <li key={artist.id}>{artist.nom}</li>
