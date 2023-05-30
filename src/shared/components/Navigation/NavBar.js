@@ -16,6 +16,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { FaDice } from "react-icons/fa";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import { Link } from "react-router-dom";
+import SearchIcon from "@material-ui/icons/Search";
 
 import SearchBar from "../UIElements/SearchBar";
 
@@ -43,6 +44,7 @@ const NavBar = () => {
   const auth = useContext(AuthContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const [searchText, setSearchText] = useState("");
+  const [displaySearchBar, setDisplaySearchBar] = useState(false);
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -142,6 +144,17 @@ const NavBar = () => {
           </div>
 
           <div style={{ display: "flex", alignItems: "center" }}>
+            <div className="mobile-search">
+              <Tooltip title="Rechercher un contenu">
+                <IconButton
+                  edge="end"
+                  color="inherit"
+                  onClick={() => setDisplaySearchBar(!displaySearchBar)}
+                >
+                  <SearchIcon style={{ color: "#fff" }} />
+                </IconButton>
+              </Tooltip>
+            </div>
             <Link to="/suggestion">
               <Tooltip title="Suggérer un contenu">
                 <IconButton edge="end" color="inherit">
@@ -149,6 +162,7 @@ const NavBar = () => {
                 </IconButton>
               </Tooltip>
             </Link>
+
             <IconButton
               edge="end"
               aria-label="account of current user"
@@ -201,7 +215,20 @@ const NavBar = () => {
           </Menu>
         </Toolbar>
       </AppBar>
+
       <StaticNavBar userId={auth.userId} />
+      {displaySearchBar && (
+        <AppBar position="static" style={{ backgroundColor: "#222" }}>
+          <div className="mobileSearchBarWrapper">
+            <SearchBar
+              placeHolder="Recherche..."
+              searchText={searchText}
+              handleSearch={handleSearch}
+              globalSearch
+            />
+          </div>
+        </AppBar>
+      )}
     </React.Fragment>
   );
 };
