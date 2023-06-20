@@ -36,7 +36,6 @@ const SearchBooks = () => {
     fetchBook();
   }, [sendRequest, searchText]);
 
-  console.log(booksByTitle, booksBySerie, artistsByName);
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />

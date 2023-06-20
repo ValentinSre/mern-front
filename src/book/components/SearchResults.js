@@ -52,6 +52,7 @@ const DisplayResultCategory = ({ titles, series, artists }) => {
 
 const DisplayBooksByTitle = ({ titles }) => {
   const history = useHistory();
+
   return (
     <div className="collection-display">
       <div className="collection-display__books_array">
@@ -60,7 +61,7 @@ const DisplayBooksByTitle = ({ titles }) => {
             <div
               key={book.id}
               className="collection-display__book"
-              onClick={() => history.push(`/book/${book.id_book}`)}
+              onClick={() => history.push(`/book/${book._id}`)}
             >
               <img src={book.image} alt={book.titre} />
             </div>
@@ -232,7 +233,12 @@ const SearchResults = ({ titles, series, artists }) => {
               <section className="search-results-section">
                 <ul className="search-results-list">
                   {artists.map((artist) => (
-                    <li key={artist.id}>{artist.nom}</li>
+                    <li
+                      key={artist.id}
+                      onClick={() => history.push(`/artist/${artist._id}`)}
+                    >
+                      {artist.nom}
+                    </li>
                   ))}
                 </ul>
               </section>

@@ -15,6 +15,7 @@ import Home from "./Home";
 import MyLibrary from "./collection/pages/MyLibrary";
 import SearchBooks from "./book/pages/SearchBooks";
 import BooksLists from "./book/pages/BooksLists";
+import ArtistBooks from "./book/pages/ArtistBooks";
 
 const NewBook = React.lazy(() => import("./book/pages/NewBook"));
 const Auth = React.lazy(() => import("./user/pages/Auth"));
@@ -37,6 +38,9 @@ const App = () => {
         </Route>
         <Route path="/book/:id" exact>
           <Book />
+        </Route>
+        <Route path="/artist/:id" exact>
+          <ArtistBooks />
         </Route>
         <Route path="/auth" exact>
           <Auth />
