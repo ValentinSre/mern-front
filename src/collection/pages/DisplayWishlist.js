@@ -1,13 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
-import {
-  Checkbox,
-  FormControlLabel,
-  Grid,
-  Badge,
-  Divider,
-  Button,
-} from "@material-ui/core";
+import { Grid, Badge, Button, Divider } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
 import DateModal from "../../shared/components/UIElements/DateModal";
 import { BsCartCheckFill } from "react-icons/bs";
@@ -16,13 +9,19 @@ import { MdDeleteSweep } from "react-icons/md";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import { AuthContext } from "../../shared/context/auth-context";
+import WishlistFilters from "../components/WishlistFilters";
 
 import "./DisplayWishlist.css";
 
-const Wishlist = () => {
+const DisplayWishlist = () => {
   const auth = useContext(AuthContext);
   const history = useHistory();
-  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const {
+    isLoading: isDataLoading,
+    error,
+    sendRequest,
+    clearError,
+  } = useHttpClient();
   const [wishlist, setWishlist] = useState([]);
 
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
@@ -80,7 +79,7 @@ const Wishlist = () => {
 
   const [priceFilter, setPriceFilter] = useState([]);
 
-  const handleFilterChange = (event) => {
+  const handleCheckboxChange = (event) => {
     const { value, checked } = event.target;
     if (checked) {
       setPriceFilter([...priceFilter, value]);
@@ -128,52 +127,17 @@ const Wishlist = () => {
 
   return (
     <React.Fragment>
-      <ErrorModal error={error} onClear={clearError} />{" "}
+      <ErrorModal error={error} onClear={clearError} />
       <div className="wishlist">
         <div className="wishlist__filters">
-          <Grid item xs={12}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  value="20"
-                  onChange={handleFilterChange}
-                  color="primary"
-                />
-              }
-              label="< 20€"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  value="50"
-                  onChange={handleFilterChange}
-                  color="primary"
-                />
-              }
-              label="> 20€ et < 50€"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  value="100"
-                  onChange={handleFilterChange}
-                  color="primary"
-                />
-              }
-              label="> 50€"
-            />
-          </Grid>
+          <WishlistFilters handleCheckboxChange={handleCheckboxChange} />
         </div>
-        {isLoading && (
+        {isDataLoading && (
           <React.Fragment>
             <div style={{ paddingLeft: "5px", paddingTop: "15px" }}>
               <Skeleton variant="rect" width={"20%"} height={20} />
             </div>
-            <div
-              style={{
-                paddingTop: "70px",
-              }}
-            >
+            <div style={{ paddingTop: "70px" }}>
               <div
                 style={{
                   display: "grid",
@@ -190,7 +154,7 @@ const Wishlist = () => {
             </div>
           </React.Fragment>
         )}
-        {!isLoading && wishlist && (
+        {!isDataLoading && wishlist && (
           <React.Fragment>
             <Grid container spacing={2}>
               {filteredBooks.length !== 0 && (
@@ -298,4 +262,4 @@ const Wishlist = () => {
   );
 };
 
-export default Wishlist;
+export default DisplayWishlist;

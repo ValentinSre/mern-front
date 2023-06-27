@@ -6,7 +6,7 @@ const NewBook = React.lazy(() => import("./book/pages/NewBook"));
 const AuthPage = React.lazy(() => import("./user/pages/AuthPage"));
 const Book = React.lazy(() => import("./book/pages/Book"));
 const BookLibrary = React.lazy(() => import("./book/pages/BookLibrary"));
-const MyLibrary = React.lazy(() => import("./collection/pages/MyLibrary"));
+const UserLibrary = React.lazy(() => import("./collection/pages/UserLibrary"));
 const SearchBooks = React.lazy(() => import("./book/pages/SearchBooks"));
 const BooksLists = React.lazy(() => import("./book/pages/BooksLists"));
 const ArtistBooks = React.lazy(() => import("./book/pages/ArtistBooks"));
@@ -29,31 +29,31 @@ const routeConfigs = [
   },
   {
     path: "/:userId/collection",
-    component: MyLibrary,
+    component: UserLibrary,
     exact: true,
     loggedInOnly: true,
   },
   {
     path: "/:userId/readlist",
-    component: MyLibrary,
+    component: UserLibrary,
     exact: true,
     loggedInOnly: true,
   },
   {
     path: "/:userId/wishlist",
-    component: MyLibrary,
+    component: UserLibrary,
     exact: true,
     loggedInOnly: true,
   },
   {
     path: "/:userId/releases",
-    component: MyLibrary,
+    component: UserLibrary,
     exact: true,
     loggedInOnly: true,
   },
   {
     path: "/:userId/stats",
-    component: MyLibrary,
+    component: UserLibrary,
     exact: true,
     loggedInOnly: true,
   },
