@@ -1,69 +1,62 @@
 import React, { useState, useContext } from "react";
-
-// import Card from "../../shared/components/UIElements/Card";
 import { Button, TextField, Card } from "@material-ui/core";
+
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import { AuthContext } from "../../shared/context/auth-context";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 
-import "./Auth.css";
+import "./AuthPage.css";
 
-const Auth = () => {
-  const auth = useContext(AuthContext);
+const AuthPage = () => {
+  // State variables
   const [isLoginMode, setIsLoginMode] = useState(true);
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-  const [name, setName] = useState();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
 
+  // Context and HTTP hook
+  const auth = useContext(AuthContext);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
+  // Switch mode handler
   const switchModeHandler = () => {
     setIsLoginMode((prevMode) => !prevMode);
   };
 
+  // Auth submit handler
   const authSubmitHandler = async (event) => {
     event.preventDefault();
+
+    const apiUrl = process.env.REACT_APP_API_URL;
 
     if (isLoginMode) {
       try {
         const responseData = await sendRequest(
-          process.env.REACT_APP_API_URL + "/users/login",
+          `${apiUrl}/users/login`,
           "POST",
-          JSON.stringify({
-            email: email,
-            password: password,
-          }),
-          {
-            "Content-Type": "application/json",
-          }
+          JSON.stringify({ email, password }),
+          { "Content-Type": "application/json" }
         );
 
-        auth.login(
-          responseData.userId,
-          responseData.token,
-          responseData.isAdmin,
-          responseData.name
-        );
+        const { userId, token, isAdmin, name } = responseData;
+        auth.login(userId, token, isAdmin, name);
       } catch (err) {}
     } else {
       try {
-        const formData = new FormData();
-        formData.append("email", email);
-        formData.append("name", name);
-        formData.append("password", password);
+        const signupFormData = new FormData();
+        signupFormData.append("email", email);
+        signupFormData.append("name", name);
+        signupFormData.append("password", password);
+
         const responseData = await sendRequest(
-          process.env.REACT_APP_API_URL + "/users/signup",
+          `${apiUrl}/users/signup`,
           "POST",
-          formData
+          signupFormData
         );
 
-        auth.login(
-          responseData.userId,
-          responseData.token,
-          false,
-          responseData.name
-        );
+        const { userId, token, name } = responseData;
+        auth.login(userId, token, false, name);
       } catch (err) {}
     }
   };
@@ -73,7 +66,7 @@ const Auth = () => {
       <ErrorModal error={error} onClear={clearError} />
       <Card className="authentication">
         {isLoading && <LoadingSpinner asOverlay />}
-        <h2>Connexion requise</h2>
+        <h2>Connexion requises</h2>
         <hr />
         <form onSubmit={authSubmitHandler}>
           {!isLoginMode && (
@@ -104,7 +97,7 @@ const Auth = () => {
             label="Votre mot de passe"
             variant="outlined"
             type="password"
-            value={name}
+            value={password}
             onChange={(e) => setPassword(e.target.value)}
             margin="normal"
             fullWidth
@@ -123,4 +116,4 @@ const Auth = () => {
   );
 };
 
-export default Auth;
+export default AuthPage;
