@@ -91,6 +91,9 @@ const App = () => {
             <NewBook />
           </Route>
         )}
+        <Route path="/artist/:id" exact>
+          <ArtistBooks />
+        </Route>
         <Route path="/book/:id" exact>
           <Book />
         </Route>
