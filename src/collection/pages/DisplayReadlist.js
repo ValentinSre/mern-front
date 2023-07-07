@@ -37,14 +37,14 @@ const DisplayReadlist = () => {
 
   return (
     <React.Fragment>
-      <div className="readlist">
+      <div className='readlist'>
         <h1>Mes lectures</h1>
         <Button onClick={() => setOpenUnreadlistDialog(true)}>
           Voir les livres non lus
         </Button>
         {isLoading && (
           <Skeleton
-            variant="rect"
+            variant='rect'
             height={500}
             width={"80%"}
             style={{ margin: "auto", borderRadius: "5px" }}
@@ -56,7 +56,7 @@ const DisplayReadlist = () => {
           <CollectionInDialog
             open={openUnreadlistDialog}
             books={unreadlist}
-            title={"Livres non lus"}
+            title={`Livres non lus (${unreadlist.length})`}
             onClose={() => setOpenUnreadlistDialog(false)}
           />
         )}
