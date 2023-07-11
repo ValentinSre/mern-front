@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import { useHistory } from "react-router-dom";
 import { Button, TextField, Card } from "@material-ui/core";
 
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
@@ -14,6 +15,8 @@ const AuthPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+
+  const history = useHistory();
 
   // Context and HTTP hook
   const auth = useContext(AuthContext);
@@ -41,6 +44,7 @@ const AuthPage = () => {
 
         const { userId, token, isAdmin, name } = responseData;
         auth.login(userId, token, isAdmin, name);
+        history.push("/");
       } catch (err) {}
     } else {
       try {
@@ -57,6 +61,7 @@ const AuthPage = () => {
 
         const { userId, token, name } = responseData;
         auth.login(userId, token, false, name);
+        history.push("/");
       } catch (err) {}
     }
   };
@@ -66,7 +71,7 @@ const AuthPage = () => {
       <ErrorModal error={error} onClear={clearError} />
       <Card className="authentication">
         {isLoading && <LoadingSpinner asOverlay />}
-        <h2>Connexion requises</h2>
+        <h2>Connexion requise</h2>
         <hr />
         <form onSubmit={authSubmitHandler}>
           {!isLoginMode && (

@@ -16,7 +16,6 @@ const App = () => {
   // Custom auth hook
   const { userId, isAdmin, token, name, login, logout } = useAuth();
 
-  console.log(routeConfigs);
   // Rendered routes
   const renderedRoutes = (
     <Switch>

@@ -26,6 +26,7 @@ const routeConfigs = [
     path: "/lists",
     component: BooksLists,
     exact: true,
+    loggedInOnly: true,
   },
   {
     path: "/:userId/collection",

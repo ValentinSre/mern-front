@@ -15,7 +15,7 @@ export const useAuth = () => {
     setIsAdmin(admin);
     setName(name);
     const tokenExpirationDate =
-      expirationDate || new Date(new Date().getTime() + 1000 * 60 * 60);
+      expirationDate || new Date(new Date().getTime() + 1000 * 120 * 60);
     setTokenExpirationDate(tokenExpirationDate);
     localStorage.setItem(
       "userData",
