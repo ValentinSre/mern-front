@@ -26,9 +26,6 @@
 .wishlist-display__book {
   display: flex;
   flex-direction: column;
-  /* align-items: center;
-    text-align: center; */
-  /* justify-content: space-between; */
   height: 100%;
   background-color: #fff;
   padding: 1rem;
@@ -84,7 +81,6 @@
   width: 95%;
   height: auto;
   margin: auto;
-  /* margin-bottom: 1rem; */
   object-fit: "cover";
   border-radius: 10px;
   aspect-ratio: 3/4;
@@ -159,7 +155,7 @@
 
 .wishlist-display__book-state-container {
   display: flex;
-  flex-wrap: nowrap; /* Ajouter cette ligne pour empêcher les éléments de se placer sur une nouvelle ligne */
+  flex-wrap: nowrap;
 }
 
 .category {

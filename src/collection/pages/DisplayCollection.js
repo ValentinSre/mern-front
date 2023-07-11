@@ -3,25 +3,33 @@ import React, { useEffect, useState, useContext } from "react";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import { AuthContext } from "../../shared/context/auth-context";
-import DisplayByBooks from "../components/CollectionDisplay/DisplayByBooks";
-import CollectionFilter from "../components/Filters";
-import DisplayBySeries from "../components/CollectionDisplay/DisplayBySeries";
-import LoadingCollection from "../components/CollectionDisplay/LoadingCollection";
+import CollectionContent from "../components/CollectionContent";
 
 import "./DisplayCollection.css";
 
 const DisplayCollection = () => {
+  // Context and state
   const auth = useContext(AuthContext);
-  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const {
+    isLoading: isDataLoading,
+    error,
+    sendRequest,
+    clearError,
+  } = useHttpClient();
   const [loadedCollection, setLoadedCollection] = useState();
   const [originalCollection, setOriginalCollection] = useState([]);
-
   const [displayMode, setDisplayMode] = useState("bySeries");
-
   const [selectedSort, setSelectedSort] = useState(0);
   const [selectedGroupment, setSelectedGroupment] = useState(0);
   const [selectedEditeurs, setSelectedEditeurs] = useState();
+  const [checkedValues, setCheckedValues] = useState({
+    BD: true,
+    Comics: true,
+    Manga: true,
+    Roman: true,
+  });
 
+  // Fetch collection data
   const fetchBooks = async () => {
     try {
       const responseData = await sendRequest(
@@ -42,6 +50,7 @@ const DisplayCollection = () => {
     fetchBooks();
   }, [sendRequest, auth.userId, displayMode]);
 
+  // Load editeurs
   const loadEditeurs = (editeurs) => {
     const editeursObj = {};
     for (const editeur of editeurs) {
@@ -51,6 +60,7 @@ const DisplayCollection = () => {
     setSelectedEditeurs(editeursObj);
   };
 
+  // Event handlers
   const handleEditeursSelection = (name) => {
     const newEditeurs = { ...selectedEditeurs };
     newEditeurs[name] = !selectedEditeurs[name];
@@ -71,11 +81,9 @@ const DisplayCollection = () => {
 
       if (displayMode === "bySeries") {
         const { serie } = element;
-
         return serie && serie.toLowerCase().includes(searchLower);
       } else {
         const { titre, serie } = element;
-
         return (
           titre.toLowerCase().includes(searchLower) ||
           (serie && serie.toLowerCase().includes(searchLower))
@@ -86,13 +94,6 @@ const DisplayCollection = () => {
     setLoadedCollection(collectionFilteredBySearch);
   };
 
-  const [checkedValues, setCheckedValues] = React.useState({
-    BD: true,
-    Comics: true,
-    Manga: true,
-    Roman: true,
-  });
-
   const handleCheckedChange = (event) => {
     setCheckedValues({
       ...checkedValues,
@@ -100,49 +101,26 @@ const DisplayCollection = () => {
     });
   };
 
+  // Render
   return (
     <React.Fragment>
-      <ErrorModal error={error} onClear={clearError} />{" "}
-      {isLoading && (
-        <div className="collection">
-          <LoadingCollection displayMode={displayMode} />
-        </div>
-      )}
-      {!isLoading && loadedCollection && selectedEditeurs && (
-        <div className="collection">
-          <CollectionFilter
-            collection={loadedCollection}
-            displayMode={displayMode}
-            selectedSort={selectedSort}
-            selectedGroupment={selectedGroupment}
-            editeurs={selectedEditeurs}
-            handleSortChange={handleSortChange}
-            handleGroupmentChange={handleGroupmentChange}
-            handleEditeursSelection={handleEditeursSelection}
-            handleSearchBooks={handleSearchBooks}
-            setDisplayMode={setDisplayMode}
-            setLoadedCollection={setLoadedCollection}
-            checkedValues={checkedValues}
-            handleCheckedChange={handleCheckedChange}
-          />
-          {displayMode === "bySeries" && (
-            <DisplayBySeries
-              collection={loadedCollection}
-              checkedValues={checkedValues}
-              selectedEditeurs={selectedEditeurs}
-            />
-          )}
-          {displayMode === "byBooks" && (
-            <DisplayByBooks
-              collection={loadedCollection}
-              checkedValues={checkedValues}
-              selectedSort={selectedSort}
-              selectedGroupment={selectedGroupment}
-              selectedEditeurs={selectedEditeurs}
-            />
-          )}
-        </div>
-      )}
+      <ErrorModal error={error} onClear={clearError} />
+      <CollectionContent
+        isDataLoading={isDataLoading}
+        loadedCollection={loadedCollection}
+        displayMode={displayMode}
+        selectedSort={selectedSort}
+        selectedGroupment={selectedGroupment}
+        selectedEditeurs={selectedEditeurs}
+        handleSortChange={handleSortChange}
+        handleGroupmentChange={handleGroupmentChange}
+        handleEditeursSelection={handleEditeursSelection}
+        handleSearchBooks={handleSearchBooks}
+        setDisplayMode={setDisplayMode}
+        setLoadedCollection={setLoadedCollection}
+        checkedValues={checkedValues}
+        handleCheckedChange={handleCheckedChange}
+      />
     </React.Fragment>
   );
 };

@@ -28,8 +28,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.secondary.main,
   },
   oppositeContent: {
-    flex: 0.2, // ajuster la largeur de l'opposite content
-    marginRight: theme.spacing(2), // ajouter une marge à droite pour l'espacement
+    flex: 0.2,
+    marginRight: theme.spacing(2),
   },
 }));
 
@@ -41,8 +41,6 @@ function ReadHistory({ readlist }) {
 
   const releaseDates = Object.keys(readlist);
 
-  console.log("readlist", readlist);
-  // Group dates by month and year (YYYY-MM)
   const datesByMonth = releaseDates.reduce((acc, date) => {
     const month = new Date(date).getMonth() + 1;
     const year = new Date(date).getFullYear();
@@ -62,11 +60,15 @@ function ReadHistory({ readlist }) {
     return `${months[month]} ${year}`;
   };
 
+  const handleBookClick = (bookId) => {
+    history.push(`/book/${bookId}`);
+  };
+
   return (
     <Timeline style={{ width: "100%", marginLeft: "0" }} sx={{ flex: 0.2 }}>
       {releaseMonths.map((selectedMonth) =>
         datesByMonth[selectedMonth].map((date, index) => (
-          <TimelineItem>
+          <TimelineItem key={date}>
             <TimelineOppositeContent className={classes.oppositeContent}>
               {!index && (
                 <div className="display_month">
@@ -95,15 +97,12 @@ function ReadHistory({ readlist }) {
                   <div className="read-history__day-books">
                     {readlist[date].map((book) => (
                       <div
-                        onClick={() => history.push(`/book/${book.id_book}`)}
+                        key={book.id}
+                        onClick={() => handleBookClick(book.id_book)}
                       >
                         <Tooltip title={makeTitle(book)}>
-                          <div key={book.id}>
-                            <img
-                              key={book.id}
-                              src={book.image}
-                              alt={makeTitle(book)}
-                            />
+                          <div>
+                            <img src={book.image} alt={makeTitle(book)} />
                           </div>
                         </Tooltip>
                       </div>

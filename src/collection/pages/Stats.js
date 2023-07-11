@@ -9,12 +9,8 @@ import BoughtBooksByMonthComparison from "../components/StatsComponents/BoughtBo
 import AmountEvolution from "../components/StatsComponents/AmountEvolution";
 import ReadEvolution from "../components/StatsComponents/ReadEvolution";
 import BooksByEditor from "../components/StatsComponents/BooksByEditor";
-import EvolutionFrame from "../components/StatsComponents/EvolutionFrame";
-import { TbPigMoney, TbBookOff } from "react-icons/tb";
-import { BsFillCartPlusFill, BsFillEyeFill, BsBookmarks } from "react-icons/bs";
-import { GiReceiveMoney, GiWeight } from "react-icons/gi";
-import { MdSpeakerNotes } from "react-icons/md";
-import { ImBooks } from "react-icons/im";
+
+import StatsLineFrames from "../components/StatsComponents/StatsLineFrames";
 
 import "./Stats.css";
 
@@ -308,137 +304,20 @@ const Stats = () => {
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />{" "}
       {isLoading && (
-        <div className='center'>
+        <div className="center">
           <LoadingSpinner />
         </div>
       )}
       {!isLoading && loadedCollection && (
-        <div className='collection'>
-          <div className='collection-stats'>
-            <div className='collection-stats__frame'>
-              <EvolutionFrame
-                title={"Nb. de livres possédés"}
-                value={calculateStats().totalPossede}
-                positive
-                difference={(
-                  (boughtBooksByMonthArray[11].valeur /
-                    calculateStats().totalPossede) *
-                  100
-                ).toFixed(2)}
-                icon={<ImBooks />}
-                comparisonPhrase={"depuis le mois dernier"}
-              />
-            </div>
-
-            <div className='collection-stats__frame'>
-              <EvolutionFrame
-                title={"Prix des livres possédés"}
-                value={calculateStats().totalPrixPossede.toFixed(2) + " €"}
-                positive
-                difference={
-                  areaChartArray.length &&
-                  (
-                    (areaChartArray[areaChartArray.length - 1].total /
-                      calculateStats().totalPrixPossede) *
-                    100
-                  ).toFixed(2)
-                }
-                icon={<GiReceiveMoney />}
-                comparisonPhrase={"depuis le mois dernier"}
-              />
-            </div>
-
-            <div className='collection-stats__frame'>
-              <EvolutionFrame
-                title={"Nb. de livres à lire"}
-                value={calculateStats().totalPossede - calculateStats().totalLu}
-                icon={<TbBookOff />}
-              />
-            </div>
-
-            <div className='collection-stats__frame'>
-              <EvolutionFrame
-                title={"Nb. de livres souhaités"}
-                value={calculateStats().totalSouhaite}
-                icon={<BsFillCartPlusFill />}
-              />
-            </div>
-
-            <div className='collection-stats__frame'>
-              <EvolutionFrame
-                title={"Prix des livres souhaités"}
-                value={calculateStats().totalPrixSouhaite.toFixed(2) + " €"}
-                icon={<TbPigMoney />}
-              />
-            </div>
-
-            <div className='collection-stats__frame'>
-              <EvolutionFrame
-                title={"Nb. de livres lus"}
-                value={calculateStats().totalLu}
-                positive={
-                  readBooksByMonthArray.length > 2
-                    ? (readBooksByMonthArray[readBooksByMonthArray.length - 1]
-                        .livres /
-                        readBooksByMonthArray[readBooksByMonthArray.length - 2]
-                          .livres -
-                        1) *
-                        100 >
-                      0
-                    : true
-                }
-                difference={
-                  readBooksByMonthArray.length > 2
-                    ? (
-                        (readBooksByMonthArray[readBooksByMonthArray.length - 1]
-                          .livres /
-                          readBooksByMonthArray[
-                            readBooksByMonthArray.length - 2
-                          ].livres -
-                          1) *
-                        100
-                      ).toFixed(2)
-                    : null
-                }
-                comparisonPhrase={"par rapport au mois dernier"}
-                icon={<BsFillEyeFill />}
-              />
-            </div>
-
-            <div className='collection-stats__frame'>
-              <EvolutionFrame
-                title={"Nb. de livres critiqués"}
-                value={calculateStats().totalCritique}
-                percentage={(
-                  (calculateStats().totalCritique /
-                    calculateStats().totalPossede) *
-                  100
-                ).toFixed(2)}
-                icon={<MdSpeakerNotes />}
-              />
-            </div>
-
-            <div className='collection-stats__frame'>
-              <EvolutionFrame
-                title={"Nb. de pages cumulées"}
-                value={calculateStats().totalPagesPossede}
-                icon={<BsBookmarks />}
-              />
-            </div>
-
-            <div className='collection-stats__frame'>
-              <EvolutionFrame
-                title={"Poids total des livres"}
-                value={
-                  (calculateStats().totalPoidsPossede / 1000).toFixed(2) + " kg"
-                }
-                icon={<GiWeight />}
-              />
-            </div>
-          </div>
-
-          <div className='collection-stats_container'>
-            <div className='collection-stats__stepper'>
+        <div className="collection">
+          <StatsLineFrames
+            calculateStats={calculateStats}
+            boughtBooksByMonthArray={boughtBooksByMonthArray}
+            areaChartArray={areaChartArray}
+            readBooksByMonthArray={readBooksByMonthArray}
+          />
+          <div className="collection-stats_container">
+            <div className="collection-stats__stepper">
               {collectionStatsData.map((_, index) => (
                 <div
                   key={index}
@@ -449,10 +328,10 @@ const Stats = () => {
                 />
               ))}
             </div>
-            <div className='collection-stats__title'>
+            <div className="collection-stats__title">
               <h2>{title}</h2>
             </div>
-            <div className='collection-stats__components'>
+            <div className="collection-stats__components">
               <h2>{component1Name}</h2>
               {component1}
               {component2 && (
