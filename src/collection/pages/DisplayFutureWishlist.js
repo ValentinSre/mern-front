@@ -9,10 +9,15 @@ import WishlistCalendar from "../components/WishlistCalendar";
 
 import "./DisplayWishlist.css";
 
-const Wishlist = () => {
+const DisplayFutureWishlist = () => {
   const auth = useContext(AuthContext);
 
-  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const {
+    isLoading: isDataLoading,
+    error,
+    sendRequest,
+    clearError,
+  } = useHttpClient();
   const [wishlist, setWishlist] = useState();
 
   const fetchWishlists = async () => {
@@ -96,7 +101,7 @@ const Wishlist = () => {
             />
           </Grid>
         </div>
-        {isLoading && (
+        {isDataLoading && (
           <React.Fragment>
             <div style={{ paddingLeft: "5px" }}>
               <Skeleton variant="rect" width={"20%"} height={20} />
@@ -119,7 +124,7 @@ const Wishlist = () => {
             </div>
           </React.Fragment>
         )}
-        {!isLoading && wishlist && (
+        {!isDataLoading && wishlist && (
           <React.Fragment>
             {filteredBooks.length !== 0 && (
               <div style={{ marginLeft: "10px", marginTop: "20px" }}>
@@ -147,4 +152,4 @@ const Wishlist = () => {
   );
 };
 
-export default Wishlist;
+export default DisplayFutureWishlist;

@@ -59,7 +59,7 @@ const DisplayReadlist = () => {
         <CollectionInDialog
           open={openUnreadlistDialog}
           books={unreadlist}
-          title={"Livres non lus"}
+          title={`Livres non lus (${unreadlist.length})`}
           onClose={handleCloseUnreadlistDialog}
         />
       )}
