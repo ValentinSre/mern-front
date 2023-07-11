@@ -31,3 +31,181 @@
 .search-results-list li {
   margin-bottom: 5px;
 }
+
+.results-display {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+.results-display__books_array {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-gap: 2rem;
+}
+
+.results-display__book {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  justify-content: space-between;
+  height: 100%;
+  background-color: #fff;
+  padding: 1rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.results-display__book:hover {
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2);
+}
+
+.results-display__book img {
+  width: 100%;
+  height: auto;
+  margin-bottom: 1rem;
+}
+
+.results-display__book p:first-of-type {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.results-display__book p:last-of-type {
+  font-style: italic;
+}
+
+.results-series {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  padding-left: 10px;
+  margin-bottom: 15px;
+}
+
+.results-series-box {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  justify-content: space-between;
+}
+
+.results-series-box__left {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.results-series-box__left-img img {
+  width: 80px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.results-series-box__left-info {
+  display: flex;
+  flex-direction: column;
+  padding-left: 20px;
+}
+
+.results-series-box__left-info-title {
+  font-size: 18px;
+  font-weight: bold;
+  font-family: sans-serif;
+  color: #333;
+  padding-bottom: 12px;
+}
+
+@media (max-width: 768px) {
+  .results-series-box__left-info-title {
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: calc(100% - 10px);
+  }
+}
+
+.results-series-box__right {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.results-series-box__right-editor {
+  background-color: #ffde59;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  margin-right: 20px;
+  font-size: 14px;
+  font-weight: bold;
+  font-family: sans-serif;
+  padding: 8px;
+}
+
+/* dont display the editor if the screen is too small */
+@media (max-width: 768px) {
+  .results-series-box__right-editor {
+    display: none;
+  }
+}
+
+.results-series-box__right-progress {
+  margin-right: 10px;
+  align-items: center;
+  text-align: center;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: 130px;
+}
+
+@media (max-width: 768px) {
+  .results-series-box__right-progress {
+    width: 100px;
+    padding-right: 30px;
+  }
+}
+
+@media (max-width: 500px) {
+  .divider {
+    display: none;
+  }
+}
+
+.results-series-box__right-progress__number {
+  font-size: 24px;
+  font-weight: bold;
+  font-family: sans-serif;
+  color: #333;
+}
+
+@media (max-width: 768px) {
+  .results-series-box__right-progress__number {
+    font-size: 18px;
+  }
+}
+
+.results-series-box__right-progress__text {
+  font-size: 14px;
+  font-family: sans-serif;
+  color: #333;
+}
+
+@media (max-width: 768px) {
+  .results-series-box__right-progress__text {
+    font-size: 12px;
+    display: none;
+  }
+}
+
+.results-series-box__right-expand {
+  margin-left: 10px;
+}
+
+@media (max-width: 410px) {
+  .results-series-box__right-expand {
+    display: none;
+  }
+}

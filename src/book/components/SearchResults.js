@@ -54,13 +54,13 @@ const DisplayBooksByTitle = ({ titles }) => {
   const history = useHistory();
 
   return (
-    <div className="collection-display">
-      <div className="collection-display__books_array">
+    <div className="results-display">
+      <div className="results-display__books_array">
         {titles.map((book) => (
           <Tooltip title={makeTitle(book)}>
             <div
               key={book.id}
-              className="collection-display__book"
+              className="results-display__book"
               onClick={() => history.push(`/book/${book._id}`)}
             >
               <img src={book.image} alt={book.titre} />
@@ -86,29 +86,34 @@ const DisplayBooksBySerie = ({ series }) => {
   };
 
   return series.map((serie, index) => (
-    <div key={index} className="collection-series" style={{ width: "100%" }}>
-      <div className="series-box" onClick={() => toggleSerieExpansion(index)}>
+    <div key={index} className="results-series" style={{ width: "100%" }}>
+      <div
+        className="results-series-box"
+        onClick={() => toggleSerieExpansion(index)}
+      >
         {/* div de gauche */}
-        <div className="series-box__left">
-          <div className="series-box__left-img">
+        <div className="results-series-box__left">
+          <div className="results-series-box__left-img">
             <img src={serie.books[0].image} alt={serie.serie} />
           </div>
-          <div className="series-box__left-info">
-            <div className="series-box__left-info-title">{serie.serie}</div>
+          <div className="results-series-box__left-info">
+            <div className="results-series-box__left-info-title">
+              {serie.serie}
+            </div>
           </div>
         </div>
         {/* div de droite */}
-        <div className="series-box__right">
-          <div className="series-box__right-editor">
+        <div className="results-series-box__right">
+          <div className="results-series-box__right-editor">
             {serie.books[0].editeur}
           </div>
           <Divider orientation="vertical" flexItem className="divider" />
-          <div className="series-box__right-progress">
-            <div className="series-box__right-progress__number">
+          <div className="results-series-box__right-progress">
+            <div className="results-series-box__right-progress__number">
               {serie.books.length}
             </div>
           </div>
-          <div className="series-box__right-expand">
+          <div className="results-series-box__right-expand">
             <IconButton
               onClick={() => toggleSerieExpansion(index)}
               size="medium"
