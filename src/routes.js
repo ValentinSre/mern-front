@@ -68,17 +68,17 @@ const routeConfigs = [
     component: ArtistBooks,
     exact: true,
   },
-  {
-    path: "/book/:id",
-    component: Book,
-    exact: true,
-  },
-  {
+    {
     path: "/book/new",
     component: NewBook,
     exact: true,
     loggedInOnly: true,
     adminOnly: true,
+  },
+  {
+    path: "/book/:id",
+    component: Book,
+    exact: true,
   },
   {
     path: "/auth",
