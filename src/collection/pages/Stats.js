@@ -10,6 +10,7 @@ import AmountEvolution from "../components/StatsComponents/AmountEvolution";
 import ReadEvolution from "../components/StatsComponents/ReadEvolution";
 import ProportionOfEachType from "../components/StatsComponents/ProportionOfEachType";
 import ReadUnreadByTypes from "../components/StatsComponents/ReadUnreadByTypes";
+import StatsLineFrames from "../components/StatsComponents/StatsLineFrames";
 import EvolutionFrame from "../components/StatsComponents/EvolutionFrame";
 import { TbPigMoney, TbBookOff } from "react-icons/tb";
 import { BsFillCartPlusFill, BsFillEyeFill, BsBookmarks } from "react-icons/bs";
