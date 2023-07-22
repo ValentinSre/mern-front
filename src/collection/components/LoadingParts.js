@@ -1,8 +1,6 @@
 import React from "react";
-
 import { Skeleton } from "@material-ui/lab";
-
-import CollectionFilter from "../Filters";
+import CollectionFilter from "./Filters";
 
 const DEFAULT_SELECT = 0;
 const DEFAULT_ARRAY = [];
@@ -89,4 +87,15 @@ const LoadingCollection = ({ displayMode }) => {
   );
 };
 
-export default LoadingCollection;
+const LoadingReadlist = () => {
+  return (
+    <Skeleton
+      variant="rect"
+      height={500}
+      width={"80%"}
+      style={{ margin: "auto", borderRadius: "5px" }}
+    />
+  );
+};
+
+export { LoadingCollection, LoadingReadlist };

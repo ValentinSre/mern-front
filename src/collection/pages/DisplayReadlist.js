@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useContext } from "react";
-
-import { Skeleton } from "@material-ui/lab";
 import { Button } from "@material-ui/core";
+
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import { AuthContext } from "../../shared/context/auth-context";
+import { LoadingReadlist } from "../components/LoadingParts";
 import ReadHistory from "../components/ReadHistory";
 import CollectionInDialog from "../components/CollectionDisplay/components/CollectionInDialog";
 
@@ -11,9 +11,9 @@ import "./DisplayReadlist.css";
 
 const DisplayReadlist = () => {
   const auth = useContext(AuthContext);
-  const { isLoading, sendRequest } = useHttpClient();
-  const [readlist, setReadlist] = useState();
-  const [unreadlist, setUnreadlist] = useState();
+  const { isLoading: isDataLoading, sendRequest } = useHttpClient();
+  const [readlist, setReadlist] = useState([]);
+  const [unreadlist, setUnreadlist] = useState([]);
   const [openUnreadlistDialog, setOpenUnreadlistDialog] = useState(false);
 
   const fetchReadlist = async () => {
@@ -27,41 +27,43 @@ const DisplayReadlist = () => {
 
       setReadlist(responseData.readlist);
       setUnreadlist(responseData.unreadlist);
-      console.log("unreadlist", responseData.unreadlist);
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   useEffect(() => {
     fetchReadlist();
   }, [sendRequest, auth.userId]);
 
-  return (
-    <React.Fragment>
-      <div className='readlist'>
-        <h1>Mes lectures</h1>
-        <Button onClick={() => setOpenUnreadlistDialog(true)}>
-          Voir les livres non lus
-        </Button>
-        {isLoading && (
-          <Skeleton
-            variant='rect'
-            height={500}
-            width={"80%"}
-            style={{ margin: "auto", borderRadius: "5px" }}
-          />
-        )}
+  const handleOpenUnreadlistDialog = () => {
+    setOpenUnreadlistDialog(true);
+  };
 
-        {!isLoading && <ReadHistory readlist={readlist} />}
-        {!isLoading && unreadlist && (
-          <CollectionInDialog
-            open={openUnreadlistDialog}
-            books={unreadlist}
-            title={`Livres non lus (${unreadlist.length})`}
-            onClose={() => setOpenUnreadlistDialog(false)}
-          />
-        )}
-      </div>
-    </React.Fragment>
+  const handleCloseUnreadlistDialog = () => {
+    setOpenUnreadlistDialog(false);
+  };
+
+  return (
+    <div className="readlist">
+      <h1>Mes lectures</h1>
+      <Button onClick={handleOpenUnreadlistDialog}>
+        Voir les livres non lus
+      </Button>
+
+      {isDataLoading && <LoadingReadlist />}
+
+      {!isDataLoading && <ReadHistory readlist={readlist} />}
+
+      {!isDataLoading && unreadlist && (
+        <CollectionInDialog
+          open={openUnreadlistDialog}
+          books={unreadlist}
+          title={`Livres non lus (${unreadlist.length})`}
+          onClose={handleCloseUnreadlistDialog}
+        />
+      )}
+    </div>
   );
 };
 

@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MyLibrary = () => {
+const UserLibrary = () => {
   const auth = useContext(AuthContext);
   const classes = useStyles();
   const location = useLocation();
@@ -70,9 +70,6 @@ const MyLibrary = () => {
 
   return (
     <div style={{ marginTop: "40px" }}>
-      {/* <h1 style={{ padding: "20px", fontFamily: "sans-serif", color: "white" }}>
-        Ma bibliothèque
-      </h1> */}
       <AppBar position="static" className={classes.appBar}>
         <Tabs
           value={selectedTab}
@@ -125,4 +122,4 @@ const MyLibrary = () => {
   );
 };
 
-export default MyLibrary;
+export default UserLibrary;

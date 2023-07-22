@@ -57,16 +57,20 @@ const NavBar = () => {
   const renderMenuItems = () => {
     return (
       <div className="menu-items">
-        <MenuItem onClick={handleCloseMenuOnClick}>
-          <NavLink to={`/books`} className="menu-link">
-            La bibliothèque
-          </NavLink>
-        </MenuItem>
-        <MenuItem onClick={handleCloseMenuOnClick}>
-          <NavLink to={`/lists`} className="menu-link">
-            Les listes
-          </NavLink>
-        </MenuItem>
+        {auth.isLoggedIn && (
+          <React.Fragment>
+            <MenuItem onClick={handleCloseMenuOnClick}>
+              <NavLink to={`/books`} className="menu-link">
+                La bibliothèque
+              </NavLink>
+            </MenuItem>
+            <MenuItem onClick={handleCloseMenuOnClick}>
+              <NavLink to={`/lists`} className="menu-link">
+                Les listes
+              </NavLink>
+            </MenuItem>
+          </React.Fragment>
+        )}
         {auth.isAdmin && (
           <MenuItem onClick={handleCloseMenuOnClick}>
             <NavLink to="/book/new" className="menu-link">
@@ -197,7 +201,6 @@ const NavBar = () => {
             style={{ marginTop: "40px" }}
           >
             {renderMenuItems()}
-            <Divider />
             {!auth.isLoggedIn && (
               <MenuItem onClick={handleCloseMenuOnClick}>
                 <NavLink to="/auth" className="menu-link">
@@ -206,11 +209,14 @@ const NavBar = () => {
               </MenuItem>
             )}
             {auth.isLoggedIn && (
-              <MenuItem onClick={handleCloseMenuOnClick}>
-                <div onClick={auth.logout} className="menu-link">
-                  Déconnexion
-                </div>
-              </MenuItem>
+              <React.Fragment>
+                <Divider />
+                <MenuItem onClick={handleCloseMenuOnClick}>
+                  <div onClick={auth.logout} className="menu-link">
+                    Déconnexion
+                  </div>
+                </MenuItem>
+              </React.Fragment>
             )}
           </Menu>
         </Toolbar>
