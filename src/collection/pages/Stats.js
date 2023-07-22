@@ -8,7 +8,8 @@ import ReadReviewedProportion from "../components/StatsComponents/ReadReviewedPr
 import BoughtBooksByMonthComparison from "../components/StatsComponents/BoughtBooksByMonthComparison";
 import AmountEvolution from "../components/StatsComponents/AmountEvolution";
 import ReadEvolution from "../components/StatsComponents/ReadEvolution";
-import BooksByEditor from "../components/StatsComponents/BooksByEditor";
+import ProportionOfEachType from "../components/StatsComponents/ProportionOfEachType";
+import ReadUnreadByTypes from "../components/StatsComponents/ReadUnreadByTypes";
 import EvolutionFrame from "../components/StatsComponents/EvolutionFrame";
 import { TbPigMoney, TbBookOff } from "react-icons/tb";
 import { BsFillCartPlusFill, BsFillEyeFill, BsBookmarks } from "react-icons/bs";
@@ -53,6 +54,26 @@ const Stats = () => {
       totalPoidsPossede: 0,
       totalBooksByEditeur: {},
       readBooksByEditeur: {},
+      Manga: {
+        total: 0,
+        lu: 0,
+        nonLu: 0,
+      },
+      Comics: {
+        total: 0,
+        lu: 0,
+        nonLu: 0,
+      },
+      Roman: {
+        total: 0,
+        lu: 0,
+        nonLu: 0,
+      },
+      BD: {
+        total: 0,
+        lu: 0,
+        nonLu: 0,
+      },
     };
 
     for (const book of loadedCollection) {
@@ -61,6 +82,13 @@ const Stats = () => {
         stats.totalPrixPossede += book.prix;
         stats.totalPagesPossede += book.planches;
         stats.totalPoidsPossede += book.poids;
+
+        stats[book.type].total++;
+        if (book.lu) {
+          stats[book.type].lu++;
+        } else {
+          stats[book.type].nonLu++;
+        }
       }
       if (book.souhaite) {
         stats.totalSouhaite++;
@@ -99,12 +127,44 @@ const Stats = () => {
   let areaChartArray = [];
   let readBooksByMonthArray = [];
   let booksByEditeur = [];
+  let proportionOfEachType = {};
+  let proportionOfEachTypeRead = {
+    Manga: { lu: 0, nonLu: 0 },
+    Comics: { lu: 0, nonLu: 0 },
+    Roman: { lu: 0, nonLu: 0 },
+    BD: { lu: 0, nonLu: 0 },
+  };
 
   if (loadedCollection) {
     // Calculate brut stats
     const ownedBooks = calculateStats().totalPossede;
     const readBooks = calculateStats().totalLu;
     const reviewBooks = calculateStats().totalCritique;
+
+    // Calculate proportion of each type of book (ProportionOfEachType)
+    proportionOfEachType = {
+      Manga: calculateStats().Manga.total,
+      Comics: calculateStats().Comics.total,
+      Roman: calculateStats().Roman.total,
+      BD: calculateStats().BD.total,
+    };
+
+    // Calculate proportion of each type of book read (ProportionOfEachTypeRead)
+    proportionOfEachTypeRead = {
+      Manga: {
+        lu: calculateStats().Manga.lu,
+        nonLu: calculateStats().Manga.nonLu,
+      },
+      Comics: {
+        lu: calculateStats().Comics.lu,
+        nonLu: calculateStats().Comics.nonLu,
+      },
+      Roman: {
+        lu: calculateStats().Roman.lu,
+        nonLu: calculateStats().Roman.nonLu,
+      },
+      BD: { lu: calculateStats().BD.lu, nonLu: calculateStats().BD.nonLu },
+    };
 
     // Calculate read/review percentages (ReadReviewProportion)
     const readBooksPercentage = (readBooks / ownedBooks) * 100;
@@ -282,10 +342,10 @@ const Stats = () => {
     },
     {
       title: "Informations par éditeur",
-      component1: <BooksByEditor data={booksByEditeur} />,
-      component1Name: "Proportion par éditeur",
-      component2: null,
-      component2Name: null,
+      component1: <ProportionOfEachType data={proportionOfEachType} />,
+      component1Name: "Proportion par type de livre",
+      component2: <ReadUnreadByTypes data={proportionOfEachTypeRead} />,
+      component2Name: "Proportion lu / non lu par type de livre",
     },
   ];
 
