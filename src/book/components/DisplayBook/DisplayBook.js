@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 
@@ -22,6 +22,10 @@ const DisplayBook = ({ book: initialBook }) => {
   const [dateObtention, setDateObtention] = useState(book.date_achat);
   const [openReadModal, setOpenReadModal] = useState(false);
   const [dateLecture, setDateLecture] = useState(book.date_lecture);
+
+  useEffect(() => {
+    setBook(initialBook);
+  }, [initialBook]);
 
   const handleOpenCollectionModal = () => {
     setOpenCollectionModal(true);

@@ -2,6 +2,7 @@ import React from "react";
 
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import { AuthContext } from "../../shared/context/auth-context";
+import { useHistory } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useContext } from "react";
 import { useEffect } from "react";
@@ -14,6 +15,7 @@ import BooksSerie from "../components/DisplayBooksSerie";
 
 const Book = () => {
   const auth = useContext(AuthContext);
+  const history = useHistory();
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [loadedBook, setLoadedBook] = useState();
   const bookId = useParams().id;
@@ -31,7 +33,10 @@ const Book = () => {
     fetchBook();
   }, [sendRequest, bookId, auth.userId]);
 
-  console.log(loadedBook);
+  const redirectPage = (id) => {
+    history.push(`/book/${id}`);
+  };
+
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />
@@ -42,7 +47,10 @@ const Book = () => {
       )}
       {!isLoading && loadedBook && <BookDetails book={loadedBook} />}
       {!isLoading && loadedBook && loadedBook.booksSerie && (
-        <BooksSerie booksSerie={loadedBook.booksSerie} />
+        <BooksSerie
+          booksSerie={loadedBook.booksSerie}
+          redirectPage={redirectPage}
+        />
       )}
     </React.Fragment>
   );
