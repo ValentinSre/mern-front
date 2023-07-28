@@ -10,6 +10,7 @@ import {
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import { Delete as DeleteIcon, Done as DoneIcon } from "@material-ui/icons";
 import { FaListUl, FaTh } from "react-icons/fa";
+import DatedCollection from "./DatedCollection";
 import SearchBar from "../../shared/components/UIElements/SearchBar";
 import Checkbox from "../../shared/components/UIElements/ThemedCheckbox";
 import { Skeleton } from "@material-ui/lab";
@@ -53,20 +54,23 @@ const CollectionFilter = ({
         marginBottom: "20px",
       }}
     >
-      <ToggleButtonGroup
-        value={displayMode}
-        exclusive
-        onChange={handleDisplayMode}
-        aria-label="device"
-        style={{ marginBottom: "10px" }}
-      >
-        <ToggleButton value="bySeries" aria-label="bySeries">
-          <FaListUl />
-        </ToggleButton>
-        <ToggleButton value="byBooks" aria-label="byBooks">
-          <FaTh />
-        </ToggleButton>
-      </ToggleButtonGroup>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <ToggleButtonGroup
+          value={displayMode}
+          exclusive
+          onChange={handleDisplayMode}
+          aria-label='device'
+          style={{ marginBottom: "10px", flexGrow: 1 }} // Utilisez flexGrow pour occuper tout l'espace disponible
+        >
+          <ToggleButton value='bySeries' aria-label='bySeries'>
+            <FaListUl />
+          </ToggleButton>
+          <ToggleButton value='byBooks' aria-label='byBooks'>
+            <FaTh />
+          </ToggleButton>
+        </ToggleButtonGroup>
+        <DatedCollection loadedBooks={collection} displayMode={displayMode} />
+      </div>
       <div
         style={{
           padding: "20px",
@@ -139,55 +143,55 @@ const SeriesFilter = ({
             <Checkbox
               checked={checkedValues.BD}
               onChange={handleCheckedChange}
-              name="BD"
+              name='BD'
             />
           }
-          label="Bande dessinée"
+          label='Bande dessinée'
         />
         <FormControlLabel
           control={
             <Checkbox
               checked={checkedValues.Comics}
               onChange={handleCheckedChange}
-              name="Comics"
+              name='Comics'
             />
           }
-          label="Comics"
+          label='Comics'
         />
         <FormControlLabel
           control={
             <Checkbox
               checked={checkedValues.Manga}
               onChange={handleCheckedChange}
-              name="Manga"
+              name='Manga'
             />
           }
-          label="Manga"
+          label='Manga'
         />
         <FormControlLabel
           control={
             <Checkbox
               checked={checkedValues.Roman}
               onChange={handleCheckedChange}
-              name="Roman"
+              name='Roman'
             />
           }
-          label="Roman"
+          label='Roman'
         />
       </div>
       <div style={{ marginTop: "20px" }}>
         <SearchBar
           searchText={searchText}
           handleSearch={handleSearch}
-          placeHolder="Rechercher une série..."
+          placeHolder='Rechercher une série...'
         />
       </div>
       <div style={{ marginTop: "20px" }}>
         {loading && (
           <Skeleton
-            animation="wave"
+            animation='wave'
             height={50}
-            width="100%"
+            width='100%'
             style={{ marginBottom: 6 }}
           />
         )}
@@ -219,40 +223,40 @@ const BooksFilter = ({
             <Checkbox
               checked={checkedValues.BD}
               onChange={handleCheckedChange}
-              name="BD"
+              name='BD'
             />
           }
-          label="Bande dessinée"
+          label='Bande dessinée'
         />
         <FormControlLabel
           control={
             <Checkbox
               checked={checkedValues.Comics}
               onChange={handleCheckedChange}
-              name="Comics"
+              name='Comics'
             />
           }
-          label="Comics"
+          label='Comics'
         />
         <FormControlLabel
           control={
             <Checkbox
               checked={checkedValues.Manga}
               onChange={handleCheckedChange}
-              name="Manga"
+              name='Manga'
             />
           }
-          label="Manga"
+          label='Manga'
         />
         <FormControlLabel
           control={
             <Checkbox
               checked={checkedValues.Roman}
               onChange={handleCheckedChange}
-              name="Roman"
+              name='Roman'
             />
           }
-          label="Roman"
+          label='Roman'
         />
       </div>
       <div
@@ -262,13 +266,13 @@ const BooksFilter = ({
         }}
       >
         <div>
-          <InputLabel id="label-tri" style={{ paddingBottom: "5px" }}>
+          <InputLabel id='label-tri' style={{ paddingBottom: "5px" }}>
             Tri
           </InputLabel>
 
           <Select
-            label="Tri"
-            id="tri-select"
+            label='Tri'
+            id='tri-select'
             value={selectedSort}
             onChange={handleSortChange}
           >
@@ -278,12 +282,12 @@ const BooksFilter = ({
           </Select>
         </div>
         <div style={{ paddingLeft: "20px" }}>
-          <InputLabel id="label-groupement" style={{ paddingBottom: "5px" }}>
+          <InputLabel id='label-groupement' style={{ paddingBottom: "5px" }}>
             Groupement
           </InputLabel>
           <Select
-            label="Groupement"
-            id="demo-simple-select"
+            label='Groupement'
+            id='demo-simple-select'
             value={selectedGroupment}
             onChange={handleGroupmentChange}
           >
@@ -298,15 +302,15 @@ const BooksFilter = ({
         <SearchBar
           searchText={searchText}
           handleSearch={handleSearch}
-          placeHolder="Rechercher un titre..."
+          placeHolder='Rechercher un titre...'
         />
       </div>
       <div style={{ marginTop: "20px" }}>
         {loading && (
           <Skeleton
-            animation="wave"
+            animation='wave'
             height={50}
-            width="100%"
+            width='100%'
             style={{ marginBottom: 6 }}
           />
         )}

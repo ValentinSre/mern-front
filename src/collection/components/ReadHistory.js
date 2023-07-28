@@ -17,7 +17,7 @@ import variables from "../../shared/util/variables";
 
 import "./ReadHistory.css";
 
-const { months } = variables;
+const { shortMonths: months } = variables;
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -71,7 +71,7 @@ function ReadHistory({ readlist }) {
           <TimelineItem key={date}>
             <TimelineOppositeContent className={classes.oppositeContent}>
               {!index && (
-                <div className="display_month">
+                <div className='display_month'>
                   {displayMonthYear(selectedMonth)}
                 </div>
               )}
@@ -91,10 +91,10 @@ function ReadHistory({ readlist }) {
               </TimelineDot>
               <TimelineConnector />
             </TimelineSeparator>
-            <TimelineContent className="timeline_content">
+            <TimelineContent className='timeline_content'>
               <div>
                 <Paper elevation={3} className={classes.paper}>
-                  <div className="read-history__day-books">
+                  <div className='read-history__day-books'>
                     {readlist[date].map((book) => (
                       <div
                         key={book.id}
