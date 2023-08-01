@@ -153,7 +153,15 @@ const NavBar = () => {
                 <IconButton
                   edge="end"
                   color="inherit"
-                  onClick={() => setDisplaySearchBar(!displaySearchBar)}
+                  onClick={() => {
+                    setDisplaySearchBar(!displaySearchBar);
+                    if (!displaySearchBar) {
+                      window.scrollTo({
+                        top: 0,
+                        behavior: "smooth",
+                      });
+                    }
+                  }}
                 >
                   <SearchIcon style={{ color: "#fff" }} />
                 </IconButton>
