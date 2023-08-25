@@ -61,6 +61,7 @@ const DisplayReadlist = () => {
           books={unreadlist}
           title={`Livres non lus (${unreadlist.length})`}
           onClose={handleCloseUnreadlistDialog}
+          filters={true}
         />
       )}
     </div>
