@@ -91,14 +91,14 @@ const MonthSelectComponent = ({ loadedBooks, displayMode }) => {
       {/* Affichez le Select uniquement lorsque les données sont chargées */}
       {isDataLoaded ? (
         <Select
-          label='Groupement'
-          id='demo-simple-select'
+          label="Groupement"
+          id="demo-simple-select"
           value={selectedMonth}
           onChange={(e) => setSelectedMonth(e.target.value)}
         >
           {uniqueMonths.map((month, index) => (
             <MenuItem key={index} value={month}>
-              {variables.months[month.split("/")[0]] +
+              {variables.shortMonths[month.split("/")[0]] +
                 " " +
                 month.split("/")[1]}
             </MenuItem>
