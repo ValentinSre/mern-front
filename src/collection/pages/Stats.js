@@ -78,7 +78,7 @@ const Stats = () => {
     };
 
     for (const book of loadedCollection) {
-      if (book.possede) {
+      if (book.possede && !book.revendu) {
         stats.totalPossede++;
         stats.totalPrixPossede += book.prix;
         stats.totalPagesPossede += book.planches;
@@ -95,7 +95,7 @@ const Stats = () => {
         stats.totalSouhaite++;
         stats.totalPrixSouhaite += book.prix;
       }
-      if (book.lu && book.possede) {
+      if (book.lu && book.possede && !book.revendu) {
         stats.totalLu++;
         if (book.editeur in stats.readBooksByEditeur) {
           stats.readBooksByEditeur[book.editeur]++;

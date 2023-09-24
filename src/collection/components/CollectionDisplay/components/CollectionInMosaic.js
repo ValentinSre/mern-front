@@ -73,7 +73,8 @@ const CollectionInMosaic = ({
       <div className='collection-display__books_array'>
         {sortCollection(collection, sort).map(
           (book) =>
-            selectedEditeurs[book.editeur] && (
+            selectedEditeurs[book.editeur] &&
+            !book.revendu && (
               <Tooltip title={makeTitle(book)}>
                 <div
                   key={book.id}

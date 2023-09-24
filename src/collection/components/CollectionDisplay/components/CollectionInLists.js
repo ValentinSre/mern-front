@@ -71,7 +71,10 @@ const CollectionInLists = ({
             {key !== "undefined" ? key : UNDEFINED_CATEGORIES[groupment]}
           </div>
           <div className='book-list'>
-            {sortCollection(groupedCollection[key], sort)
+            {sortCollection(
+              groupedCollection[key].filter((el) => !el.revendu),
+              sort
+            )
               .slice(0, MAX_ITEMS_PER_CATEGORY + 1)
               .map((book, index) =>
                 index < MAX_ITEMS_PER_CATEGORY ? (

@@ -10,7 +10,6 @@ import DateModal from "../../../shared/components/UIElements/DateModal";
 import { useHttpClient } from "../../../shared/hooks/http-hook";
 
 import "./DisplayBySeries.css";
-import { CiPalette } from "react-icons/ci";
 
 const DisplayBySeries = ({
   collection: series,
@@ -47,16 +46,21 @@ const DisplayBySeries = ({
   const [readState, setReadState] = useState(false);
   const [seriesTitle, setSeriesTitle] = useState(null);
 
-  const filteredSeries = series.filter((serie) => {
-    const { type, editeur } = serie.books[0];
-    return checkedValues[type] && selectedEditeurs[editeur];
-  });
+  // Filtrer les séries
+  const filteredSeries = series
+    .filter((serie) => {
+      const { type, editeur } = serie.books[0];
+      return checkedValues[type] && selectedEditeurs[editeur];
+    })
+    .filter((serie) => !serie.books.every((book) => book.revendu));
 
+  // Calculer le nombre de séries et de livres non revendus
   const nbSeries = filteredSeries.length;
-  const nbBooks = filteredSeries.reduce(
-    (acc, serie) => acc + serie.books.length,
-    0
-  );
+  const nbBooks = filteredSeries.reduce((acc, serie) => {
+    // Filtrer les livres non revendus
+    const nonRevenduBooks = serie.books.filter((book) => !book.revendu);
+    return acc + nonRevenduBooks.length;
+  }, 0);
 
   const handleBookReading = async () => {
     try {
@@ -110,53 +114,65 @@ const DisplayBySeries = ({
         </div>
       </div>
       {filteredSeries.map((serie, index) => (
-        <div key={index} className="collection-series">
+        <div key={index} className='collection-series'>
           <div
-            className="series-box"
+            className='series-box'
             onClick={() => toggleSerieExpansion(index)}
           >
             {/* div de gauche */}
-            <div className="series-box__left">
-              <div className="series-box__left-img">
+            <div className='series-box__left'>
+              <div className='series-box__left-img'>
                 <img src={serie.books[0].image} alt={serie.serie} />
               </div>
-              <div className="series-box__left-info">
-                <div className="series-box__left-info-title">{serie.serie}</div>
+              <div className='series-box__left-info'>
+                <div className='series-box__left-info-title'>{serie.serie}</div>
                 <div>
                   <Rating
                     rating={
-                      serie.books.reduce((accumulator, currentValue) => {
-                        if (currentValue.note) {
-                          return accumulator + currentValue.note;
-                        } else {
-                          return accumulator;
-                        }
-                      }, 0) / serie.books.filter((book) => book.note).length
+                      serie.books
+                        .filter((book) => !book.revendu)
+                        .reduce((accumulator, currentValue) => {
+                          return accumulator + (currentValue.note || 0);
+                        }, 0) /
+                      serie.books
+                        .filter((book) => !book.revendu)
+                        .filter((book) => book.note).length
                     }
                     size={"18px"}
-                    real={serie.books.filter((book) => book.note).length > 0}
+                    real={
+                      serie.books
+                        .filter((book) => !book.revendu)
+                        .filter((book) => book.note).length > 0
+                    }
                   />
-                  {}
                 </div>
               </div>
             </div>
             {/* div de droite */}
-            <div className="series-box__right">
-              <div className="series-box__right-editor">
+            <div className='series-box__right'>
+              <div className='series-box__right-editor'>
                 {serie.books[0].editeur}
               </div>
-              <Divider orientation="vertical" flexItem className="divider" />
-              <div className="series-box__right-progress">
-                <div className="series-box__right-progress__number">
-                  {serie.books.filter((book) => book.lu).length}/
-                  {serie.books.length}
+              <Divider orientation='vertical' flexItem className='divider' />
+              <div className='series-box__right-progress'>
+                <div className='series-box__right-progress__number'>
+                  {
+                    serie.books
+                      .filter((book) => !book.revendu)
+                      .filter((book) => book.lu).length
+                  }
+                  /{serie.books.filter((book) => !book.revendu).length}
                 </div>
-                <div className="series-box__right-progress__text">
-                  {serie.books.filter((book) => book.lu).length > 0 ? (
+                <div className='series-box__right-progress__text'>
+                  {serie.books
+                    .filter((book) => !book.revendu)
+                    .filter((book) => book.lu).length > 0 ? (
                     <span>
                       {Math.round(
-                        (serie.books.filter((book) => book.lu).length /
-                          serie.books.length) *
+                        (serie.books
+                          .filter((book) => !book.revendu)
+                          .filter((book) => book.lu).length /
+                          serie.books.filter((book) => !book.revendu).length) *
                           100
                       )}
                       % lus
@@ -166,10 +182,10 @@ const DisplayBySeries = ({
                   )}
                 </div>
               </div>
-              <div className="series-box__right-expand">
+              <div className='series-box__right-expand'>
                 <IconButton
                   onClick={() => toggleSerieExpansion(index)}
-                  size="medium"
+                  size='medium'
                 >
                   {expandedSerie === index ? <ExpandLess /> : <ExpandMore />}
                 </IconButton>
@@ -178,59 +194,65 @@ const DisplayBySeries = ({
           </div>
           {expandedSerie === index && (
             <div>
-              {serie.books.map((book, bookIndex) => (
-                <div key={bookIndex}>
-                  <div className="book-box">
-                    <div
-                      className="book-box__left"
-                      onClick={() => handleBookClick(book.id_book)}
-                    >
-                      <img src={book.image} alt={book.titre} />
-                    </div>
-                    <div
-                      style={{ flex: 1, paddingLeft: "20px" }}
-                      onClick={() => handleBookClick(book.id_book)}
-                    >
-                      <div className="book-box__left-title">{book.titre}</div>
-                      {book.tome !== undefined && (
-                        <div className="book-box__left-tome">
-                          Tome {book.tome}
-                        </div>
-                      )}
-                      <div className="book-box__left-rating">
-                        {book.note ? (
-                          <Rating
-                            rating={book.note}
-                            size={"18px"}
-                            real={true}
-                          />
-                        ) : (
-                          <span>Pas encore noté</span>
+              {serie.books
+                .filter((book) => !book.revendu)
+                .map((book, bookIndex) => (
+                  <div key={bookIndex}>
+                    <div className='book-box'>
+                      <div
+                        className='book-box__left'
+                        onClick={() => handleBookClick(book.id_book)}
+                      >
+                        <img src={book.image} alt={book.titre} />
+                      </div>
+                      <div
+                        style={{ flex: 1, paddingLeft: "20px" }}
+                        onClick={() => handleBookClick(book.id_book)}
+                      >
+                        <div className='book-box__left-title'>{book.titre}</div>
+                        {book.tome !== undefined && (
+                          <div className='book-box__left-tome'>
+                            Tome {book.tome}
+                          </div>
                         )}
+                        <div className='book-box__left-rating'>
+                          {book.note ? (
+                            <Rating
+                              rating={book.note}
+                              size={"18px"}
+                              real={true}
+                            />
+                          ) : (
+                            <span>Pas encore noté</span>
+                          )}
+                        </div>
+                      </div>
+                      <div>
+                        <IconButton
+                          onClick={() =>
+                            updateBookStatus(
+                              serie.serie,
+                              book.id_book,
+                              !book.lu
+                            )
+                          }
+                          size='medium'
+                        >
+                          {book.lu ? (
+                            <Tooltip title='Marquer comme non lu'>
+                              <MdBookmarkAdded />
+                            </Tooltip>
+                          ) : (
+                            <Tooltip title='Marquer comme lu'>
+                              <MdBookmarkBorder />
+                            </Tooltip>
+                          )}
+                        </IconButton>
                       </div>
                     </div>
-                    <div>
-                      <IconButton
-                        onClick={() =>
-                          updateBookStatus(serie.serie, book.id_book, !book.lu)
-                        }
-                        size="medium"
-                      >
-                        {book.lu ? (
-                          <Tooltip title="Marquer comme non lu">
-                            <MdBookmarkAdded />
-                          </Tooltip>
-                        ) : (
-                          <Tooltip title="Marquer comme lu">
-                            <MdBookmarkBorder />
-                          </Tooltip>
-                        )}
-                      </IconButton>
-                    </div>
+                    {bookIndex !== serie.books.length - 1 && <Divider />}
                   </div>
-                  {bookIndex !== serie.books.length - 1 && <Divider />}
-                </div>
-              ))}
+                ))}
             </div>
           )}
         </div>
@@ -245,8 +267,8 @@ const DisplayBySeries = ({
         handleClose={() => setOpenReadModal(false)}
         date={dateLecture}
         authorizeNoDate
-        label="Date de lecture"
-        title="Quand avez-vous lu ce livre ?"
+        label='Date de lecture'
+        title='Quand avez-vous lu ce livre ?'
         handleChange={(e) => setDateLecture(e.target.value)}
         handleSubmit={handleBookReading}
       />

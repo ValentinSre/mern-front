@@ -7,6 +7,7 @@ import {
   MdAddTask,
   MdOutlineBookmarkAdded,
   MdCollectionsBookmark,
+  MdAttachMoney,
 } from "react-icons/md";
 import { BsPatchCheckFill, BsPatchPlus } from "react-icons/bs";
 import { RxChatBubble } from "react-icons/rx";
@@ -22,8 +23,9 @@ const BookDetails = ({
   handleCollection,
   handleWishlist,
   handleRead,
+  handleSell,
 }) => {
-  const { possede, souhaite, lu } = book;
+  const { possede, souhaite, lu, revendu } = book;
 
   return (
     <div className='book-details'>
@@ -35,9 +37,14 @@ const BookDetails = ({
         <div className='book-details__actions'>
           <Tooltip title="Je l'ai !" placement='top'>
             <span>
-              <IconButton onClick={handleCollection} disabled={possede}>
+              <IconButton
+                onClick={handleCollection}
+                disabled={possede && !revendu}
+              >
                 <MdAddTask
-                  style={{ color: book.possede ? "#4caf50" : "#000" }}
+                  style={{
+                    color: book.possede && !book.revendu ? "#4caf50" : "#000",
+                  }}
                 />
               </IconButton>
             </span>
@@ -58,6 +65,13 @@ const BookDetails = ({
             <IconButton onClick={handleRead}>
               <MdOutlineBookmarkAdded
                 style={{ color: book.lu ? "#4caf50" : "#000" }}
+              />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="J'ai revendu !" placement='top'>
+            <IconButton onClick={handleSell}>
+              <MdAttachMoney
+                style={{ color: book.revendu ? "#4caf50" : "#000" }}
               />
             </IconButton>
           </Tooltip>

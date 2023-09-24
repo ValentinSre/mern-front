@@ -45,6 +45,33 @@ const DisplayBook = ({ book: initialBook }) => {
     handleAddToList([bookId], "wishlist");
   };
 
+  const handleRemoveFromCollection = async () => {
+    const bookId = book.id;
+
+    try {
+      const responseData = await sendRequest(
+        process.env.REACT_APP_API_URL + "/collection/edit",
+        "POST",
+        JSON.stringify({
+          id_book: bookId,
+          id_user: auth.userId,
+          revendu: true,
+        }),
+        {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + auth.token,
+        }
+      );
+
+      const { success } = responseData;
+      if (success) {
+        setBook({ ...book, revendu: true });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const handleAddToReadlist = async () => {
     const bookId = book.id;
 
@@ -159,6 +186,7 @@ const DisplayBook = ({ book: initialBook }) => {
         handleCollection={handleOpenCollectionModal}
         handleWishlist={handleAddToWishlist}
         handleRead={handleOpenReadModal}
+        handleSell={handleRemoveFromCollection}
       />
       <EditBookDialog
         open={openEditDialog}
