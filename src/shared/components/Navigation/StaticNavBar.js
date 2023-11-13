@@ -8,7 +8,7 @@ import { ImBooks } from "react-icons/im";
 import "./StaticNavBar.css";
 
 const StaticNavBar = ({ userId }) => {
-  const categories = ["BD", "Comics", "Manga", "Roman"];
+  const categories = ["BD", "Comics", "Manga"];
 
   return (
     <div className="static-nav-bar">
