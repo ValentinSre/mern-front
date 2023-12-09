@@ -39,28 +39,28 @@ function BookCalendar({ books }) {
   // Sort dates by ascending order
   releaseDates.sort((a, b) => new Date(a) - new Date(b));
 
-  // Group dates by month
+  // Group dates by month and year
   const datesByMonth = releaseDates.reduce((acc, date) => {
     const month = new Date(date).getMonth() + 1;
-    if (!acc[month]) {
-      acc[month] = [];
+    const year = new Date(date).getFullYear();
+    const monthYear = `${month}-${year}`;
+    if (!acc[monthYear]) {
+      acc[monthYear] = [];
     }
-    acc[month].push(date);
+    acc[monthYear].push(date);
     return acc;
   }, {});
 
   const releaseMonths = Object.keys(datesByMonth);
 
-  // const [selectedMonth, setSelectedMonth] = useState(releaseMonths[0]);
-
   return (
-    <Timeline align="alternate" style={{ width: "100%" }}>
+    <Timeline align='alternate' style={{ width: "100%" }}>
       {releaseMonths.map((selectedMonth) =>
         datesByMonth[selectedMonth].map((date, index) => (
           <TimelineItem>
             <TimelineOppositeContent>
               {!index && (
-                <div className="month_displayer">{months[selectedMonth]}</div>
+                <div className='month_displayer'>{months[selectedMonth]}</div>
               )}
             </TimelineOppositeContent>
             <TimelineSeparator>
@@ -78,10 +78,10 @@ function BookCalendar({ books }) {
               </TimelineDot>
               <TimelineConnector />
             </TimelineSeparator>
-            <TimelineContent className="timelineContent">
+            <TimelineContent className='timelineContent'>
               <div>
                 <Paper elevation={3} className={classes.paper}>
-                  <div className="book-calendar-day-books">
+                  <div className='book-calendar-day-books'>
                     {booksByDate[date].map((book) => (
                       <div onClick={() => history.push(`/book/${book.id}`)}>
                         <Tooltip title={makeTitle(book)}>
