@@ -82,7 +82,7 @@ const MarvelChallenge = () => {
       )}
       {!isLoading && productions && (
         <React.Fragment>
-          <ChallengeStats productions={productions} />
+          {productions.length && <ChallengeStats productions={productions} />}
           <ProductionTable
             productions={productions}
             setWatched={handlePatchProduction}
