@@ -87,7 +87,7 @@ const MarvelChallenge = () => {
             productions={productions}
             setWatched={handlePatchProduction}
           />
-          <NextContent marvelContent={nextSuggestion} />
+          {productions.length && <NextContent marvelContent={nextSuggestion} />}
         </React.Fragment>
       )}
       <ProductionForm handleSubmit={handleAddProduction} />
