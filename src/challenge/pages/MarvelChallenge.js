@@ -80,17 +80,25 @@ const MarvelChallenge = () => {
           <LoadingSpinner />
         </div>
       )}
+      <div style={{ margin: "10px" }}>
+        <ProductionForm handleSubmit={handleAddProduction} />
+      </div>
       {!isLoading && productions && (
         <React.Fragment>
           {productions.length && <ChallengeStats productions={productions} />}
-          <ProductionTable
-            productions={productions}
-            setWatched={handlePatchProduction}
-          />
-          {productions.length && <NextContent marvelContent={nextSuggestion} />}
+          <div style={{ margin: "10px" }}>
+            <ProductionTable
+              productions={productions}
+              setWatched={handlePatchProduction}
+            />
+          </div>
+          {productions.length && (
+            <div style={{ margin: "10px" }}>
+              <NextContent marvelContent={nextSuggestion} />
+            </div>
+          )}
         </React.Fragment>
       )}
-      <ProductionForm handleSubmit={handleAddProduction} />
     </React.Fragment>
   );
 };
