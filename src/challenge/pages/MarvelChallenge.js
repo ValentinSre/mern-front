@@ -81,7 +81,10 @@ const MarvelChallenge = () => {
         </div>
       )}
       <div style={{ margin: "10px" }}>
-        <ProductionForm handleSubmit={handleAddProduction} />
+        <ProductionForm
+          handleSubmit={handleAddProduction}
+          series={productions}
+        />
       </div>
       {!isLoading && productions && (
         <React.Fragment>

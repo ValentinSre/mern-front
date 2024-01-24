@@ -11,8 +11,9 @@ import {
 } from "@material-ui/core";
 
 import "./ProductionForm.css";
+import { Autocomplete } from "@material-ui/lab";
 
-const ProductionForm = ({ handleSubmit, existingSeries }) => {
+const ProductionForm = ({ handleSubmit, series }) => {
   const [type, setType] = useState("Film");
   const [title, setTitle] = useState("");
   const [poster, setPoster] = useState("");
@@ -20,6 +21,8 @@ const ProductionForm = ({ handleSubmit, existingSeries }) => {
   const [season, setSeason] = useState("");
   const [episode, setEpisode] = useState("");
   const [episodeTitle, setEpisodeTitle] = useState("");
+
+  const existingSeries = series?.map((el) => el.title);
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -37,6 +40,16 @@ const ProductionForm = ({ handleSubmit, existingSeries }) => {
     handleSubmit(formData);
   };
 
+  const handleInputTitleChange = (event, value) => {
+    if (value !== undefined && value !== null) {
+      setTitle(value);
+    }
+  };
+
+  const [autocompleteOptions, setAutocompleteOptions] = useState(
+    existingSeries || []
+  );
+
   return (
     <form onSubmit={handleFormSubmit} className='production-form-container'>
       <div className='form-control'>
@@ -50,15 +63,41 @@ const ProductionForm = ({ handleSubmit, existingSeries }) => {
           <FormControlLabel value='Film' control={<Radio />} label='Film' />
           <FormControlLabel value='Série' control={<Radio />} label='Série' />
         </RadioGroup>
-        <TextField
-          label='Titre'
-          variant='outlined'
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          margin='normal'
-          fullWidth
-          required
-        />
+        {type === "Film" ? (
+          <TextField
+            label='Titre'
+            variant='outlined'
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            margin='normal'
+            fullWidth
+            required
+          />
+        ) : (
+          <Autocomplete
+            freeSolo
+            options={autocompleteOptions}
+            value={title}
+            onChange={(e, value) => handleInputTitleChange(e, value)}
+            inputValue={title}
+            onInputChange={(event, value) => {
+              const updatedOptions = existingSeries.filter((option) =>
+                option.toLowerCase().includes(value.toLowerCase())
+              );
+              setAutocompleteOptions(updatedOptions);
+              handleInputTitleChange(event, value);
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label='Titre'
+                variant='outlined'
+                margin='normal'
+                fullWidth
+              />
+            )}
+          />
+        )}
         <TextField
           label='Poster'
           variant='outlined'
