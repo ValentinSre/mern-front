@@ -85,7 +85,7 @@ const ProductionForm = ({ handleSubmit, series }) => {
             onChange={(e, value) => handleInputTitleChange(e, value)}
             inputValue={title}
             onInputChange={(event, value) => {
-              const updatedOptions = existingSeries.filter((option) =>
+              const updatedOptions = uniqueSeriesArray.filter((option) =>
                 option.toLowerCase().includes(value.toLowerCase())
               );
               setAutocompleteOptions(updatedOptions);
