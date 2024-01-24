@@ -46,8 +46,12 @@ const ProductionForm = ({ handleSubmit, series }) => {
     }
   };
 
+  const uniqueSeriesSet = new Set(existingSeries);
+
+  const uniqueSeriesArray = Array.from(uniqueSeriesSet);
+
   const [autocompleteOptions, setAutocompleteOptions] = useState(
-    existingSeries || []
+    uniqueSeriesArray || []
   );
 
   return (
