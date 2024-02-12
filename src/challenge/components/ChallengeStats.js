@@ -40,12 +40,27 @@ const ChallengeStats = ({ productions }) => {
   const moyenneMinutesAvoirParSemaine =
     productions.reduce((total, item) => total + item.length, 0) / 52;
 
+  const currentDate = new Date();
+  const currentWeek = Math.ceil(
+    (currentDate - new Date(currentDate.getFullYear(), 0, 1)) /
+      (7 * 24 * 60 * 60 * 1000)
+  );
+
   const watchtimeIdealProgression = semaineProgression.map((el, index) => {
     const watchtimeTotalSemaine = semaineProgression
       .slice(0, index)
       .reduce((sum, element) => sum + element, 0);
     const watchtimeRestant = minutesTotales - watchtimeTotalSemaine;
-    return parseFloat((watchtimeRestant / (52 - index)).toFixed(2));
+
+    if (index < currentWeek) {
+      // Pour les semaines actuelles, utilisez la méthode de calcul existante
+      return parseFloat((watchtimeRestant / (52 - index)).toFixed(2));
+    } else {
+      // Pour les semaines futures, calculez la moyenne des minutes restantes
+      const semainesRestantes = 52 - index;
+      const watchtimeIdealFuture = watchtimeRestant / (52 - currentWeek);
+      return parseFloat(watchtimeIdealFuture.toFixed(2));
+    }
   });
 
   // Calculer la moyenne pour savoir combien de minutes à regarder réellement pour finir l'année
