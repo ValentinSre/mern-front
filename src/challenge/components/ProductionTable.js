@@ -134,8 +134,9 @@ const ProductionTable = ({ productions, setWatched }) => {
                 hasBeenTotallyWatched && ep.watch_dates.length;
             });
 
+            const lastEpisode = episodes.slice(-1)[0];
             const watch_dates = hasBeenTotallyWatched
-              ? [episodes.slice(-1).watch_dates.slice(-1)]
+              ? [lastEpisode.watch_dates.slice(-1)[0]]
               : [];
 
             const newProduction = {
