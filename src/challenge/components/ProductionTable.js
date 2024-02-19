@@ -84,34 +84,36 @@ const ProductionTable = ({ productions, setWatched }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {productions.map((production) => (
-            <TableRow key={production.id}>
-              <TableCell>{production.title}</TableCell>
-              <TableCell>{production.length}</TableCell>
-              <TableCell>{production.season || "-"}</TableCell>
-              <TableCell>{production.episode || "-"}</TableCell>
-              <TableCell>{production.episode_title || "-"}</TableCell>
-              <TableCell>
-                <Button
-                  variant={
-                    production.watch_dates.length ? "outlined" : "contained"
-                  }
-                  onClick={() => handleWatchedClick(production)}
-                >
-                  {production.watch_dates.length ? "Rewatch" : "Watch"}
-                </Button>
-              </TableCell>
-              <TableCell>
-                <Button
-                  variant={production.review ? "outlined" : "contained"}
-                  color='secondary'
-                  onClick={() => handleReviewClick(production)}
-                >
-                  {production.review ? "Remake a review" : "Review"}
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
+          {productions
+            .sort((a, b) => a.order - b.order)
+            .map((production) => (
+              <TableRow key={production.id}>
+                <TableCell>{production.title}</TableCell>
+                <TableCell>{production.length}</TableCell>
+                <TableCell>{production.season || "-"}</TableCell>
+                <TableCell>{production.episode || "-"}</TableCell>
+                <TableCell>{production.episode_title || "-"}</TableCell>
+                <TableCell>
+                  <Button
+                    variant={
+                      production.watch_dates.length ? "outlined" : "contained"
+                    }
+                    onClick={() => handleWatchedClick(production)}
+                  >
+                    {production.watch_dates.length ? "Rewatch" : "Watch"}
+                  </Button>
+                </TableCell>
+                <TableCell>
+                  <Button
+                    variant={production.review ? "outlined" : "contained"}
+                    color='secondary'
+                    onClick={() => handleReviewClick(production)}
+                  >
+                    {production.review ? "Remake a review" : "Review"}
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
         </TableBody>
       </Table>
       {/* Watched Modal */}
