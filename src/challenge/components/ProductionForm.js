@@ -20,7 +20,6 @@ const ProductionForm = ({ handleSubmit, series }) => {
   const [length, setLength] = useState("");
   const [season, setSeason] = useState("");
   const [episode, setEpisode] = useState("");
-  const [episodeTitle, setEpisodeTitle] = useState("");
 
   const existingSeries = series?.map((el) => el.title);
 
@@ -34,7 +33,6 @@ const ProductionForm = ({ handleSubmit, series }) => {
       length,
       season: type === "Série" ? season : undefined,
       episode: type === "Série" ? episode : undefined,
-      episodeTitle: type === "Série" ? episodeTitle : undefined,
     };
 
     handleSubmit(formData);
@@ -139,15 +137,6 @@ const ProductionForm = ({ handleSubmit, series }) => {
               variant='outlined'
               value={episode}
               onChange={(e) => setEpisode(e.target.value)}
-              margin='normal'
-              fullWidth
-              required
-            />
-            <TextField
-              label="Titre de l'épisode"
-              variant='outlined'
-              value={episodeTitle}
-              onChange={(e) => setEpisodeTitle(e.target.value)}
               margin='normal'
               fullWidth
               required
