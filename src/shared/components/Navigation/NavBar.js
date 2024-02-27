@@ -13,7 +13,7 @@ import {
   Tooltip,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { FaDice } from "react-icons/fa";
+import { BsFillCameraReelsFill } from "react-icons/bs";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import { Link } from "react-router-dom";
 import SearchIcon from "@material-ui/icons/Search";
@@ -26,7 +26,6 @@ import logo from "../../images/logo.png";
 import StaticNavBar from "./StaticNavBar";
 
 import "./NavBar.css";
-import { LeakAdd } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   small: {
@@ -171,7 +170,7 @@ const NavBar = () => {
               <Link to='/challenge2024'>
                 <Tooltip title='Explorer le multivers'>
                   <IconButton edge='end' color='inherit'>
-                    <FaDice style={{ color: "#fff" }} />
+                    <BsFillCameraReelsFill style={{ color: "#fff" }} />
                   </IconButton>
                 </Tooltip>
               </Link>
