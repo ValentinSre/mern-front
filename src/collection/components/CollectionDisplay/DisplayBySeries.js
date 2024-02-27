@@ -122,7 +122,10 @@ const DisplayBySeries = ({
             {/* div de gauche */}
             <div className='series-box__left'>
               <div className='series-box__left-img'>
-                <img src={serie.books[0].image} alt={serie.serie} />
+                <img
+                  src={serie.books.find((el) => !el.revendu).image}
+                  alt={serie.serie}
+                />
               </div>
               <div className='series-box__left-info'>
                 <div className='series-box__left-info-title'>{serie.serie}</div>
