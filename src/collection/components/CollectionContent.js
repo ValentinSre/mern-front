@@ -8,6 +8,7 @@ import DisplayByBooks from "./CollectionDisplay/DisplayByBooks";
 const CollectionContent = ({
   isDataLoading,
   loadedCollection,
+  originalCollection,
   displayMode,
   selectedSort,
   selectedGroupment,
@@ -24,45 +25,49 @@ const CollectionContent = ({
   return (
     <React.Fragment>
       {isDataLoading && (
-        <div className="collection">
+        <div className='collection'>
           <LoadingCollection displayMode={displayMode} />
         </div>
       )}
-      {!isDataLoading && loadedCollection && selectedEditeurs && (
-        <div className="collection">
-          <CollectionFilter
-            collection={loadedCollection}
-            displayMode={displayMode}
-            selectedSort={selectedSort}
-            selectedGroupment={selectedGroupment}
-            editeurs={selectedEditeurs}
-            handleSortChange={handleSortChange}
-            handleGroupmentChange={handleGroupmentChange}
-            handleEditeursSelection={handleEditeursSelection}
-            handleSearchBooks={handleSearchBooks}
-            setDisplayMode={setDisplayMode}
-            setLoadedCollection={setLoadedCollection}
-            checkedValues={checkedValues}
-            handleCheckedChange={handleCheckedChange}
-          />
-          {displayMode === "bySeries" && (
-            <DisplayBySeries
+      {!isDataLoading &&
+        loadedCollection &&
+        originalCollection &&
+        selectedEditeurs && (
+          <div className='collection'>
+            <CollectionFilter
               collection={loadedCollection}
-              checkedValues={checkedValues}
-              selectedEditeurs={selectedEditeurs}
-            />
-          )}
-          {displayMode === "byBooks" && (
-            <DisplayByBooks
-              collection={loadedCollection}
-              checkedValues={checkedValues}
+              originalCollection={originalCollection}
+              displayMode={displayMode}
               selectedSort={selectedSort}
               selectedGroupment={selectedGroupment}
-              selectedEditeurs={selectedEditeurs}
+              editeurs={selectedEditeurs}
+              handleSortChange={handleSortChange}
+              handleGroupmentChange={handleGroupmentChange}
+              handleEditeursSelection={handleEditeursSelection}
+              handleSearchBooks={handleSearchBooks}
+              setDisplayMode={setDisplayMode}
+              setLoadedCollection={setLoadedCollection}
+              checkedValues={checkedValues}
+              handleCheckedChange={handleCheckedChange}
             />
-          )}
-        </div>
-      )}
+            {displayMode === "bySeries" && (
+              <DisplayBySeries
+                collection={loadedCollection}
+                checkedValues={checkedValues}
+                selectedEditeurs={selectedEditeurs}
+              />
+            )}
+            {displayMode === "byBooks" && (
+              <DisplayByBooks
+                collection={loadedCollection}
+                checkedValues={checkedValues}
+                selectedSort={selectedSort}
+                selectedGroupment={selectedGroupment}
+                selectedEditeurs={selectedEditeurs}
+              />
+            )}
+          </div>
+        )}
     </React.Fragment>
   );
 };

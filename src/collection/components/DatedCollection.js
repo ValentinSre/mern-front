@@ -91,8 +91,8 @@ const MonthSelectComponent = ({ loadedBooks, displayMode }) => {
       {/* Affichez le Select uniquement lorsque les données sont chargées */}
       {isDataLoaded ? (
         <Select
-          label="Groupement"
-          id="demo-simple-select"
+          label='Groupement'
+          id='demo-simple-select'
           value={selectedMonth}
           onChange={(e) => setSelectedMonth(e.target.value)}
         >

@@ -122,6 +122,7 @@ const DisplayCollection = () => {
       <ErrorModal error={error} onClear={clearError} />
       <CollectionContent
         isDataLoading={isDataLoading}
+        originalCollection={originalCollection}
         loadedCollection={loadedCollection}
         displayMode={displayMode}
         selectedSort={selectedSort}

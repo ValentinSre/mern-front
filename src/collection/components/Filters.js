@@ -18,6 +18,7 @@ import { Skeleton } from "@material-ui/lab";
 const CollectionFilter = ({
   selectedSort,
   collection,
+  originalCollection,
   displayMode,
   selectedGroupment,
   editeurs,
@@ -32,6 +33,7 @@ const CollectionFilter = ({
   loading,
 }) => {
   const [searchText, setSearchText] = React.useState("");
+  const listOfBooks = originalCollection ?? [];
 
   const handleDisplayMode = (event, newDisplayMode) => {
     if (newDisplayMode !== null) {
@@ -69,7 +71,7 @@ const CollectionFilter = ({
             <FaTh />
           </ToggleButton>
         </ToggleButtonGroup>
-        <DatedCollection loadedBooks={collection} displayMode={displayMode} />
+        <DatedCollection loadedBooks={listOfBooks} displayMode={displayMode} />
       </div>
       <div
         style={{
