@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 
+import { Skeleton } from "@material-ui/lab";
+
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
@@ -11,12 +13,6 @@ import ReadEvolution from "../components/StatsComponents/ReadEvolution";
 import ProportionOfEachType from "../components/StatsComponents/ProportionOfEachType";
 import ReadUnreadByTypes from "../components/StatsComponents/ReadUnreadByTypes";
 import StatsLineFrames from "../components/StatsComponents/StatsLineFrames";
-import EvolutionFrame from "../components/StatsComponents/EvolutionFrame";
-import { TbPigMoney, TbBookOff } from "react-icons/tb";
-import { BsFillCartPlusFill, BsFillEyeFill, BsBookmarks } from "react-icons/bs";
-import { GiReceiveMoney, GiWeight } from "react-icons/gi";
-import { MdSpeakerNotes } from "react-icons/md";
-import { ImBooks } from "react-icons/im";
 
 import "./Stats.css";
 
@@ -368,9 +364,23 @@ const Stats = () => {
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />{" "}
-      {isLoading && (
-        <div className='center'>
-          <LoadingSpinner />
+      {(isLoading || !loadedCollection) && (
+        <div className='collection'>
+          <div>
+            <Skeleton
+              width={"90%"}
+              height={250}
+              style={{ borderRadius: "10px", margin: "10px" }}
+            />
+          </div>
+          <div>
+            <Skeleton
+              variant='rect'
+              width={"90%"}
+              height={500}
+              style={{ borderRadius: "10px", margin: "10px" }}
+            />
+          </div>
         </div>
       )}
       {!isLoading && loadedCollection && (
