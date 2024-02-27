@@ -42,7 +42,7 @@ const DisplayCollection = () => {
       setOriginalCollection(responseData.collection);
       setLoadedCollection(responseData.collection);
 
-      loadEditeurs(responseData.editeurs);
+      loadEditeurs(responseData.collection, displayMode);
     } catch (err) {}
   };
 
@@ -50,17 +50,33 @@ const DisplayCollection = () => {
     fetchBooks();
   }, [sendRequest, auth.userId, displayMode]);
 
-  // Load editeurs
-  const loadEditeurs = (editeurs) => {
+  const loadEditeurs = (collection, displayMode) => {
+    if (!Array.isArray(collection) || typeof displayMode !== "string") {
+      throw new Error("Invalid arguments provided to loadEditeurs function.");
+    }
+
     const editeursObj = {};
-    for (const editeur of editeurs) {
-      editeursObj[editeur] = true;
+
+    const processItem = (item) => {
+      if (!item.revendu && !(item.editeur in editeursObj)) {
+        editeursObj[item.editeur] = true;
+      }
+    };
+
+    if (displayMode === "bySeries") {
+      collection.forEach((serie) => {
+        const firstBookOfSerie = serie.books[0];
+        processItem(firstBookOfSerie);
+      });
+    } else {
+      collection.forEach((book) => {
+        processItem(book);
+      });
     }
 
     setSelectedEditeurs(editeursObj);
   };
 
-  // Event handlers
   const handleEditeursSelection = (name) => {
     const newEditeurs = { ...selectedEditeurs };
     newEditeurs[name] = !selectedEditeurs[name];
@@ -101,7 +117,6 @@ const DisplayCollection = () => {
     });
   };
 
-  // Render
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />
