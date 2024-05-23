@@ -11,6 +11,7 @@ const UserLibrary = React.lazy(() => import("./collection/pages/UserLibrary"));
 const SearchBooks = React.lazy(() => import("./book/pages/SearchBooks"));
 const BooksLists = React.lazy(() => import("./book/pages/BooksLists"));
 const ArtistBooks = React.lazy(() => import("./book/pages/ArtistBooks"));
+const Suggestions = React.lazy(() => import("./collection/pages/Suggestions"));
 
 const routeConfigs = [
   {
@@ -21,6 +22,16 @@ const routeConfigs = [
   {
     path: "/search",
     component: SearchBooks,
+    exact: true,
+  },
+  {
+    path: "/suggestions",
+    component: Suggestions,
+    exact: true,
+  },
+  {
+    path: "/challenge2024",
+    component: MarvelChallenge,
     exact: true,
   },
   {
