@@ -151,23 +151,6 @@ const PurchasingSuggestions = () => {
                         Acheté
                       </Button>
                     </div>
-                    <div className='wishlist-display__actions_delete'>
-                      <Button
-                        variant='contained'
-                        style={{
-                          height: "30px",
-                          marginTop: "10px",
-                          margin: "auto",
-                          backgroundColor: "#cb1515",
-                          color: "white",
-                        }}
-                        fullWidth
-                        startIcon={<MdDeleteSweep />}
-                        onClick={() => handleDeleteButton(book.id_book)}
-                      >
-                        Retirer
-                      </Button>
-                    </div>
                     <Divider />
                     <div
                       className='wishlist-display__info-serie'
