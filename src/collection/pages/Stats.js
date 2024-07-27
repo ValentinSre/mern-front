@@ -80,18 +80,21 @@ const Stats = () => {
     const targetDate = new Date("2022-08-31T23:59:59.999+00:00");
 
     for (const book of loadedCollection) {
+      if (
+        book.possede &&
+        (!book.date_achat || new Date(book.date_achat) <= targetDate)
+      ) {
+        stats.originalPossede++;
+        stats.originalPrixPossede += book.prix;
+        stats.originalPagesPossede += book.planches;
+        stats.originalPoidsPossede += book.poids;
+      }
+
       if (book.possede && !book.revendu) {
         stats.totalPossede++;
         stats.totalPrixPossede += book.prix;
         stats.totalPagesPossede += book.planches;
         stats.totalPoidsPossede += book.poids;
-
-        if (!book.date_achat || new Date(book.date_achat) <= targetDate) {
-          stats.originalPossede++;
-          stats.originalPrixPossede += book.prix;
-          stats.originalPagesPossede += book.planches;
-          stats.originalPoidsPossede += book.poids;
-        }
 
         stats[book.type].total++;
         if (book.lu) {
