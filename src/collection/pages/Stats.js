@@ -40,6 +40,10 @@ const Stats = () => {
 
   const calculateStats = () => {
     const stats = {
+      originalPossede: 0,
+      originalPrixPossede: 0,
+      originalPoidsPossede: 0,
+      originalPagesPossede: 0,
       totalPossede: 0,
       totalSouhaite: 0,
       totalLu: 0,
@@ -73,12 +77,21 @@ const Stats = () => {
       },
     };
 
+    const targetDate = new Date("2022-08-31T23:59:59.999+00:00");
+
     for (const book of loadedCollection) {
       if (book.possede && !book.revendu) {
         stats.totalPossede++;
         stats.totalPrixPossede += book.prix;
         stats.totalPagesPossede += book.planches;
         stats.totalPoidsPossede += book.poids;
+
+        if (!book.date_achat || new Date(book.date_achat) <= targetDate) {
+          stats.originalPossede++;
+          stats.originalPrixPossede += book.prix;
+          stats.originalPagesPossede += book.planches;
+          stats.originalPoidsPossede += book.poids;
+        }
 
         stats[book.type].total++;
         if (book.lu) {
@@ -387,8 +400,6 @@ const Stats = () => {
         <div className='collection'>
           <StatsLineFrames
             calculateStats={calculateStats}
-            boughtBooksByMonthArray={boughtBooksByMonthArray}
-            areaChartArray={areaChartArray}
             readBooksByMonthArray={readBooksByMonthArray}
           />
           <div className='collection-stats_container'>

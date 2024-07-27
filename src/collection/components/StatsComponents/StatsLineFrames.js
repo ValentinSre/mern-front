@@ -7,48 +7,46 @@ import { ImBooks } from "react-icons/im";
 
 import EvolutionFrame from "./EvolutionFrame";
 
-const StatsLineFrames = ({
-  calculateStats,
-  boughtBooksByMonthArray,
-  areaChartArray,
-  readBooksByMonthArray,
-}) => {
+const StatsLineFrames = ({ calculateStats, readBooksByMonthArray }) => {
   return (
-    <div className="collection-stats">
-      <div className="collection-stats__frame">
+    <div className='collection-stats'>
+      <div className='collection-stats__frame'>
         <EvolutionFrame
           title={"Nb. de livres possédés"}
           value={calculateStats().totalPossede}
           positive
           difference={(
-            (boughtBooksByMonthArray[11].valeur /
-              calculateStats().totalPossede) *
+            ((calculateStats().totalPossede -
+              calculateStats().originalPossede) /
+              calculateStats().originalPossede) *
             100
           ).toFixed(2)}
           icon={<ImBooks />}
-          comparisonPhrase={"depuis le mois dernier"}
+          comparisonPhrase={`depuis le 01/09/22 (${
+            calculateStats().originalPossede
+          })`}
         />
       </div>
 
-      <div className="collection-stats__frame">
+      <div className='collection-stats__frame'>
         <EvolutionFrame
           title={"Prix des livres possédés"}
           value={calculateStats().totalPrixPossede.toFixed(2) + " €"}
           positive
-          difference={
-            areaChartArray.length &&
-            (
-              (areaChartArray[areaChartArray.length - 1].total /
-                calculateStats().totalPrixPossede) *
-              100
-            ).toFixed(2)
-          }
+          difference={(
+            ((calculateStats().totalPrixPossede -
+              calculateStats().originalPrixPossede) /
+              calculateStats().originalPrixPossede) *
+            100
+          ).toFixed(2)}
           icon={<GiReceiveMoney />}
-          comparisonPhrase={"depuis le mois dernier"}
+          comparisonPhrase={`depuis le 01/09/22 (${calculateStats().originalPrixPossede.toFixed(
+            2
+          )}€)`}
         />
       </div>
 
-      <div className="collection-stats__frame">
+      <div className='collection-stats__frame'>
         <EvolutionFrame
           title={"Nb. de livres à lire"}
           value={calculateStats().totalPossede - calculateStats().totalLu}
@@ -56,7 +54,7 @@ const StatsLineFrames = ({
         />
       </div>
 
-      <div className="collection-stats__frame">
+      <div className='collection-stats__frame'>
         <EvolutionFrame
           title={"Nb. de livres souhaités"}
           value={calculateStats().totalSouhaite}
@@ -64,7 +62,7 @@ const StatsLineFrames = ({
         />
       </div>
 
-      <div className="collection-stats__frame">
+      <div className='collection-stats__frame'>
         <EvolutionFrame
           title={"Prix des livres souhaités"}
           value={calculateStats().totalPrixSouhaite.toFixed(2) + " €"}
@@ -72,7 +70,7 @@ const StatsLineFrames = ({
         />
       </div>
 
-      <div className="collection-stats__frame">
+      <div className='collection-stats__frame'>
         <EvolutionFrame
           title={"Nb. de livres lus"}
           value={calculateStats().totalLu}
@@ -104,7 +102,7 @@ const StatsLineFrames = ({
         />
       </div>
 
-      <div className="collection-stats__frame">
+      <div className='collection-stats__frame'>
         <EvolutionFrame
           title={"Nb. de livres critiqués"}
           value={calculateStats().totalCritique}
@@ -116,7 +114,7 @@ const StatsLineFrames = ({
         />
       </div>
 
-      <div className="collection-stats__frame">
+      <div className='collection-stats__frame'>
         <EvolutionFrame
           title={"Nb. de pages cumulées"}
           value={calculateStats().totalPagesPossede}
@@ -124,7 +122,7 @@ const StatsLineFrames = ({
         />
       </div>
 
-      <div className="collection-stats__frame">
+      <div className='collection-stats__frame'>
         <EvolutionFrame
           title={"Poids total des livres"}
           value={(calculateStats().totalPoidsPossede / 1000).toFixed(2) + " kg"}
