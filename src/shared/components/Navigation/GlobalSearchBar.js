@@ -1,11 +1,17 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { Paper, InputBase, IconButton } from "@material-ui/core";
+import { InputBase, IconButton } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 
-import "./SearchBar.css";
+import "./GlobalSearchBar.css";
 
-const SearchBar = ({ placeHolder, searchText, handleSearch, globalSearch }) => {
+const GlobalSearchBar = ({
+  placeHolder,
+  searchText,
+  handleSearch,
+  globalSearch,
+  toggleSearchBar,
+}) => {
   const history = useHistory();
 
   const handleKeyPress = (event) => {
@@ -20,8 +26,13 @@ const SearchBar = ({ placeHolder, searchText, handleSearch, globalSearch }) => {
   };
 
   return (
-    <Paper component='form' className='searchBar'>
-      <IconButton type='button' sx={{ p: "10px" }} aria-label='search'>
+    <React.Fragment component='form' className='globalSearchBar'>
+      <IconButton
+        type='button'
+        sx={{ p: "10px" }}
+        aria-label='search'
+        onClick={toggleSearchBar}
+      >
         <SearchIcon />
       </IconButton>
       <InputBase
@@ -32,8 +43,8 @@ const SearchBar = ({ placeHolder, searchText, handleSearch, globalSearch }) => {
         onChange={handleSearch}
         onKeyPress={handleKeyPress}
       />
-    </Paper>
+    </React.Fragment>
   );
 };
 
-export default SearchBar;
+export default GlobalSearchBar;

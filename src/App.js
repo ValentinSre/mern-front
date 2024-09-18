@@ -12,6 +12,7 @@ import { useAuth } from "./shared/hooks/auth-hook";
 import routeConfigs from "./routes";
 import { IconButton, Tooltip } from "@material-ui/core";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
+import BottomNavbar from "./shared/components/Navigation/BottomNavbar";
 
 const App = () => {
   // Custom auth hook
@@ -64,7 +65,7 @@ const App = () => {
           </Route>
         );
       })}
-      <Redirect to="/" />
+      <Redirect to='/' />
     </Switch>
   );
 
@@ -81,11 +82,11 @@ const App = () => {
       }}
     >
       <Router>
-        <NavBar />
+        {/* <NavBar /> */}
         <main ref={rootRef}>
           <Suspense
             fallback={
-              <div className="center">
+              <div className='center'>
                 <LoadingSpinner />
               </div>
             }
@@ -100,7 +101,7 @@ const App = () => {
                 right: "20px",
               }}
             >
-              <Tooltip title="Remonter en haut de la page">
+              <Tooltip title='Remonter en haut de la page'>
                 <IconButton
                   style={{
                     backgroundColor: "#ffde59",
@@ -115,6 +116,11 @@ const App = () => {
             </div>
           )}
         </main>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <BottomNavbar />
       </Router>
     </AuthContext.Provider>
   );
