@@ -84,7 +84,7 @@ const BottomNavbar = () => {
           {!auth.isLoggedIn && (
             <NavLink to='/auth' className='navbar-item'>
               <AccountCircleIcon className='icon' />
-              <span>CONNEXION</span>
+              {/* <span>CONNEXION</span> */}
             </NavLink>
           )}
         </React.Fragment>
