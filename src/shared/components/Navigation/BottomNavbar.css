@@ -3,37 +3,36 @@
     bottom: 0;
     left: 0;
     right: 0;
-    max-width: calc(100% - 30px); /* Réduire la largeur pour inclure l'espace de chaque côté */
-    margin: 0 auto; /* Centrer la navbar */
+    max-width: calc(100% - 30px);
+    margin: 0 auto;
     display: flex;
     justify-content: space-around;
     align-items: center;
     background-color: white;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-    padding: 10px 15px; /* Espace à l'intérieur de la barre */
+    padding: 10px 15px;
     border-radius: 30px;
     margin-bottom: 15px;
     margin-top: 15px;
+    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
   }
   
-  /* Style des items de la navbar */
   .navbar-item {
     text-align: center;
     flex-grow: 1;
     color: #333;
   }
   
-  /* Style des icônes */
   .icon {
     font-size: 1.5rem;
     display: block;
     margin: 0 auto 5px;
   }
   
-  /* Bouton rouge central */
   .navbar-add {
     position: relative;
-    margin-top: -30px; /* Pour que le bouton dépasse de la navbar */
+    margin-top: -30px;
   }
   
   .add-button {
@@ -65,11 +64,11 @@
 
 .navbar-item {
     display: flex;
-    flex-direction: column; /* Alignement vertical des icônes et textes */
-    justify-content: center; /* Centre verticalement */
-    align-items: center; /* Centre horizontalement */
-    text-decoration: none; /* Enlever le soulignement */
-    color: #333; /* Couleur par défaut du texte */
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center;
+    text-decoration: none; 
+    color: #333; 
     flex-grow: 1;
   }
 
