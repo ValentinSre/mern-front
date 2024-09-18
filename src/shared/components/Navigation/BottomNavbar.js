@@ -10,7 +10,8 @@ import SearchIcon from "@material-ui/icons/Search";
 import CollectionsBookmarkIcon from "@material-ui/icons/CollectionsBookmark";
 import BookIcon from "@material-ui/icons/MenuBook";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import AddCircleIcon from "@material-ui/icons/AddCircle"; // Bouton d'ajout
+import AddCircleIcon from "@material-ui/icons/AddCircle";
+import FormatListBulletedIcon from "@material-ui/icons/FormatListBulleted";
 
 const BottomNavbar = () => {
   const auth = useContext(AuthContext);
@@ -61,6 +62,11 @@ const BottomNavbar = () => {
             {/* <span>BIBLIO</span> */}
           </NavLink>
 
+          <NavLink to='/lists' className='navbar-item'>
+            <FormatListBulletedIcon className='icon' />
+            {/* <span>Listes</span> */}
+          </NavLink>
+
           {auth.isAdmin && (
             <NavLink to='/book/new' className='navbar-add'>
               <button className='add-button'>
@@ -86,6 +92,12 @@ const BottomNavbar = () => {
               <AccountCircleIcon className='icon' />
               {/* <span>CONNEXION</span> */}
             </NavLink>
+          )}
+          {auth.isLoggedIn && (
+            <div onClick={auth.logout} className='navbar-item'>
+              <AccountCircleIcon className='icon' />
+              {/* <span>DECONNEXION</span> */}
+            </div>
           )}
         </React.Fragment>
       )}
