@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import BookCalendar from "./book/components/BookCalendar";
+import HomeLoaded from "./book/components/HomeLoaded";
 import ErrorModal from "./shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "./shared/components/UIElements/LoadingSpinner";
 import { useHttpClient } from "./shared/hooks/http-hook";
@@ -33,7 +33,7 @@ const Home = () => {
         </div>
       )}
       {!isLoading && loadedBooks && loadedBooks.length && (
-        <BookCalendar books={loadedBooks} />
+        <HomeLoaded booksToRelease={loadedBooks} />
       )}
     </div>
   );

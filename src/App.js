@@ -5,12 +5,10 @@ import {
   Redirect,
   Switch,
 } from "react-router-dom";
-import NavBar from "./shared/components/Navigation/NavBar";
 import LoadingSpinner from "./shared/components/UIElements/LoadingSpinner";
 import { AuthContext } from "./shared/context/auth-context";
 import { useAuth } from "./shared/hooks/auth-hook";
 import routeConfigs from "./routes";
-import { IconButton, Tooltip } from "@material-ui/core";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import BottomNavbar from "./shared/components/Navigation/BottomNavbar";
 
@@ -93,7 +91,7 @@ const App = () => {
           >
             {renderedRoutes}
           </Suspense>
-          {isTopVisible && (
+          {/* {isTopVisible && (
             <div
               style={{
                 position: "fixed",
@@ -114,7 +112,7 @@ const App = () => {
                 </IconButton>
               </Tooltip>
             </div>
-          )}
+          )} */}
         </main>
         <br></br>
         <br></br>

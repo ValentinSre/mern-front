@@ -14,7 +14,6 @@
   }
   
   @media (min-width: 768px) {
-    /* appliquez les styles ci-dessous uniquement si la largeur de l'écran est supérieure ou égale à 768px (taille de l'écran de bureau) */
     .book-calendar {
       width: 800px;
     }
