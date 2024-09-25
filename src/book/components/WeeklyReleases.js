@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 import makeTitle from "../../shared/util/makeTitle";
 
@@ -23,27 +24,37 @@ const formalizeDay = (date) => {
 
   return `${WEEK_DAYS[day]} ${dayNumber}`;
 };
-const BookItem = ({ book }) => (
-  <Tooltip title={makeTitle(book)}>
-    <div className='book-item'>
-      <img src={book.image} alt={book.titre} className='book-image' />
-      <div className='book-info'>
-        <p className='book-date'>{formalizeDay(book.date_parution)}</p>
-      </div>
-    </div>
-  </Tooltip>
-);
 
-BookItem.propTypes = {
-  book: PropTypes.shape({
-    date_parution: PropTypes.string.isRequired,
-    image: PropTypes.string.isRequired,
-    serie: PropTypes.string,
-    titre: PropTypes.string.isRequired,
-    tome: PropTypes.number,
-    version: PropTypes.string,
-  }).isRequired,
+const BookItem = ({ book }) => {
+  const history = useHistory();
+
+  const openPreview = () => {
+    history.push(`/book/${book.id}`);
+  };
+
+  return (
+    <Tooltip title={makeTitle(book)}>
+      <div className='book-item' onClick={openPreview}>
+        <img src={book.image} alt={book.titre} className='book-image' />
+        <div className='book-info'>
+          <p className='book-date'>{formalizeDay(book.date_parution)}</p>
+        </div>
+      </div>
+    </Tooltip>
+  );
 };
+
+// BookItem.propTypes = {
+//   book: PropTypes.shape({
+//     date_parution: PropTypes.string.isRequired,
+//     image: PropTypes.string.isRequired,
+//     serie: PropTypes.string,
+//     titre: PropTypes.string.isRequired,
+//     tome: PropTypes.number,
+//     version: PropTypes.string,
+//     id: PropTypes.string,
+//   }).isRequired,
+// };
 
 const WeeklyReleases = ({ books }) => {
   const [expanded, setExpanded] = useState(false);
