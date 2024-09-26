@@ -3,18 +3,18 @@
     width: 85%;
   }
   
-  .header {
+  .calendar_header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     text-transform: uppercase;
   }
 
-  .header h2 {
+  .calendar_header h2 {
     font-size: 1.3em;
   }
   
-  .toggle-btn {
+  .expand-calendar-btn {
     background-color: #d0b32c;
     color: white;
     border: none;
@@ -38,7 +38,7 @@
     margin-bottom: 10px; /* Moins d'espace sous la date */
   }
   
-  .book-list {
+  .calendar_book-list {
     display: flex;
     flex-wrap: nowrap;
     overflow-x: auto;
@@ -47,18 +47,18 @@
     scrollbar-width: none; /* Masquer la scrollbar sur Firefox */
   }
   
-  .book-list::-webkit-scrollbar {
+  .calendar_book-list::-webkit-scrollbar {
     display: none; /* Masquer la scrollbar sur Chrome/Safari */
   }
   
-  .book-item {
+  .calendar_book-item {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 140px; /* Augmente la largeur pour correspondre à la taille plus grande de l'image */
   }
   
-  .book-image {
+  .calendar_book-image {
     width: 120px; /* Augmente la taille de l'image */
     height: 180px;
     object-fit: cover;
@@ -66,23 +66,16 @@
     transition: transform 0.2s ease;
   }
   
-  .book-image:hover {
+  .calendar_book-image:hover {
     transform: scale(1.05); /* Zoom léger au survol */
   }
   
-  .book-info {
+  .calendar_book-info {
     text-align: center;
     margin-top: 10px;
   }
   
-  .book-title {
-    font-size: 0.85em; 
-    font-weight: bold;
-    color: #333;
-    line-height: 1.2;
-  }
-  
-  .book-date {
+  .calendar_book-date {
     font-size: 0.75em; 
     color: #777;
     margin-top: 5px;
