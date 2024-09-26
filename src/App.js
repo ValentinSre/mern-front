@@ -11,6 +11,7 @@ import { useAuth } from "./shared/hooks/auth-hook";
 import routeConfigs from "./routes";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import BottomNavbar from "./shared/components/Navigation/BottomNavbar";
+import "./book/components/WeeklyReleases.css";
 
 const App = () => {
   // Custom auth hook
