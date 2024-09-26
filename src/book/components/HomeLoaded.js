@@ -1,6 +1,6 @@
 import React from "react";
 
-import "./HomeLoaded.css";
+// import "./HomeLoaded.css";
 import WeeklyReleases from "./WeeklyReleases";
 
 const HomeLoaded = ({ booksToRelease }) => {
