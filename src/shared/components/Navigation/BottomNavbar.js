@@ -52,7 +52,7 @@ const BottomNavbar = () => {
     <div className='navbar'>
       {!searchMode && (
         <React.Fragment>
-          <NavLink to='/' className='navbar-item' activeClassName='active'>
+          <NavLink to='/home' className='navbar-item' activeClassName='active'>
             <HomeIcon className='icon' />
             {/* <span>ACCUEIL</span> */}
           </NavLink>
