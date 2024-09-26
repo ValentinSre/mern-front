@@ -34,10 +34,10 @@ const BookItem = ({ book }) => {
 
   return (
     <Tooltip title={makeTitle(book)}>
-      <div className='book-item' onClick={openPreview}>
-        <img src={book.image} alt={book.titre} className='book-image' />
-        <div className='book-info'>
-          <p className='book-date'>{formalizeDay(book.date_parution)}</p>
+      <div className='calendar_book-item' onClick={openPreview}>
+        <img src={book.image} alt={book.titre} className='calendar_book-image' />
+        <div className='calendar_book-info'>
+          <p className='calendar_book-date'>{formalizeDay(book.date_parution)}</p>
         </div>
       </div>
     </Tooltip>
@@ -130,10 +130,10 @@ const WeeklyReleases = ({ books }) => {
 
   return (
     <div className='weekly-releases-container'>
-      <div className='header'>
+      <div className='calendar_header'>
         <h2></h2>
         {/* <h2>Sorties de la semaine</h2> */}
-        <button className='toggle-btn' onClick={toggleExpanded}>
+        <button className='expand-calendar-btn' onClick={toggleExpanded}>
           {expanded ? "Réduire" : "Voir tout"}
         </button>
       </div>
@@ -141,7 +141,7 @@ const WeeklyReleases = ({ books }) => {
       <div className='releases-list'>
         <div className='date-section'>
           <h3 className='release-date'>Cette semaine</h3>
-          <div className='book-list horizontal-scroll'>
+          <div className='calendar_book-list horizontal-scroll'>
             {currentWeekBooks.map((book, idx) => (
               <BookItem key={idx} book={book} />
             ))}
@@ -158,7 +158,7 @@ const WeeklyReleases = ({ books }) => {
             .map((weekNumber) => (
               <div key={weekNumber} className='date-section past-release'>
                 <h3 className='release-date'>Semaine {weekNumber}</h3>
-                <div className='book-list horizontal-scroll'>
+                <div className='calendar_book-list horizontal-scroll'>
                   {monthlyBooks[weekNumber].map((book, idx) => (
                     <BookItem key={idx} book={book} />
                   ))}
