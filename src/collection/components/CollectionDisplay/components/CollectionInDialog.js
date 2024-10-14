@@ -119,7 +119,7 @@ const CollectionInDialog = (props) => {
   const dialogTitle =
     books.length === filteredBooks.length
       ? `Ma collection : ${title}`
-      : `Ma collection (filtrée) : ${filteredBooks.length} livres non lus`;
+      : `Ma collection : Livres non lus (${filteredBooks.length})`;
 
   return (
     <Dialog fullScreen open={open} onClose={onClose}>
