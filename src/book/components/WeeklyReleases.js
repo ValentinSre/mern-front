@@ -6,7 +6,6 @@ import makeTitle from "../../shared/util/makeTitle";
 import "./WeeklyReleases.css";
 import { Tooltip } from "@material-ui/core";
 
-// Move to variables file
 const WEEK_DAYS = {
   1: "Lundi",
   2: "Mardi",
@@ -35,26 +34,20 @@ const BookItem = ({ book }) => {
   return (
     <Tooltip title={makeTitle(book)}>
       <div className='calendar_book-item' onClick={openPreview}>
-        <img src={book.image} alt={book.titre} className='calendar_book-image' />
+        <img
+          src={book.image}
+          alt={book.titre}
+          className='calendar_book-image'
+        />
         <div className='calendar_book-info'>
-          <p className='calendar_book-date'>{formalizeDay(book.date_parution)}</p>
+          <p className='calendar_book-date'>
+            {formalizeDay(book.date_parution)}
+          </p>
         </div>
       </div>
     </Tooltip>
   );
 };
-
-// BookItem.propTypes = {
-//   book: PropTypes.shape({
-//     date_parution: PropTypes.string.isRequired,
-//     image: PropTypes.string.isRequired,
-//     serie: PropTypes.string,
-//     titre: PropTypes.string.isRequired,
-//     tome: PropTypes.number,
-//     version: PropTypes.string,
-//     id: PropTypes.string,
-//   }).isRequired,
-// };
 
 const WeeklyReleases = ({ books }) => {
   const [expanded, setExpanded] = useState(false);
@@ -77,53 +70,61 @@ const WeeklyReleases = ({ books }) => {
     );
   };
 
-  const sortBooksByDate = (bookList) => {
-    return bookList.sort(
+  const sortBooksByDate = (bookList) =>
+    bookList.sort(
       (a, b) => new Date(a.date_parution) - new Date(b.date_parution)
     );
-  };
-
-  const getCurrentWeekBooks = () => {
-    const now = new Date();
-    const currentWeekNumber = getWeekNumber(now);
-    let weekBooks = [];
-
-    Object.keys(books).forEach((date) => {
-      const bookDate = new Date(date);
-      const bookWeekNumber = getWeekNumber(bookDate);
-      if (bookWeekNumber === currentWeekNumber) {
-        weekBooks = weekBooks.concat(books[date]);
-      }
-    });
-
-    return sortBooksByDate(weekBooks);
-  };
 
   const groupBooksByWeek = () => {
+    const now = new Date();
+    const currentWeek = getWeekNumber(now);
+    const currentYear = now.getFullYear();
+
+    const futureBooks = Object.values(books)
+      .flat()
+      .map((book) => ({
+        ...book,
+        week: getWeekNumber(book.date_parution),
+        year: new Date(book.date_parution).getFullYear(),
+      }))
+      .filter((book) => {
+        const bookDate = new Date(book.date_parution);
+        return (
+          bookDate >= now ||
+          book.year > currentYear ||
+          (book.year === currentYear && book.week >= currentWeek)
+        );
+      });
+
     const groupedBooks = {};
-
-    Object.keys(books).forEach((date) => {
-      const bookWeekNumber = getWeekNumber(date);
-
-      if (!groupedBooks[bookWeekNumber]) {
-        groupedBooks[bookWeekNumber] = [];
-      }
-
-      groupedBooks[bookWeekNumber] = groupedBooks[bookWeekNumber].concat(
-        books[date]
-      );
+    futureBooks.forEach((book) => {
+      const weekKey = `${book.year}-S${book.week}`;
+      if (!groupedBooks[weekKey]) groupedBooks[weekKey] = [];
+      groupedBooks[weekKey].push(book);
     });
 
-    Object.keys(groupedBooks).forEach((week) => {
-      groupedBooks[week] = sortBooksByDate(groupedBooks[week]);
+    Object.keys(groupedBooks).forEach((key) => {
+      groupedBooks[key] = sortBooksByDate(groupedBooks[key]);
     });
 
-    return groupedBooks;
+    const sortedWeeks = Object.entries(groupedBooks).sort(([a], [b]) => {
+      const [yearA, weekA] = a.split("-S").map(Number);
+      const [yearB, weekB] = b.split("-S").map(Number);
+      return yearA === yearB ? weekA - weekB : yearA - yearB;
+    });
+
+    return {
+      currentWeekBooks: groupedBooks[`${currentYear}-S${currentWeek}`] || [],
+      futureWeeksBooks: Object.fromEntries(
+        sortedWeeks.filter(([key]) => key !== `${currentYear}-S${currentWeek}`)
+      ),
+    };
   };
 
   useEffect(() => {
-    setCurrentWeekBooks(getCurrentWeekBooks());
-    setMonthlyBooks(groupBooksByWeek());
+    const { currentWeekBooks, futureWeeksBooks } = groupBooksByWeek();
+    setCurrentWeekBooks(currentWeekBooks);
+    setMonthlyBooks(futureWeeksBooks);
   }, [books]);
 
   const toggleExpanded = () => setExpanded(!expanded);
@@ -149,22 +150,21 @@ const WeeklyReleases = ({ books }) => {
         </div>
 
         {expanded &&
-          Object.keys(monthlyBooks)
-            .filter(
-              (weekNumber) =>
-                weekNumber > getWeekNumber(new Date()) &&
-                !currentWeekBooks.includes(monthlyBooks[weekNumber])
-            )
-            .map((weekNumber) => (
-              <div key={weekNumber} className='date-section past-release'>
-                <h3 className='release-date'>Semaine {weekNumber}</h3>
+          Object.keys(monthlyBooks).map((weekKey) => {
+            const [year, week] = weekKey.split("-S");
+            return (
+              <div key={weekKey} className='date-section past-release'>
+                <h3 className='release-date'>
+                  Semaine {week} (<i>{year}</i>)
+                </h3>
                 <div className='calendar_book-list horizontal-scroll'>
-                  {monthlyBooks[weekNumber].map((book, idx) => (
+                  {monthlyBooks[weekKey].map((book, idx) => (
                     <BookItem key={idx} book={book} />
                   ))}
                 </div>
               </div>
-            ))}
+            );
+          })}
       </div>
     </div>
   );
@@ -180,6 +180,7 @@ WeeklyReleases.propTypes = {
         titre: PropTypes.string.isRequired,
         tome: PropTypes.number,
         version: PropTypes.string,
+        id: PropTypes.string.isRequired,
       })
     )
   ).isRequired,
