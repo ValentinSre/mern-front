@@ -7,7 +7,7 @@ export const CollectionRedirection = ({ userId }) => {
 
   const items = [
     { label: "MA COLLECTION", route: `/${userId}/collection`, icon: "📚" },
-    { label: "MA LISTE DE LECTURE", route: `/${userId}/readlist`, icon: "📖" },
+    { label: "MES LECTURES", route: `/${userId}/readlist`, icon: "📖" },
     { label: "MA LISTE D'ACHAT", route: `/${userId}/wishlist`, icon: "🎁" },
     { label: "MES SORTIES", route: `/${userId}/releases`, icon: "🗓️" },
     { label: "MES STATISTIQUES", route: `/${userId}/stats`, icon: "📊" },
