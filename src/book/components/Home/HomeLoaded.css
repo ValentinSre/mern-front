@@ -7,7 +7,6 @@
   }
   
   @media (max-width: 767px) {
-    /* appliquez les styles ci-dessous uniquement si la largeur de l'écran est inférieure à 768px (taille de l'écran de téléphone mobile) */
     .book-calendar {
       width: 350px;
     }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
-import makeTitle from "../../shared/util/makeTitle";
+import makeTitle from "../../../shared/util/makeTitle";
 
 import "./WeeklyReleases.css";
 import { Tooltip } from "@material-ui/core";
