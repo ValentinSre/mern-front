@@ -30,7 +30,7 @@ const CollectionInDialog = (props) => {
     BD: true,
     Comics: true,
     Manga: true,
-    Roman: false,
+    Roman: true,
   });
 
   const handleSortChange = (event) => {
