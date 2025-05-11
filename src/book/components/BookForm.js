@@ -114,7 +114,7 @@ const BookForm = ({
 
   const handleInputAuteurChange = (event, value) => {
     const filteredAuteurs = existingArtistes.filter((auteur) =>
-      auteur.toLowerCase().includes(value.toLowerCase())
+      auteur && auteur.toLowerCase().includes(value.toLowerCase())
     );
 
     setExistingAuteurs(filteredAuteurs);
@@ -123,7 +123,7 @@ const BookForm = ({
 
   const handleInputDessinateurChange = (event, value) => {
     const filteredDessinateurs = existingArtistes.filter((dessinateur) =>
-      dessinateur.toLowerCase().includes(value.toLowerCase())
+      dessinateur && dessinateur.toLowerCase().includes(value.toLowerCase())
     );
 
     setExistingDessinateurs(filteredDessinateurs);
