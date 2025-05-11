@@ -8,7 +8,6 @@ import CollectionContent from "../components/CollectionContent";
 import "./DisplayCollection.css";
 
 const DisplayCollection = () => {
-  // Context and state
   const auth = useContext(AuthContext);
   const {
     isLoading: isDataLoading,
@@ -29,7 +28,6 @@ const DisplayCollection = () => {
     Roman: true,
   });
 
-  // Fetch collection data
   const fetchBooks = async () => {
     try {
       const responseData = await sendRequest(

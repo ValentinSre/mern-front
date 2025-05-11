@@ -6,6 +6,9 @@ import MarvelChallenge from "./challenge/pages/MarvelChallenge";
 const NewBook = React.lazy(() => import("./book/pages/NewBook"));
 const AuthPage = React.lazy(() => import("./user/pages/AuthPage"));
 const Book = React.lazy(() => import("./book/pages/Book"));
+const RealPurchaseManager = React.lazy(() =>
+  import("./collection/pages/RealPurchaseManager")
+);
 const BookLibrary = React.lazy(() => import("./book/pages/BookLibrary"));
 const UserLibrary = React.lazy(() => import("./collection/pages/UserLibrary"));
 const SearchBooks = React.lazy(() => import("./book/pages/SearchBooks"));
@@ -24,6 +27,7 @@ const routeConfigs = [
     component: SearchBooks,
     exact: true,
   },
+
   {
     path: "/suggestions",
     component: Suggestions,
@@ -39,9 +43,16 @@ const routeConfigs = [
     component: MarvelChallenge,
     exact: true,
   },
+
   {
     path: "/lists",
     component: BooksLists,
+    exact: true,
+    loggedInOnly: true,
+  },
+  {
+    path: "/:userId/real-purchase",
+    component: RealPurchaseManager,
     exact: true,
     loggedInOnly: true,
   },
