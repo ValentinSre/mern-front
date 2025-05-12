@@ -66,16 +66,29 @@ const RealPurchaseManager = () => {
     const sortedMonths = Object.keys(datesByMonth).sort((a, b) => {
       const [aMonth, aYear] = a.split("/").map(Number);
       const [bMonth, bYear] = b.split("/").map(Number);
-      return aYear !== bYear ? bYear - aYear : bMonth - aMonth;
+      if (aYear !== bYear) {
+        return bYear - aYear;
+      }
+      return bMonth - aMonth;
     });
+    console.log("sortedMonths", sortedMonths);
     setLoadedCollection(datesByMonth);
     setSelectedMonth(sortedMonths[0] || null);
   };
 
   const handleMonthChange = (direction) => {
-    const months = Object.keys(loadedCollection);
+    const months = Object.keys(loadedCollection).sort((a, b) => {
+      const [aMonth, aYear] = a.split("/").map(Number);
+      const [bMonth, bYear] = b.split("/").map(Number);
+      if (aYear !== bYear) {
+        return bYear - aYear;
+      }
+      return bMonth - aMonth;
+    });
+
     const currentIndex = months.indexOf(selectedMonth);
     const newIndex = direction === "prev" ? currentIndex + 1 : currentIndex - 1;
+
     if (newIndex >= 0 && newIndex < months.length) {
       setSelectedMonth(months[newIndex]);
     }
@@ -131,8 +144,8 @@ const RealPurchaseManager = () => {
           <TableRow>
             <TableCell>
               <Button
-                variant="contained"
-                color="primary"
+                variant='contained'
+                color='primary'
                 onClick={() =>
                   handleOpenModal(
                     books.filter((book) => selectedBookIds.includes(book.id))
@@ -152,7 +165,7 @@ const RealPurchaseManager = () => {
             <TableRow key={book.id}>
               <TableCell>
                 <input
-                  type="checkbox"
+                  type='checkbox'
                   checked={selectedBookIds.includes(book.id)}
                   onChange={() => handleCheckboxChange(book.id)}
                 />
@@ -167,7 +180,6 @@ const RealPurchaseManager = () => {
   );
 
   const renderSecondTable = (books) => {
-    // Regrouper les livres achetés ensemble
     const groupedBooks = books.reduce((acc, book) => {
       const groupKey = book.bought_with?.length
         ? [book.id, ...book.bought_with].sort().join(",")
@@ -191,11 +203,9 @@ const RealPurchaseManager = () => {
             {Object.values(groupedBooks).map((group, index) => (
               <TableRow key={index}>
                 <TableCell>
-                  {/* Afficher les titres des livres dans le groupe */}
                   {group.map((book) => makeTitle(book)).join(", ")}
                 </TableCell>
                 <TableCell>
-                  {/* Calculer le prix total pour le groupe */}
                   {group.reduce(
                     (sum, book) =>
                       sum + (book.real_price || 0) + (book.shipping_cost || 0),
@@ -203,7 +213,6 @@ const RealPurchaseManager = () => {
                   )}
                 </TableCell>
                 <TableCell>
-                  {/* Indiquer si l'achat est d'occasion */}
                   {group.some((book) => book.is_occasion) ? "Oui" : "Non"}
                 </TableCell>
               </TableRow>
@@ -248,13 +257,13 @@ const RealPurchaseManager = () => {
       <Modal
         show={showModal}
         onCancel={handleCloseModal}
-        header="Renseigner le prix"
+        header='Renseigner le prix'
       >
         <div>
           <label>
             Prix :
             <input
-              type="number"
+              type='number'
               value={price}
               onChange={(e) => setPrice(parseFloat(e.target.value))}
             />
@@ -262,7 +271,7 @@ const RealPurchaseManager = () => {
           <label>
             Occasion :
             <input
-              type="checkbox"
+              type='checkbox'
               checked={isOccasion}
               onChange={(e) => setIsOccasion(e.target.checked)}
             />
@@ -270,7 +279,7 @@ const RealPurchaseManager = () => {
           <label>
             Frais de port :
             <input
-              type="number"
+              type='number'
               value={shippingCost}
               onChange={(e) => setShippingCost(parseFloat(e.target.value))}
             />
