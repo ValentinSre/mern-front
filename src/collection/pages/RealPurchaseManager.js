@@ -322,7 +322,7 @@ const RealPurchaseManager = () => {
             </Typography>
             {renderFirstTable(
               loadedCollection[selectedMonth]?.filter(
-                (book) => !book.real_price
+                (book) => book.real_price == null 
               ) || []
             )}
           </div>
@@ -332,7 +332,7 @@ const RealPurchaseManager = () => {
             </Typography>
             {renderSecondTable(
               loadedCollection[selectedMonth]?.filter(
-                (book) => book.real_price
+                (book) => book.real_price || book.real_price === 0
               ) || []
             )}
           </div>
