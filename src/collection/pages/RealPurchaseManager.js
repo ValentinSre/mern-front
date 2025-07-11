@@ -13,6 +13,11 @@ import {
   Button,
   Typography,
   makeStyles,
+  Box,
+  Grid,
+  Divider,
+  Tooltip,
+  Switch,
 } from "@material-ui/core";
 import { ArrowBack, ArrowForward } from "@material-ui/icons";
 import makeTitle from "../../shared/util/makeTitle";
@@ -21,34 +26,99 @@ import variables from "../../shared/util/variables";
 const useStyles = makeStyles((theme) => ({
   container: {
     padding: theme.spacing(3),
+    background: "#f7f7fa",
+    minHeight: "100vh",
   },
   header: {
     display: "flex",
-    justifyContent: "space-between",
+    justifyContent: "center",
     alignItems: "center",
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(3),
+    gap: theme.spacing(2),
+  },
+  tableSection: {
+    marginBottom: theme.spacing(4),
+    background: "#fff",
+    borderRadius: 16,
+    boxShadow: theme.shadows[2],
+    padding: theme.spacing(2, 2, 1, 2),
   },
   tableContainer: {
-    marginBottom: theme.spacing(3),
-    boxShadow: theme.shadows[3],
+    borderRadius: 12,
+    boxShadow: theme.shadows[1],
+    background: "#fafbfc",
   },
   button: {
-    margin: theme.spacing(1),
+    margin: theme.spacing(1, 0),
+    fontWeight: 600,
+    borderRadius: 8,
+    textTransform: "none",
+  },
+  selectButton: {
+    backgroundColor: "#ffde59",
+    color: "#222",
+    "&:hover": {
+      backgroundColor: "#ffe98a",
+    },
+  },
+  outlinedButton: {
+    color: "#d0b32c",
+    borderColor: "#d0b32c",
+    fontWeight: 600,
+    borderRadius: 8,
+    textTransform: "none",
   },
   modalContent: {
     display: "flex",
     flexDirection: "column",
     gap: theme.spacing(2),
+    minWidth: 320,
   },
   input: {
-    marginBottom: theme.spacing(2),
-  },
-  arrow: {
-    cursor: "pointer",
+    marginBottom: theme.spacing(1),
+    borderRadius: 6,
+    border: "1px solid #e0e0e0",
+    padding: theme.spacing(1),
+    fontSize: 16,
+    width: "100%",
   },
   modalActions: {
     display: "flex",
     justifyContent: "space-between",
+    marginTop: theme.spacing(2),
+    gap: theme.spacing(2),
+  },
+  arrow: {
+    cursor: "pointer",
+    fontSize: "2.2rem",
+    color: theme.palette.text.secondary,
+    transition: "color 0.2s",
+    "&:hover": {
+      color: "#ffde59",
+    },
+  },
+  tableTitle: {
+    fontWeight: 600,
+    fontSize: "1.1rem",
+    color: theme.palette.text.primary,
+    marginBottom: theme.spacing(0.5),
+  },
+  tableInfo: {
+    fontSize: "0.95rem",
+    color: theme.palette.text.secondary,
+    marginBottom: theme.spacing(1),
+  },
+  divider: {
+    margin: theme.spacing(3, 0, 2, 0),
+  },
+  checkbox: {
+    transform: "scale(1.2)",
+  },
+  switchLabel: {
+    display: "flex",
+    alignItems: "center",
+    gap: theme.spacing(1),
+    fontSize: 16,
   },
 }));
 
@@ -81,6 +151,7 @@ const RealPurchaseManager = () => {
 
   useEffect(() => {
     fetchBooks();
+    // eslint-disable-next-line
   }, [sendRequest, auth.userId]);
 
   const extractDates = (listOfBooks) => {
@@ -111,7 +182,6 @@ const RealPurchaseManager = () => {
       return bMonth - aMonth;
     });
     setLoadedCollection(datesByMonth);
-
     if (!selectedMonth) {
       setSelectedMonth(sortedMonths[0] || null);
     }
@@ -179,8 +249,31 @@ const RealPurchaseManager = () => {
   };
 
   const renderFirstTable = (books) => {
+    const totalTheoretical = books.reduce(
+      (sum, book) => sum + (book.prix || 0),
+      0
+    );
+    const allBooks = loadedCollection[selectedMonth] || [];
+    const totalTheoreticalAll = allBooks.reduce(
+      (sum, book) => sum + (book.prix || 0),
+      0
+    );
+
     return (
-      <div>
+      <Box className={classes.tableSection}>
+        <Typography className={classes.tableTitle} variant='subtitle1'>
+          Livres sans prix renseigné
+        </Typography>
+        <Typography className={classes.tableInfo}>
+          Valeur théorique : {totalTheoreticalAll.toFixed(2)} €
+          {totalTheoretical !== totalTheoreticalAll && (
+            <span>
+              {" "}
+              (dont {totalTheoretical.toFixed(2)} € pour les livres non
+              renseignés)
+            </span>
+          )}
+        </Typography>
         <TableContainer component={Paper} className={classes.tableContainer}>
           <Table>
             <TableHead>
@@ -188,7 +281,7 @@ const RealPurchaseManager = () => {
                 <TableCell>
                   <Button
                     variant='contained'
-                    color='primary'
+                    className={`${classes.button} ${classes.selectButton}`}
                     onClick={() =>
                       handleOpenModal(
                         books.filter((book) =>
@@ -197,7 +290,6 @@ const RealPurchaseManager = () => {
                       )
                     }
                     disabled={selectedBookIds.length === 0}
-                    className={classes.button}
                   >
                     Sélectionner
                   </Button>
@@ -208,22 +300,27 @@ const RealPurchaseManager = () => {
             </TableHead>
             <TableBody>
               {books.map((book) => (
-                <TableRow key={book.id}>
+                <TableRow key={book.id} hover>
                   <TableCell>
                     <input
                       type='checkbox'
+                      className={classes.checkbox}
                       checked={selectedBookIds.includes(book.id)}
                       onChange={() => handleCheckboxChange(book.id)}
                     />
                   </TableCell>
                   <TableCell>{makeTitle(book)}</TableCell>
-                  <TableCell>{book.prix || "Non renseigné"}</TableCell>
+                  <TableCell>
+                    {book.prix !== undefined && book.prix !== null
+                      ? book.prix.toFixed(2)
+                      : "Non renseigné"}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
-      </div>
+      </Box>
     );
   };
 
@@ -241,16 +338,36 @@ const RealPurchaseManager = () => {
       (sum, book) => sum + (book.prix || 0),
       0
     );
-
     const totalEffectiveValue = books.reduce(
       (sum, book) => sum + (book.real_price || 0) + (book.shipping_cost || 0),
       0
     );
+    const totalShippingCost = books.reduce(
+      (sum, book) => sum + (book.shipping_cost || 0),
+      0
+    );
 
     return (
-      <div>
-        <Typography variant='subtitle2' color='textSecondary' gutterBottom>
-          Total : {totalEffectiveValue}€ (théorique : {totalTheoricalValue}€)
+      <Box className={classes.tableSection}>
+        <Typography className={classes.tableTitle} variant='subtitle1'>
+          Livres avec prix renseigné
+        </Typography>
+        <Typography className={classes.tableInfo}>
+          Valeur effective : {totalEffectiveValue.toFixed(2)} €
+          <span> (dont {totalShippingCost.toFixed(2)} € de frais de port)</span>
+          {totalTheoricalValue > 0 && (
+            <>
+              <span> — Théorique : {totalTheoricalValue.toFixed(2)} €</span>
+              <span>
+                {" "}
+                {totalEffectiveValue < totalTheoricalValue &&
+                  `(soit ${(
+                    100 -
+                    (totalEffectiveValue / totalTheoricalValue) * 100
+                  ).toFixed(0)}% d'économie)`}
+              </span>
+            </>
+          )}
         </Typography>
         <TableContainer component={Paper} className={classes.tableContainer}>
           <Table>
@@ -263,18 +380,20 @@ const RealPurchaseManager = () => {
             </TableHead>
             <TableBody>
               {Object.values(groupedBooks).map((group, index) => (
-                <TableRow key={index}>
+                <TableRow key={index} hover>
                   <TableCell>
                     {group.map((book) => makeTitle(book)).join(", ")}
                   </TableCell>
                   <TableCell>
-                    {group.reduce(
-                      (sum, book) =>
-                        sum +
-                        (book.real_price || 0) +
-                        (book.shipping_cost || 0),
-                      0
-                    )}
+                    {group
+                      .reduce(
+                        (sum, book) =>
+                          sum +
+                          (book.real_price || 0) +
+                          (book.shipping_cost || 0),
+                        0
+                      )
+                      .toFixed(2)}
                   </TableCell>
                   <TableCell>
                     {group.some((book) => book.is_occasion) ? "Oui" : "Non"}
@@ -284,13 +403,12 @@ const RealPurchaseManager = () => {
             </TableBody>
           </Table>
         </TableContainer>
-      </div>
+      </Box>
     );
   };
 
   const renderDateLabel = (selectedMonth) => {
     if (!selectedMonth) return "Aucun mois sélectionné";
-
     const [month, year] = selectedMonth.split("/");
     return (
       <span>
@@ -303,39 +421,38 @@ const RealPurchaseManager = () => {
     <div className={classes.container}>
       {loadedCollection && (
         <>
-          <div className={classes.header}>
-            <ArrowBack
-              className={classes.arrow}
-              onClick={() => handleMonthChange("prev")}
-            />
-            <Typography variant='h6'>
+          <Box className={classes.header}>
+            <Tooltip title='Mois précédent'>
+              <ArrowBack
+                className={classes.arrow}
+                onClick={() => handleMonthChange("prev")}
+              />
+            </Tooltip>
+            <Typography
+              variant='h6'
+              style={{ minWidth: 120, textAlign: "center" }}
+            >
               {renderDateLabel(selectedMonth)}
             </Typography>
-            <ArrowForward
-              className={classes.arrow}
-              onClick={() => handleMonthChange("next")}
-            />
-          </div>
-          <div>
-            <Typography variant='h5' gutterBottom>
-              Livres sans prix renseigné
-            </Typography>
-            {renderFirstTable(
-              loadedCollection[selectedMonth]?.filter(
-                (book) => !book.real_price
-              ) || []
-            )}
-          </div>
-          <div>
-            <Typography variant='h5' gutterBottom>
-              Livres avec prix renseigné
-            </Typography>
-            {renderSecondTable(
-              loadedCollection[selectedMonth]?.filter(
-                (book) => book.real_price
-              ) || []
-            )}
-          </div>
+            <Tooltip title='Mois suivant'>
+              <ArrowForward
+                className={classes.arrow}
+                onClick={() => handleMonthChange("next")}
+              />
+            </Tooltip>
+          </Box>
+          <Divider className={classes.divider} />
+          {renderFirstTable(
+            loadedCollection[selectedMonth]?.filter(
+              (book) => !book.real_price
+            ) || []
+          )}
+          <Divider className={classes.divider} />
+          {renderSecondTable(
+            loadedCollection[selectedMonth]?.filter(
+              (book) => book.real_price
+            ) || []
+          )}
         </>
       )}
       <Modal
@@ -349,17 +466,18 @@ const RealPurchaseManager = () => {
             <input
               type='number'
               value={price}
-              onChange={(e) => setPrice(parseFloat(e.target.value))}
+              onChange={(e) =>
+                setPrice(parseFloat(Number(e.target.value).toFixed(2)))
+              }
               className={classes.input}
             />
           </label>
-          <label>
+          <label className={classes.switchLabel}>
             Occasion :
-            <input
-              type='checkbox'
+            <Switch
               checked={isOccasion}
               onChange={(e) => setIsOccasion(e.target.checked)}
-              className={classes.input}
+              color='primary'
             />
           </label>
           <label>
@@ -367,21 +485,23 @@ const RealPurchaseManager = () => {
             <input
               type='number'
               value={shippingCost}
-              onChange={(e) => setShippingCost(parseFloat(e.target.value))}
+              onChange={(e) =>
+                setShippingCost(parseFloat(Number(e.target.value).toFixed(2)))
+              }
               className={classes.input}
             />
           </label>
           <div className={classes.modalActions}>
             <Button
               variant='outlined'
-              style={{ color: "#d0b32c", borderColor: "#d0b32c" }}
+              className={classes.outlinedButton}
               onClick={handleCloseModal}
             >
               Annuler
             </Button>
             <Button
               variant='contained'
-              style={{ backgroundColor: "#ffde59", color: "#000" }}
+              className={classes.selectButton}
               onClick={handleValidate}
             >
               Valider
