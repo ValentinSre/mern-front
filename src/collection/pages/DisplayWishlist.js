@@ -10,6 +10,7 @@ import { useHttpClient } from "../../shared/hooks/http-hook";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import { AuthContext } from "../../shared/context/auth-context";
 import WishlistFilters from "../components/WishlistFilters";
+import makeTitle from "../../shared/util/makeTitle";
 
 import "./DisplayWishlist.css";
 
@@ -78,6 +79,8 @@ const DisplayWishlist = () => {
   }, [sendRequest, auth.userId]);
 
   const [priceFilter, setPriceFilter] = useState([]);
+  const [onlyReleased, setOnlyReleased] = useState(false);
+  const [sortBy, setSortBy] = useState("alpha");
 
   const handleCheckboxChange = (event) => {
     const { value, checked } = event.target;
@@ -88,20 +91,37 @@ const DisplayWishlist = () => {
     }
   };
 
-  const filteredBooks = priceFilter.length
-    ? wishlist.filter((book) => {
-        if (priceFilter.includes("20")) {
-          if (book.prix < 20) return true;
-        }
-        if (priceFilter.includes("50")) {
-          if (book.prix >= 20 && book.prix < 50) return true;
-        }
-        if (priceFilter.includes("100")) {
-          if (book.prix >= 50) return true;
-        }
-        return false;
+  // Build filteredBooks applying price filters, release filter and sorting
+  let filteredBooks = wishlist.slice();
+  if (priceFilter.length) {
+    filteredBooks = filteredBooks.filter((book) => {
+      if (priceFilter.includes("20")) {
+        if (book.prix < 20) return true;
+      }
+      if (priceFilter.includes("50")) {
+        if (book.prix >= 20 && book.prix < 50) return true;
+      }
+      if (priceFilter.includes("100")) {
+        if (book.prix >= 50) return true;
+      }
+      return false;
+    });
+  }
+  const currentDate = new Date();
+  if (onlyReleased) {
+    filteredBooks = filteredBooks.filter(
+      (book) => new Date(book.date_parution) < currentDate
+    );
+  }
+  if (sortBy === "price") {
+    filteredBooks.sort((a, b) => (a.prix || 0) - (b.prix || 0));
+  } else {
+    filteredBooks.sort((a, b) =>
+      (makeTitle(a) || "").localeCompare(makeTitle(b) || "", "fr", {
+        sensitivity: "base",
       })
-    : wishlist;
+    );
+  }
 
   const handleBuyButton = (bookId) => {
     setOpenCollectionModal(true);
@@ -123,19 +143,49 @@ const DisplayWishlist = () => {
     } catch (err) {}
   };
 
-  const currentDate = new Date();
-
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />
-      <div className="wishlist">
-        <div className="wishlist__filters">
+      <div className='wishlist'>
+        <div className='wishlist__filters'>
           <WishlistFilters handleCheckboxChange={handleCheckboxChange} />
+          <div
+            style={{
+              marginTop: 10,
+              display: "flex",
+              gap: "12px",
+              alignItems: "center",
+            }}
+          >
+            <label
+              style={{ display: "flex", alignItems: "center", gap: "6px" }}
+            >
+              <input
+                type='checkbox'
+                checked={onlyReleased}
+                onChange={(e) => setOnlyReleased(e.target.checked)}
+              />
+              Livres déjà sortis
+            </label>
+            <label
+              style={{ display: "flex", alignItems: "center", gap: "6px" }}
+            >
+              Trier par:
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                style={{ marginLeft: 6 }}
+              >
+                <option value='alpha'>Alphabetique</option>
+                <option value='price'>Prix</option>
+              </select>
+            </label>
+          </div>
         </div>
         {isDataLoading && (
           <React.Fragment>
             <div style={{ paddingLeft: "5px", paddingTop: "15px" }}>
-              <Skeleton variant="rect" width={"20%"} height={20} />
+              <Skeleton variant='rect' width={"20%"} height={20} />
             </div>
             <div style={{ paddingTop: "70px" }}>
               <div
@@ -145,11 +195,11 @@ const DisplayWishlist = () => {
                   gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
                 }}
               >
-                <Skeleton variant="rect" height={200} />
-                <Skeleton variant="rect" height={200} />
-                <Skeleton variant="rect" height={200} />
-                <Skeleton variant="rect" height={200} />
-                <Skeleton variant="rect" height={200} />
+                <Skeleton variant='rect' height={200} />
+                <Skeleton variant='rect' height={200} />
+                <Skeleton variant='rect' height={200} />
+                <Skeleton variant='rect' height={200} />
+                <Skeleton variant='rect' height={200} />
               </div>
             </div>
           </React.Fragment>
@@ -166,38 +216,38 @@ const DisplayWishlist = () => {
                   €
                 </div>
               )}
-              <div className="wishlist-display">
+              <div className='wishlist-display'>
                 {filteredBooks.length === 0 && (
                   <h2 style={{ paddingLeft: "20px" }}>
                     Aucun livre dans cette wishlist
                   </h2>
                 )}
-                <div className="wishlist-display__books_array">
+                <div className='wishlist-display__books_array'>
                   {filteredBooks.map((book) => (
-                    <div key={book.id} className="wishlist-display__book">
+                    <div key={book.id} className='wishlist-display__book'>
                       <div
                         style={{ position: "relative" }}
                         onClick={() => history.push(`/book/${book.id_book}`)}
                       >
                         <img src={book.image} alt={book.titre} />
                         {new Date(book.date_parution) < currentDate && (
-                          <Badge color="primary" badgeContent="✓" />
+                          <Badge color='primary' badgeContent='✓' />
                         )}
                       </div>
 
                       <div
-                        className="wishlist-display__info-title"
+                        className='wishlist-display__info-title'
                         onClick={() => history.push(`/book/${book.id_book}`)}
                       >
                         <h3>{book.titre}</h3>
                         {book.tome && <span>Tome {book.tome}</span>}
                       </div>
-                      <div className="wishlist-display__info-price">
+                      <div className='wishlist-display__info-price'>
                         <h3>{book.prix.toFixed(2)}€</h3>
                       </div>
-                      <div className="wishlist-display__actions_buy">
+                      <div className='wishlist-display__actions_buy'>
                         <Button
-                          variant="outlined"
+                          variant='outlined'
                           style={{
                             height: "30px",
                             marginTop: "10px",
@@ -212,9 +262,9 @@ const DisplayWishlist = () => {
                           Acheté
                         </Button>
                       </div>
-                      <div className="wishlist-display__actions_delete">
+                      <div className='wishlist-display__actions_delete'>
                         <Button
-                          variant="contained"
+                          variant='contained'
                           style={{
                             height: "30px",
                             marginTop: "10px",
@@ -231,7 +281,7 @@ const DisplayWishlist = () => {
                       </div>
                       <Divider />
                       <div
-                        className="wishlist-display__info-serie"
+                        className='wishlist-display__info-serie'
                         onClick={() => history.push(`/book/${book.id_book}`)}
                       >
                         {book.serie ? (
@@ -251,7 +301,7 @@ const DisplayWishlist = () => {
               date={dateObtention}
               authorizeNoDate
               label="Date d'achat"
-              title="Quand avez-vous acheté ce livre ?"
+              title='Quand avez-vous acheté ce livre ?'
               handleChange={(e) => setDateObtention(e.target.value)}
               handleSubmit={handleAdditionToCollection}
             />
