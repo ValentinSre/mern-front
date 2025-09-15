@@ -444,13 +444,13 @@ const RealPurchaseManager = () => {
           <Divider className={classes.divider} />
           {renderFirstTable(
             loadedCollection[selectedMonth]?.filter(
-              (book) => !book.real_price
+              (book) => book.real_price === undefined || book.real_price === null
             ) || []
           )}
           <Divider className={classes.divider} />
           {renderSecondTable(
             loadedCollection[selectedMonth]?.filter(
-              (book) => book.real_price
+              (book) => book.real_price || book.real_price === 0
             ) || []
           )}
         </>
