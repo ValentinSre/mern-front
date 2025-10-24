@@ -33,14 +33,14 @@ body {
    CREATE LIST FORM
    ============================= */
 
-.create-list-form {
+.lists-page .create-list-form {
   display: flex;
   align-items: center;
   gap: 1rem;
   flex-wrap: wrap;
 }
 
-.create-list-form input[type="text"] {
+.lists-page .create-list-form input[type="text"] {
   flex: 1;
   min-width: 250px;
   padding: 0.75rem 1rem;
@@ -51,13 +51,13 @@ body {
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.create-list-form input[type="text"]:focus {
+.lists-page .create-list-form input[type="text"]:focus {
   border-color: #ffde59;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
   outline: none;
 }
 
-.create-list-form button {
+.lists-page .create-list-form button {
   background-color: #ffde59;
   color: #fff;
   border: none;
@@ -68,21 +68,21 @@ body {
   transition: background-color 0.2s, transform 0.1s;
 }
 
-.create-list-form button:hover {
+.lists-page .create-list-form button:hover {
   background-color: #d0b32c;
 }
 
-.create-list-form button:active {
+.lists-page .create-list-form button:active {
   transform: scale(0.97);
 }
 
-.lists-container {
+.lists-page .lists-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 1.5rem;
 }
 
-.list-card {
+.lists-page .list-card {
   background-color: #fff;
   border-radius: 1rem;
   padding: 1.25rem;
@@ -90,12 +90,12 @@ body {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.list-card:hover {
+.lists-page .list-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
-.list-card a {
+.lists-page .list-card a {
   text-decoration: none;
   color: #0f172a;
   font-weight: 500;
@@ -105,11 +105,11 @@ body {
   transition: color 0.2s;
 }
 
-.list-card a:hover {
+.lists-page .list-card a:hover {
   color: #d0b32c;
 }
 
-.empty-state {
+.lists-page .empty-state {
   text-align: center;
   color: #64748b;
   font-style: italic;
@@ -117,20 +117,20 @@ body {
 }
 
 @media (max-width: 768px) {
-  body {
+  .lists-page {
     padding: 1rem;
   }
 
-  .create-list-form {
+  .lists-page .create-list-form {
     flex-direction: column;
     align-items: stretch;
   }
 
-  .create-list-form button {
+  .lists-page .create-list-form button {
     width: 100%;
   }
 
-  .lists-container {
+  .lists-page .lists-container {
     grid-template-columns: 1fr;
   }
 }
