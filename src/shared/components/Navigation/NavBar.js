@@ -56,16 +56,16 @@ const NavBar = () => {
 
   const renderMenuItems = () => {
     return (
-      <div className="menu-items">
+      <div className='menu-items'>
         {auth.isLoggedIn && (
           <React.Fragment>
             <MenuItem onClick={handleCloseMenuOnClick}>
-              <NavLink to={`/books`} className="menu-link">
+              <NavLink to={`/books`} className='menu-link'>
                 La bibliothèque
               </NavLink>
             </MenuItem>
             <MenuItem onClick={handleCloseMenuOnClick}>
-              <NavLink to={`/lists`} className="menu-link">
+              <NavLink to={`/lists`} className='menu-link'>
                 Les listes
               </NavLink>
             </MenuItem>
@@ -73,7 +73,7 @@ const NavBar = () => {
         )}
         {auth.isAdmin && (
           <MenuItem onClick={handleCloseMenuOnClick}>
-            <NavLink to="/book/new" className="menu-link">
+            <NavLink to='/book/new' className='menu-link'>
               Ajouter un livre
             </NavLink>
           </MenuItem>
@@ -83,27 +83,27 @@ const NavBar = () => {
             <Divider />
 
             <MenuItem onClick={handleCloseMenuOnClick}>
-              <NavLink to={`/${auth.userId}/collection`} className="menu-link">
+              <NavLink to={`/${auth.userId}/collection`} className='menu-link'>
                 Ma collection
               </NavLink>
             </MenuItem>
             <MenuItem onClick={handleCloseMenuOnClick}>
-              <NavLink to={`/${auth.userId}/readlist`} className="menu-link">
+              <NavLink to={`/${auth.userId}/readlist`} className='menu-link'>
                 Mes lectures
               </NavLink>
             </MenuItem>
             <MenuItem onClick={handleCloseMenuOnClick}>
-              <NavLink to={`/${auth.userId}/wishlist`} className="menu-link">
+              <NavLink to={`/${auth.userId}/wishlist`} className='menu-link'>
                 Ma wishlist
               </NavLink>
             </MenuItem>
             <MenuItem onClick={handleCloseMenuOnClick}>
-              <NavLink to={`/${auth.userId}/releases`} className="menu-link">
+              <NavLink to={`/${auth.userId}/releases`} className='menu-link'>
                 Mes sorties
               </NavLink>
             </MenuItem>
             <MenuItem onClick={handleCloseMenuOnClick}>
-              <NavLink to={`/${auth.userId}/stats`} className="menu-link">
+              <NavLink to={`/${auth.userId}/stats`} className='menu-link'>
                 Mes statistiques
               </NavLink>
             </MenuItem>
@@ -123,7 +123,7 @@ const NavBar = () => {
 
   return (
     <React.Fragment>
-      <AppBar position="fixed" style={{ backgroundColor: "#ffde59" }}>
+      <AppBar position='fixed' style={{ backgroundColor: "#ffde59" }}>
         <Toolbar
           style={{
             display: "flex",
@@ -133,14 +133,14 @@ const NavBar = () => {
         >
           <img
             src={logo}
-            alt="WebVerse"
-            className="logo"
+            alt='WebVerse'
+            className='logo'
             onClick={() => history.push("/")}
           />
 
-          <div className="searchBarWrapper">
+          <div className='searchBarWrapper'>
             <SearchBar
-              placeHolder="Rechercher un album, une série, un auteur..."
+              placeHolder='Rechercher un album, une série, un auteur...'
               searchText={searchText}
               handleSearch={handleSearch}
               globalSearch
@@ -148,11 +148,11 @@ const NavBar = () => {
           </div>
 
           <div style={{ display: "flex", alignItems: "center" }}>
-            <div className="mobile-search">
-              <Tooltip title="Rechercher un contenu">
+            <div className='mobile-search'>
+              <Tooltip title='Rechercher un contenu'>
                 <IconButton
-                  edge="end"
-                  color="inherit"
+                  edge='end'
+                  color='inherit'
                   onClick={() => {
                     setDisplaySearchBar(!displaySearchBar);
                     if (!displaySearchBar) {
@@ -168,31 +168,22 @@ const NavBar = () => {
               </Tooltip>
             </div>
             {auth.isLoggedIn && (
-              <Link to="/suggestions">
-                <Tooltip title="Miroir, mon beau miroir">
-                  <IconButton edge="end" color="inherit">
+              <Link to='/suggestions'>
+                <Tooltip title='Miroir, mon beau miroir'>
+                  <IconButton edge='end' color='inherit'>
                     <MdLiveHelp style={{ color: "#fff" }} />
-                  </IconButton>
-                </Tooltip>
-              </Link>
-            )}
-            {auth.isAdmin && (
-              <Link to="/challenge2024">
-                <Tooltip title="Explorer le multivers">
-                  <IconButton edge="end" color="inherit">
-                    <BsFillCameraReelsFill style={{ color: "#fff" }} />
                   </IconButton>
                 </Tooltip>
               </Link>
             )}
 
             <IconButton
-              edge="end"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
+              edge='end'
+              aria-label='account of current user'
+              aria-controls='menu-appbar'
+              aria-haspopup='true'
               onClick={handleMenuOpen}
-              color="inherit"
+              color='inherit'
             >
               {auth.isLoggedIn ? (
                 <Avatar className={classes.small}>
@@ -204,7 +195,7 @@ const NavBar = () => {
             </IconButton>
           </div>
           <Menu
-            id="menu-appbar"
+            id='menu-appbar'
             anchorEl={anchorEl}
             anchorOrigin={{
               vertical: "bottom",
@@ -222,7 +213,7 @@ const NavBar = () => {
             {renderMenuItems()}
             {!auth.isLoggedIn && (
               <MenuItem onClick={handleCloseMenuOnClick}>
-                <NavLink to="/auth" className="menu-link">
+                <NavLink to='/auth' className='menu-link'>
                   Se connecter
                 </NavLink>
               </MenuItem>
@@ -231,7 +222,7 @@ const NavBar = () => {
               <React.Fragment>
                 <Divider />
                 <MenuItem onClick={handleCloseMenuOnClick}>
-                  <div onClick={auth.logout} className="menu-link">
+                  <div onClick={auth.logout} className='menu-link'>
                     Déconnexion
                   </div>
                 </MenuItem>
@@ -243,10 +234,10 @@ const NavBar = () => {
 
       <StaticNavBar userId={auth.userId} />
       {displaySearchBar && (
-        <AppBar position="static" style={{ backgroundColor: "#222" }}>
-          <div className="mobileSearchBarWrapper">
+        <AppBar position='static' style={{ backgroundColor: "#222" }}>
+          <div className='mobileSearchBarWrapper'>
             <SearchBar
-              placeHolder="Recherche..."
+              placeHolder='Recherche...'
               searchText={searchText}
               handleSearch={handleSearch}
               globalSearch

@@ -1,7 +1,6 @@
 import React from "react";
 
 import Home from "./Home";
-import MarvelChallenge from "./challenge/pages/MarvelChallenge";
 
 const NewBook = React.lazy(() => import("./book/pages/NewBook"));
 const AuthPage = React.lazy(() => import("./user/pages/AuthPage"));
@@ -33,17 +32,6 @@ const routeConfigs = [
     component: Suggestions,
     exact: true,
   },
-  {
-    path: "/challenge2024",
-    component: MarvelChallenge,
-    exact: true,
-  },
-  {
-    path: "/challenge2024",
-    component: MarvelChallenge,
-    exact: true,
-  },
-
   {
     path: "/lists",
     component: BooksLists,
