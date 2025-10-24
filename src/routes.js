@@ -8,6 +8,8 @@ const Book = React.lazy(() => import("./book/pages/Book"));
 const RealPurchaseManager = React.lazy(() =>
   import("./collection/pages/RealPurchaseManager")
 );
+const ListsPage = React.lazy(() => import("./book/pages/ListsPage"));
+const EditListPage = React.lazy(() => import("./book/pages/EditListPage"));
 const BookLibrary = React.lazy(() => import("./book/pages/BookLibrary"));
 const UserLibrary = React.lazy(() => import("./collection/pages/UserLibrary"));
 const SearchBooks = React.lazy(() => import("./book/pages/SearchBooks"));
@@ -19,6 +21,18 @@ const routeConfigs = [
     path: "/",
     component: Home,
     exact: true,
+  },
+  {
+    path: "/lists",
+    component: ListsPage,
+    exact: true,
+    loggedInOnly: true,
+  },
+  {
+    path: "/lists/:listId",
+    component: EditListPage,
+    exact: true,
+    loggedInOnly: true,
   },
   {
     path: "/search",

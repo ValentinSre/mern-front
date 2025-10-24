@@ -8,6 +8,7 @@ import {
   MdOutlineBookmarkAdded,
   MdCollectionsBookmark,
   MdAttachMoney,
+  MdPlaylistAdd,
 } from "react-icons/md";
 import { BsPatchCheckFill, BsPatchPlus } from "react-icons/bs";
 import { RxChatBubble } from "react-icons/rx";
@@ -24,6 +25,7 @@ const BookDetails = ({
   handleWishlist,
   handleRead,
   handleSell,
+  handleAddToList,
 }) => {
   const { possede, souhaite, lu, revendu } = book;
 
@@ -73,6 +75,11 @@ const BookDetails = ({
               <MdAttachMoney
                 style={{ color: book.revendu ? "#4caf50" : "#000" }}
               />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title='Ajouter à une liste' placement='top'>
+            <IconButton onClick={handleAddToList}>
+              <MdPlaylistAdd style={{ color: "#000" }} />
             </IconButton>
           </Tooltip>
         </div>

@@ -1,0 +1,136 @@
+/* =============================
+   GLOBAL LAYOUT
+   ============================= */
+
+body {
+  font-family: "Inter", "Roboto", sans-serif;
+  background: #f8fafc;
+  color: #1e293b;
+  margin: 0;
+  padding: 2rem;
+}
+
+.lists-page {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* =============================
+   HEADER
+   ============================= */
+
+.lists-page h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 1rem;
+}
+
+/* =============================
+   CREATE LIST FORM
+   ============================= */
+
+.create-list-form {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.create-list-form input[type="text"] {
+  flex: 1;
+  min-width: 250px;
+  padding: 0.75rem 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  background-color: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.create-list-form input[type="text"]:focus {
+  border-color: #ffde59;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  outline: none;
+}
+
+.create-list-form button {
+  background-color: #ffde59;
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.create-list-form button:hover {
+  background-color: #d0b32c;
+}
+
+.create-list-form button:active {
+  transform: scale(0.97);
+}
+
+.lists-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+.list-card {
+  background-color: #fff;
+  border-radius: 1rem;
+  padding: 1.25rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.list-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.list-card a {
+  text-decoration: none;
+  color: #0f172a;
+  font-weight: 500;
+  font-size: 1.1rem;
+  display: block;
+  margin-bottom: 0.25rem;
+  transition: color 0.2s;
+}
+
+.list-card a:hover {
+  color: #d0b32c;
+}
+
+.empty-state {
+  text-align: center;
+  color: #64748b;
+  font-style: italic;
+  margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 1rem;
+  }
+
+  .create-list-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .create-list-form button {
+    width: 100%;
+  }
+
+  .lists-container {
+    grid-template-columns: 1fr;
+  }
+}

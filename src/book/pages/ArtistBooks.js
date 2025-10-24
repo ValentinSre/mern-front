@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { Tooltip } from "@material-ui/core";
-
 import { AuthContext } from "../../shared/context/auth-context";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import makeTitle from "../../shared/util/makeTitle";
@@ -38,13 +37,13 @@ const ArtistBooks = () => {
           <div style={{ backgroundColor: "white", borderRadius: "5px" }}>
             {artist.nom}
           </div>
-          <div className="collection-display">
-            <div className="collection-display__books_array">
+          <div className='collection-display'>
+            <div className='collection-display__books_array'>
               {books.map((book) => (
                 <Tooltip title={makeTitle(book)}>
                   <div
                     key={book.id}
-                    className="collection-display__book"
+                    className='collection-display__book'
                     onClick={() => history.push(`/book/${book._id}`)}
                   >
                     <img src={book.image} alt={book.titre} />
