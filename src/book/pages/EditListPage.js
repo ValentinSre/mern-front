@@ -18,6 +18,10 @@ const EditListPage = () => {
   const [coverImage, setCoverImage] = useState("");
   const [books, setBooks] = useState([]);
 
+  const [fadeOwned, setFadeOwned] = useState(false);
+  const [fadeRead, setFadeRead] = useState(false);
+  const [simpleList, setSimpleList] = useState(false);
+
   const history = useHistory();
 
   useEffect(() => {
@@ -45,13 +49,10 @@ const EditListPage = () => {
   const moveBook = (index, direction) => {
     const newBooks = [...books];
     const targetIndex = index + direction;
-
     if (targetIndex < 0 || targetIndex >= books.length) return;
-
     const temp = newBooks[index];
     newBooks[index] = newBooks[targetIndex];
     newBooks[targetIndex] = temp;
-
     setBooks(newBooks);
   };
 
@@ -78,7 +79,7 @@ const EditListPage = () => {
 
   const saveChanges = async () => {
     try {
-      const bookIds = books.map((book) => book._id); // Utiliser _id au lieu de id
+      const bookIds = books.map((book) => book._id);
       const responseData = await sendRequest(
         process.env.REACT_APP_API_URL + `/lists/update/${listId}`,
         "POST",
@@ -93,6 +94,75 @@ const EditListPage = () => {
       console.error("Erreur lors de la sauvegarde de la liste:", error);
     }
   };
+
+  const toggleFadeOwned = () => {
+    setFadeOwned((prev) => !prev);
+    if (fadeRead) setFadeRead(false);
+  };
+
+  const toggleFadeRead = () => {
+    setFadeRead((prev) => !prev);
+    if (fadeOwned) setFadeOwned(false);
+  };
+
+  const toggleSimpleList = () => {
+    setSimpleList((prev) => !prev);
+  };
+
+  const calculateStats = () => {
+    const totalBooks = books.length;
+    const ownedBooks = books.filter((book) => book.collection?.possede).length;
+    const readBooks = books.filter((book) => book.collection?.lu).length;
+
+    const totalPrice = books.reduce((sum, book) => sum + (book.prix || 0), 0);
+    const ownedPrice = books
+      .filter((book) => book.collection?.possede)
+      .reduce((sum, book) => sum + (book.prix || 0), 0);
+
+    const totalWeight =
+      books.reduce((sum, book) => sum + (book.poids || 0), 0) / 1000;
+    const ownedWeight =
+      books
+        .filter((book) => book.collection?.possede)
+        .reduce((sum, book) => sum + (book.poids || 0), 0) / 1000;
+
+    const totalPages = books.reduce(
+      (sum, book) => sum + (book.planches || 0),
+      0
+    );
+    const readPages = books
+      .filter((book) => book.collection?.lu)
+      .reduce((sum, book) => sum + (book.planches || 0), 0);
+
+    return {
+      totalBooks,
+      ownedBooks,
+      readBooks,
+      totalPrice,
+      ownedPrice,
+      totalWeight,
+      ownedWeight,
+      totalPages,
+      readPages,
+      ownedPercentage: totalBooks
+        ? Math.round((ownedBooks / totalBooks) * 100)
+        : 0,
+      readPercentage: totalBooks
+        ? Math.round((readBooks / totalBooks) * 100)
+        : 0,
+      ownedPricePercentage: totalPrice
+        ? Math.round((ownedPrice / totalPrice) * 100)
+        : 0,
+      ownedWeightPercentage: totalWeight
+        ? Math.round((ownedWeight / totalWeight) * 100)
+        : 0,
+      readPagesPercentage: totalPages
+        ? Math.round((readPages / totalPages) * 100)
+        : 0,
+    };
+  };
+
+  const stats = calculateStats();
 
   if (!list) return <div>Chargement...</div>;
 
@@ -123,46 +193,126 @@ const EditListPage = () => {
         )}
       </div>
 
-      <div className='display-books-serie_container'>
+      <div className='filter-buttons'>
+        <button onClick={toggleFadeOwned} className={fadeOwned ? "active" : ""}>
+          Masquer les livres possédés
+        </button>
+        <button onClick={toggleFadeRead} className={fadeRead ? "active" : ""}>
+          Masquer les livres lus
+        </button>
+        <button
+          onClick={toggleSimpleList}
+          className={simpleList ? "active" : ""}
+        >
+          Afficher en liste simple
+        </button>
+      </div>
+
+      <div
+        className={`display-books-serie_container ${
+          simpleList ? "simple-list" : ""
+        }`}
+      >
         <h2>Livres dans la liste</h2>
-        <div className='display-books-serie'>
+        <div
+          className={`display-books-serie ${
+            simpleList ? "horizontal-scroll" : ""
+          }`}
+        >
           {books.map((book, index) => (
             <Tooltip title={makeTitle(book)} placement='top' key={book._id}>
-              <div className='display-books-serie__book'>
+              <div
+                className={`display-books-serie__book ${
+                  (fadeOwned && book.collection?.possede) ||
+                  (fadeRead && book.collection?.lu)
+                    ? "faded"
+                    : ""
+                }`}
+              >
                 <img
                   src={book.image}
                   alt={book.titre}
                   onClick={() => history.push(`/book/${book._id}`)}
                 />
-                <div className='top-right'>
-                  <button
-                    onClick={() => moveBook(index, -1)}
-                    disabled={index === 0}
-                  >
-                    ↑
-                  </button>
-                  <button
-                    onClick={() => moveBook(index, 1)}
-                    disabled={index === books.length - 1}
-                  >
-                    ↓
-                  </button>
-                </div>
-                <div className='bottom-right'>
-                  <button
-                    className='delete'
-                    onClick={() => handleRemoveBook(index)}
-                  >
-                    Supprimer
-                  </button>
-                </div>
+                {!simpleList && (
+                  <div className='top-right'>
+                    <button
+                      onClick={() => moveBook(index, -1)}
+                      disabled={index === 0}
+                    >
+                      ↑
+                    </button>
+                    <button
+                      onClick={() => moveBook(index, 1)}
+                      disabled={index === books.length - 1}
+                    >
+                      ↓
+                    </button>
+                  </div>
+                )}
+                {!simpleList && (
+                  <div className='bottom-right'>
+                    <button
+                      className='delete'
+                      onClick={() => handleRemoveBook(index)}
+                    >
+                      Supprimer
+                    </button>
+                  </div>
+                )}
               </div>
             </Tooltip>
           ))}
         </div>
       </div>
 
-      {/* Boutons de bas de page */}
+      <div className='stats-container'>
+        <div className='stat-item'>
+          <div className='icon'>📚</div>
+          <h3>
+            {stats.ownedBooks}/{stats.totalBooks}
+          </h3>
+          <p>Possédés ({stats.ownedPercentage}%)</p>
+        </div>
+        <div className='stat-item'>
+          <div className='icon'>📖</div>
+          <h3>
+            {stats.readBooks}/{stats.totalBooks}
+          </h3>
+          <p>Lus ({stats.readPercentage}%)</p>
+        </div>
+        <div className='stat-item'>
+          <div className='icon'>💰</div>
+          <h3>{stats.totalPrice.toFixed(2)} €</h3>
+          <p>Prix total</p>
+        </div>
+        <div className='stat-item'>
+          <div className='icon'>🪙</div>
+          <h3>{stats.ownedPrice.toFixed(2)} €</h3>
+          <p>Prix possédé ({stats.ownedPricePercentage}%)</p>
+        </div>
+        <div className='stat-item'>
+          <div className='icon'>⚖️</div>
+          <h3>{stats.totalWeight.toFixed(2)} kg</h3>
+          <p>Poids total</p>
+        </div>
+        <div className='stat-item'>
+          <div className='icon'>📦</div>
+          <h3>{stats.ownedWeight.toFixed(2)} kg</h3>
+          <p>Poids possédé ({stats.ownedWeightPercentage}%)</p>
+        </div>
+        <div className='stat-item'>
+          <div className='icon'>📄</div>
+          <h3>{stats.totalPages}</h3>
+          <p>Planches totales</p>
+        </div>
+        <div className='stat-item'>
+          <div className='icon'>✅</div>
+          <h3>{stats.readPages}</h3>
+          <p>Planches lues ({stats.readPagesPercentage}%)</p>
+        </div>
+      </div>
+
       <div className='action-buttons'>
         <CustomButtons
           buttonType='edit'

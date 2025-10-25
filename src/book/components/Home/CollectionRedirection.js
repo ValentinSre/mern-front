@@ -8,6 +8,7 @@ export const CollectionRedirection = ({ userId }) => {
   const items = [
     { label: "MA COLLECTION", route: `/${userId}/collection`, icon: "📚" },
     { label: "MES LECTURES", route: `/${userId}/readlist`, icon: "📖" },
+    { label: "MES LISTES", route: `/${userId}/lists`, icon: "📝" },
     { label: "MES ACHATS", route: `/${userId}/real-purchase`, icon: "💰" },
     { label: "MA LISTE D'ACHAT", route: `/${userId}/wishlist`, icon: "🎁" },
     { label: "MES SORTIES", route: `/${userId}/releases`, icon: "🗓️" },
