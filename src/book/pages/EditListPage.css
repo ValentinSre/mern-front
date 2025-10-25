@@ -1,20 +1,4 @@
-body {
-  font-family: "Inter", "Roboto", sans-serif;
-  background: #f8fafc;
-  color: #1e293b;
-  margin: 0;
-  padding: 2rem;
-}
 
-h1, h2 {
-  font-weight: 600;
-  color: #0f172a;
-  margin-bottom: 1rem;
-}
-
-h1 {
-  font-size: 2rem;
-}
 
 .edit-list {
   font-family: "Inter", "Roboto", sans-serif;

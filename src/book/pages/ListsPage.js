@@ -1,14 +1,17 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import { AuthContext } from "../../shared/context/auth-context";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import "./ListsPage.css";
+import { Tooltip } from "@material-ui/core";
 
 const ListsPage = () => {
   const { sendRequest } = useHttpClient();
   const auth = useContext(AuthContext);
   const [lists, setLists] = useState([]);
   const [newListName, setNewListName] = useState("");
+
+  const history = useHistory();
 
   useEffect(() => {
     const fetchLists = async () => {
@@ -66,13 +69,27 @@ const ListsPage = () => {
         <div className='empty-state'>Aucune liste pour le moment.</div>
       ) : (
         <div className='lists-container'>
-          {lists.map((list) => (
-            <Link to={`/lists/${list._id}`}>
-              <div className='list-card' key={list._id}>
-                {list.name}
+          {lists
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .map((list) => (
+              <div
+                className='list-card'
+                key={list._id}
+                onClick={() => history.push(`/lists/${list._id}`)}
+              >
+                {list.coverImage ? (
+                  <Tooltip title={list.name}>
+                    <img
+                      src={list.coverImage}
+                      alt={list.name}
+                      className='list-card__cover'
+                    />
+                  </Tooltip>
+                ) : (
+                  <div className='list-card__no-cover'>{list.name}</div>
+                )}
               </div>
-            </Link>
-          ))}
+            ))}
         </div>
       )}
     </div>

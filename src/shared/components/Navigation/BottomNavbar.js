@@ -54,18 +54,17 @@ const BottomNavbar = () => {
         <React.Fragment>
           <NavLink to='/home' className='navbar-item' activeClassName='active'>
             <HomeIcon className='icon' />
-            {/* <span>ACCUEIL</span> */}
           </NavLink>
 
           <NavLink to='/books' className='navbar-item'>
             <CollectionsBookmarkIcon className='icon' />
-            {/* <span>BIBLIO</span> */}
           </NavLink>
 
-          <NavLink to='/lists' className='navbar-item'>
-            <FormatListBulletedIcon className='icon' />
-            {/* <span>Listes</span> */}
-          </NavLink>
+          {auth.isLoggedIn && (
+            <NavLink to='/lists' className='navbar-item'>
+              <FormatListBulletedIcon className='icon' />
+            </NavLink>
+          )}
 
           {auth.isAdmin && (
             <NavLink to='/book/new' className='navbar-add'>
