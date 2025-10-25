@@ -60,6 +60,22 @@ const EditListPage = () => {
     setBooks(updatedBooks);
   };
 
+  const deleteList = async () => {
+    try {
+      await sendRequest(
+        process.env.REACT_APP_API_URL + `/lists/${listId}`,
+        "DELETE",
+        null,
+        {
+          Authorization: "Bearer " + auth.token,
+        }
+      );
+      history.push("/lists");
+    } catch (error) {
+      console.error("Erreur lors de la suppression de la liste:", error);
+    }
+  };
+
   const saveChanges = async () => {
     try {
       const bookIds = books.map((book) => book._id); // Utiliser _id au lieu de id
@@ -156,7 +172,7 @@ const EditListPage = () => {
         <CustomButtons
           buttonType='delete'
           title='Supprimer'
-          onClick={console.log("TODO: Supprimer la liste")}
+          onClick={deleteList}
         />
       </div>
     </div>
