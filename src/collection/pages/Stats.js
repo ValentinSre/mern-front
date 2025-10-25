@@ -265,13 +265,42 @@ const Stats = () => {
       return Number(moisA) - Number(moisB);
     });
 
+    const doesRealPriceExist = (monthYear) => {
+      // couper  la chaîne monthYear en mois et année
+      const [month, year] = monthYear.split("/");
+      if (year < 2024) {
+        return false;
+      } else {
+        if (year > 2024) {
+          return true;
+        } else {
+          if (month < 5) {
+            return false;
+          } else {
+            return true;
+          }
+        }
+      }
+    };
+
     // Calculate the price of books bought each month since the beginning (AmountEvolution)
+    console.log(boughtBooksByMonth);
     for (const monthYear in boughtBooksByMonth) {
       let total = 0;
+      let realTotal = 0;
       boughtBooksByMonth[monthYear].forEach((book) => {
         total += book.prix;
+        if (doesRealPriceExist(monthYear)) {
+          realTotal += book.real_price || 0;
+          realTotal += book.shipping_cost / (book.bought_with?.length + 1) || 0;
+        } else {
+          realTotal += book.prix;
+        }
       });
-      areaChartArray.push({ date: monthYear, total: total });
+
+      total = total.toFixed(2);
+      realTotal = realTotal.toFixed(2);
+      areaChartArray.push({ date: monthYear, total, realTotal });
     }
     areaChartArray.sort((a, b) => {
       const [moisA, anneeA] = a.date.split("/");
@@ -283,6 +312,7 @@ const Stats = () => {
 
       return Number(moisA) - Number(moisB);
     });
+    console.log(areaChartArray);
 
     // Calculate the number of books read and the number of pages read each month separately (ReadBooksByMonthComparison)
     for (const monthYear in readBooksByMonth) {
