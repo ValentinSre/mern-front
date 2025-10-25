@@ -138,7 +138,7 @@ const DisplayBook = ({ book: initialBook }) => {
   const handleAddToList = async (bookIds, listName) => {
     try {
       const requestData = await sendRequest(
-        process.env.REACT_APP_API_URL + "/lists//add",
+        process.env.REACT_APP_API_URL + "/lists/add",
         "POST",
         JSON.stringify({
           ids_book: bookIds,
@@ -301,7 +301,7 @@ const DisplayBook = ({ book: initialBook }) => {
                     <Button
                       variant='contained'
                       color='primary'
-                      onClick={() => handleAddToExistingList(list._id)}
+                      onClick={() => handleAddToList(list._id)}
                     >
                       {list.name}
                     </Button>
