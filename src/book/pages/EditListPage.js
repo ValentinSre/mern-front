@@ -20,7 +20,7 @@ const EditListPage = () => {
 
   const [fadeOwned, setFadeOwned] = useState(false);
   const [fadeRead, setFadeRead] = useState(false);
-  const [simpleList, setSimpleList] = useState(false);
+  const [simpleList, setSimpleList] = useState(true);
 
   const history = useHistory();
 
@@ -204,7 +204,7 @@ const EditListPage = () => {
           onClick={toggleSimpleList}
           className={simpleList ? "active" : ""}
         >
-          Afficher en liste simple
+          {simpleList ? "Modifier l'ordre" : "Afficher uniquement"}
         </button>
       </div>
 
