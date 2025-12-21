@@ -13,6 +13,7 @@ import ReadEvolution from "../components/StatsComponents/ReadEvolution";
 import ProportionOfEachType from "../components/StatsComponents/ProportionOfEachType";
 import ReadUnreadByTypes from "../components/StatsComponents/ReadUnreadByTypes";
 import StatsLineFrames from "../components/StatsComponents/StatsLineFrames";
+import Modal from "../../shared/components/UIElements/Modal";
 
 import "./Stats.css";
 
@@ -360,6 +361,52 @@ const Stats = () => {
 
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [showYearStats, setShowYearStats] = useState(false);
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+
+  const openYearStats = () => setShowYearStats(true);
+  const closeYearStats = () => setShowYearStats(false);
+
+  const calculateYearStats = (year) => {
+    const stats = {
+      Manga: { read: 0, pages: 0, bought: 0 },
+      Comics: { read: 0, pages: 0, bought: 0 },
+      Roman: { read: 0, pages: 0, bought: 0 },
+      BD: { read: 0, pages: 0, bought: 0 },
+      total: { read: 0, pages: 0, bought: 0 },
+    };
+
+    if (!loadedCollection) {
+      return stats;
+    }
+
+    loadedCollection.forEach((book) => {
+      const readDates = book.read_dates || [];
+      const boughtYear = book.date_achat
+        ? new Date(book.date_achat).getFullYear()
+        : null;
+
+      if (readDates.some((date) => new Date(date).getFullYear() === year)) {
+        stats[book.type].read++;
+        stats[book.type].pages += book.planches || 0;
+        stats.total.read++;
+        stats.total.pages += book.planches || 0;
+      }
+
+      if (boughtYear === year) {
+        stats[book.type].bought++;
+        stats.total.bought++;
+      }
+    });
+
+    return stats;
+  };
+
+  const yearStats = calculateYearStats(selectedYear);
+
+  const handleYearChange = (event) => {
+    setSelectedYear(Number(event.target.value));
+  };
 
   const collectionStatsData = [
     {
@@ -431,6 +478,35 @@ const Stats = () => {
       )}
       {!isLoading && loadedCollection && (
         <div className='collection'>
+          <div className='year-stats-button-container'>
+            <select
+              id='year'
+              value={selectedYear}
+              onChange={handleYearChange}
+              className='year-selector'
+            >
+              {loadedCollection &&
+                Array.from(
+                  new Set(
+                    loadedCollection
+                      .map((book) => {
+                        const date = book.date_achat || book.read_dates?.[0];
+                        return date ? new Date(date).getFullYear() : null;
+                      })
+                      .filter((year) => year !== null) // Filtrer les valeurs nulles
+                  )
+                )
+                  .sort((a, b) => b - a)
+                  .map((year) => (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  ))}
+            </select>
+            <button onClick={openYearStats} className='year-stats-button'>
+              Voir les stats
+            </button>
+          </div>
           <StatsLineFrames
             calculateStats={calculateStats}
             readBooksByMonthArray={readBooksByMonthArray}
@@ -461,6 +537,46 @@ const Stats = () => {
               )}
             </div>
           </div>
+          <div className='year-selector'>
+            <button onClick={openYearStats} className='year-stats-button'>
+              Voir les stats de {selectedYear}
+            </button>
+          </div>
+
+          <Modal
+            show={showYearStats}
+            onCancel={closeYearStats}
+            header={
+              <button onClick={closeYearStats} className='close-button'>
+                ×
+              </button>
+            }
+          >
+            <div className='year-stats-table-container'>
+              <table className='year-stats-table'>
+                <thead>
+                  <tr>
+                    <th>Catégorie</th>
+                    <th>Livres lus</th>
+                    <th>Pages lues</th>
+                    <th>Livres achetés</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {["BD", "Comics", "Manga", "Roman", "total"].map(
+                    (category) => (
+                      <tr key={category}>
+                        <td>{category}</td>
+                        <td>{yearStats[category]?.read || 0}</td>
+                        <td>{yearStats[category]?.pages || 0}</td>
+                        <td>{yearStats[category]?.bought || 0}</td>
+                      </tr>
+                    )
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </Modal>
         </div>
       )}
     </React.Fragment>

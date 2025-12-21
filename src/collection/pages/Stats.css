@@ -129,3 +129,70 @@
   width: 8px;
   height: 8px;
 }
+
+.year-stats-table-container {
+  margin: 20px 0;
+  overflow-x: auto;
+}
+
+.year-stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 16px;
+}
+
+.year-stats-table th,
+.year-stats-table td {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+}
+
+.year-stats-table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+.year-stats-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.year-stats-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.year-stats-button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+.year-stats-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.year-stats-button:hover {
+  background-color: #0056b3;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.close-button:hover {
+  color: #000;
+}
