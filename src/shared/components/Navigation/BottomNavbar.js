@@ -61,7 +61,7 @@ const BottomNavbar = () => {
           </NavLink>
 
           {auth.isLoggedIn && (
-            <NavLink to='/lists' className='navbar-item'>
+            <NavLink to='/suggestions' className='navbar-item'>
               <FormatListBulletedIcon className='icon' />
             </NavLink>
           )}
