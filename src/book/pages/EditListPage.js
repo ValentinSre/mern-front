@@ -4,7 +4,8 @@ import { AuthContext } from "../../shared/context/auth-context";
 import { useParams, useHistory } from "react-router-dom";
 import makeTitle from "../../shared/util/makeTitle";
 import "../../book/components/DisplayBooksSerie.css";
-import { Tooltip } from "@material-ui/core";
+import { IconButton, Tooltip } from "@material-ui/core";
+import SearchIcon from "@material-ui/icons/Search";
 
 import "./EditListPage.css";
 import CustomButtons from "../../shared/components/UIElements/CustomButtons";
@@ -22,8 +23,17 @@ const EditListPage = () => {
   const [fadeRead, setFadeRead] = useState(false);
   const [simpleList, setSimpleList] = useState(true);
 
-  const history = useHistory();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
 
+  const [sortOption, setSortOption] = useState("title-asc");
+
+  const [showImageInput, setShowImageInput] = useState(!coverImage);
+
+  const [isModified, setIsModified] = useState(false);
+
+  const history = useHistory();
+  console.log(isModified);
   useEffect(() => {
     const fetchList = async () => {
       try {
@@ -33,7 +43,7 @@ const EditListPage = () => {
           null,
           {
             Authorization: "Bearer " + auth.token,
-          }
+          },
         );
         setList(responseData);
         setBooks(responseData.books);
@@ -54,11 +64,25 @@ const EditListPage = () => {
     newBooks[index] = newBooks[targetIndex];
     newBooks[targetIndex] = temp;
     setBooks(newBooks);
+    setIsModified(true);
   };
 
   const handleRemoveBook = (index) => {
     const updatedBooks = books.filter((_, i) => i !== index);
     setBooks(updatedBooks);
+  };
+
+  const getSortedResults = () => {
+    const sorted = [...searchResults];
+
+    switch (sortOption) {
+      case "title-asc":
+        return sorted.sort((a, b) => a.titre.localeCompare(b.titre));
+      case "title-desc":
+        return sorted.sort((a, b) => b.titre.localeCompare(a.titre));
+      default:
+        return sorted;
+    }
   };
 
   const deleteList = async () => {
@@ -69,7 +93,7 @@ const EditListPage = () => {
         null,
         {
           Authorization: "Bearer " + auth.token,
-        }
+        },
       );
       history.push("/lists");
     } catch (error) {
@@ -87,9 +111,10 @@ const EditListPage = () => {
         {
           "Content-Type": "application/json",
           Authorization: "Bearer " + auth.token,
-        }
+        },
       );
       setList(responseData);
+      setIsModified(false);
     } catch (error) {
       console.error("Erreur lors de la sauvegarde de la liste:", error);
     }
@@ -107,6 +132,10 @@ const EditListPage = () => {
 
   const toggleSimpleList = () => {
     setSimpleList((prev) => !prev);
+  };
+
+  const toggleImageInput = () => {
+    setShowImageInput((prev) => !prev);
   };
 
   const calculateStats = () => {
@@ -128,7 +157,7 @@ const EditListPage = () => {
 
     const totalPages = books.reduce(
       (sum, book) => sum + (book.planches || 0),
-      0
+      0,
     );
     const readPages = books
       .filter((book) => book.collection?.lu)
@@ -162,7 +191,46 @@ const EditListPage = () => {
     };
   };
 
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) return;
+    try {
+      const responseData = await sendRequest(
+        `${process.env.REACT_APP_API_URL}/book/search?q=${searchQuery}`,
+        "GET",
+        null,
+        {
+          Authorization: "Bearer " + auth.token,
+        },
+      );
+      if (responseData && responseData.booksByTitle) {
+        setSearchResults(responseData.booksByTitle);
+      } else {
+        setSearchResults([]);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la recherche de livres:", error);
+      setSearchResults([]);
+    }
+  };
+
+  const addBookToList = (book) => {
+    if (!books.some((b) => b._id === book._id)) {
+      setBooks((prevBooks) => [...prevBooks, book]);
+      setIsModified(true);
+    }
+  };
+
   const stats = calculateStats();
+
+  const handleNameChange = (value) => {
+    setName(value);
+    setIsModified(true);
+  };
+
+  const handleImageChange = (value) => {
+    setCoverImage(value);
+    setIsModified(true);
+  };
 
   if (!list) return <div>Chargement...</div>;
 
@@ -175,23 +243,35 @@ const EditListPage = () => {
           <input
             type='text'
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => handleNameChange(e.target.value)}
             placeholder='Nom de la liste'
           />
-          <input
-            type='text'
-            value={coverImage}
-            onChange={(e) => setCoverImage(e.target.value)}
-            placeholder="URL de l'image de couverture"
-          />
+          {showImageInput && (
+            <input
+              type='text'
+              value={coverImage}
+              onChange={(e) => handleImageChange(e.target.value)}
+              placeholder="URL de l'image de couverture"
+            />
+          )}
         </div>
 
         {coverImage && (
-          <div className='cover-preview'>
+          <div
+            className='cover-preview'
+            onClick={toggleImageInput}
+            style={{ cursor: "pointer" }}
+          >
             <img src={coverImage} alt='Aperçu de la couverture' />
           </div>
         )}
       </div>
+
+      {isModified && (
+        <p className='unsaved-alert'>
+          🚨 Modification(s) non sauvegardée(s) 🚨
+        </p>
+      )}
 
       <div className='filter-buttons'>
         <button onClick={toggleFadeOwned} className={fadeOwned ? "active" : ""}>
@@ -266,6 +346,20 @@ const EditListPage = () => {
         </div>
       </div>
 
+      <div className='action-buttons'>
+        <CustomButtons
+          buttonType='edit'
+          title='Sauvegarder'
+          onClick={saveChanges}
+          disabled={!isModified}
+        />
+        <CustomButtons
+          buttonType='delete'
+          title='Supprimer'
+          onClick={deleteList}
+        />
+      </div>
+
       <div className='stats-container'>
         <div className='stat-item'>
           <div className='icon'>📚</div>
@@ -313,17 +407,77 @@ const EditListPage = () => {
         </div>
       </div>
 
-      <div className='action-buttons'>
-        <CustomButtons
-          buttonType='edit'
-          title='Sauvegarder'
-          onClick={saveChanges}
-        />
-        <CustomButtons
-          buttonType='delete'
-          title='Supprimer'
-          onClick={deleteList}
-        />
+      <div className='search-section'>
+        <h2>Ajouter des livres</h2>
+
+        <div className='search-controls'>
+          <div className='search-bar'>
+            <input
+              type='text'
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+              placeholder='Rechercher un titre...'
+              className='search-input'
+            />
+            <IconButton
+              onClick={handleSearch}
+              type='button'
+              sx={{ p: "10px" }}
+              aria-label='search'
+            >
+              <SearchIcon />
+            </IconButton>
+          </div>
+
+          <select
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value)}
+            className='sort-select'
+          >
+            <option value='title-asc'>Titre A → Z</option>
+            <option value='title-desc'>Titre Z → A</option>
+          </select>
+        </div>
+
+        <div className='search-results'>
+          {getSortedResults().length === 0 && (
+            <p className='no-results'>Aucun résultat</p>
+          )}
+
+          {getSortedResults().map((book) => {
+            const alreadyAdded = books.some((b) => b._id === book._id);
+
+            return (
+              <div key={book._id} className='search-result-card'>
+                <img
+                  src={book.image}
+                  alt={book.titre}
+                  className='result-image'
+                />
+
+                <div className='result-info'>
+                  <span className='result-title'>{makeTitle(book)}</span>
+
+                  <span className='result-price'>
+                    {book.prix ? `${book.prix.toFixed(2)} €` : ""}
+                  </span>
+                </div>
+
+                {alreadyAdded ? (
+                  <span className='already-added'>✓ Déjà ajouté</span>
+                ) : (
+                  <button
+                    onClick={() => addBookToList(book)}
+                    className='add-button-list'
+                  >
+                    + Ajouter
+                  </button>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
