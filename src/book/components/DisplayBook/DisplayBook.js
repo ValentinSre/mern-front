@@ -39,7 +39,7 @@ const DisplayBook = ({ book: initialBook }) => {
         null,
         {
           Authorization: "Bearer " + auth.token,
-        }
+        },
       );
       setLists(responseData);
     } catch (err) {
@@ -85,7 +85,7 @@ const DisplayBook = ({ book: initialBook }) => {
         {
           "Content-Type": "application/json",
           Authorization: "Bearer " + auth.token,
-        }
+        },
       );
 
       const { success } = responseData;
@@ -113,7 +113,7 @@ const DisplayBook = ({ book: initialBook }) => {
         {
           "Content-Type": "application/json",
           Authorization: "Bearer " + auth.token,
-        }
+        },
       );
 
       const { success } = responseData;
@@ -150,7 +150,7 @@ const DisplayBook = ({ book: initialBook }) => {
         {
           "Content-Type": "application/json",
           Authorization: "Bearer " + auth.token,
-        }
+        },
       );
 
       setBook(requestData.book);
@@ -177,7 +177,7 @@ const DisplayBook = ({ book: initialBook }) => {
         null,
         {
           Authorization: "Bearer " + auth.token,
-        }
+        },
       );
 
       history.push("/books");
@@ -193,7 +193,7 @@ const DisplayBook = ({ book: initialBook }) => {
         {
           "Content-Type": "application/json",
           Authorization: "Bearer " + auth.token,
-        }
+        },
       );
       setOpenListModal(false);
     } catch (err) {
@@ -210,7 +210,7 @@ const DisplayBook = ({ book: initialBook }) => {
         {
           "Content-Type": "application/json",
           Authorization: "Bearer " + auth.token,
-        }
+        },
       );
       setLists([...lists, responseData]);
       setNewListName("");
@@ -241,14 +241,20 @@ const DisplayBook = ({ book: initialBook }) => {
         handleChange={(e) => setDateLecture(e.target.value)}
         handleSubmit={handleAddToReadlist}
       />
-      <BookDetails
-        book={book}
-        handleCollection={handleOpenCollectionModal}
-        handleWishlist={handleAddToWishlist}
-        handleRead={handleOpenReadModal}
-        handleSell={handleRemoveFromCollection}
-        handleAddToList={handleOpenListModal}
-      />
+
+      <div className='book-details-page'>
+        <div className='book-details-card'>
+          <BookDetails
+            book={book}
+            handleCollection={handleOpenCollectionModal}
+            handleWishlist={handleAddToWishlist}
+            handleRead={handleOpenReadModal}
+            handleSell={handleRemoveFromCollection}
+            handleAddToList={handleOpenListModal}
+          />
+        </div>
+      </div>
+
       <EditBookDialog
         open={openEditDialog}
         handleCloseDialog={handleCloseEditDialog}
@@ -258,73 +264,11 @@ const DisplayBook = ({ book: initialBook }) => {
         <React.Fragment>
           <div className='book-details__admin'>
             <CustomButtons
-              buttonType='edit'
-              title='Modifier'
-              onClick={handleBookEdition}
-            />
-            <CustomButtons
-              buttonType='delete'
-              title='Supprimer'
-              onClick={handleBookDeletion}
+              addBook={handleBookEdition}
+              deleteBook={handleBookDeletion}
+              editBook={handleBookEdition}
             />
           </div>
-        </React.Fragment>
-      )}
-      {auth.isLoggedIn && (
-        <React.Fragment>
-          <CustomButtons
-            buttonType='add'
-            title='Ajouter à une liste'
-            onClick={handleOpenListModal}
-          />
-          <Modal open={openListModal} onClose={() => setOpenListModal(false)}>
-            <Box
-              sx={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                width: 400,
-                bgcolor: "background.paper",
-                border: "2px solid #000",
-                boxShadow: 24,
-                borderRadius: "10px",
-                p: 4,
-              }}
-            >
-              <Typography variant='h6' component='h2'>
-                Ajouter à une liste
-              </Typography>
-              <ul>
-                {lists.map((list) => (
-                  <li key={list._id}>
-                    <Button
-                      variant='contained'
-                      color='primary'
-                      onClick={() => handleAddToExistingList(list._id)}
-                    >
-                      {list.name}
-                    </Button>
-                  </li>
-                ))}
-              </ul>
-              <TextField
-                fullWidth
-                label='Nom de la nouvelle liste'
-                value={newListName}
-                onChange={(e) => setNewListName(e.target.value)}
-                style={{ marginTop: "10px" }}
-              />
-              <Button
-                variant='contained'
-                color='secondary'
-                onClick={handleCreateList}
-                style={{ marginTop: "10px" }}
-              >
-                Créer une liste
-              </Button>
-            </Box>
-          </Modal>
         </React.Fragment>
       )}
     </React.Fragment>
@@ -332,10 +276,7 @@ const DisplayBook = ({ book: initialBook }) => {
 };
 
 DisplayBook.propTypes = {
-  book: PropTypes.shape({
-    image: PropTypes.string.isRequired,
-    titre: PropTypes.string.isRequired,
-  }).isRequired,
+  book: PropTypes.object.isRequired,
 };
 
 export default DisplayBook;

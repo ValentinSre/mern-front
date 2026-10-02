@@ -5,8 +5,8 @@ import Home from "./Home";
 const NewBook = React.lazy(() => import("./book/pages/NewBook"));
 const AuthPage = React.lazy(() => import("./user/pages/AuthPage"));
 const Book = React.lazy(() => import("./book/pages/Book"));
-const RealPurchaseManager = React.lazy(() =>
-  import("./collection/pages/RealPurchaseManager")
+const RealPurchaseManager = React.lazy(
+  () => import("./collection/pages/RealPurchaseManager"),
 );
 const ListsPage = React.lazy(() => import("./book/pages/ListsPage"));
 const EditListPage = React.lazy(() => import("./book/pages/EditListPage"));
@@ -108,6 +108,24 @@ const routeConfigs = [
     component: AuthPage,
     exact: true,
     loggedInOnly: false,
+  },
+  {
+    path: "/readlist",
+    component: UserLibrary,
+    exact: true,
+    loggedInOnly: true,
+  },
+  {
+    path: "/wishlist",
+    component: UserLibrary,
+    exact: true,
+    loggedInOnly: true,
+  },
+  {
+    path: "/releases",
+    component: UserLibrary,
+    exact: true,
+    loggedInOnly: true,
   },
 ];
 

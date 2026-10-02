@@ -62,6 +62,15 @@ const UserLibrary = () => {
       case `/${auth.userId}/stats`:
         setSelectedTab(4);
         break;
+      case "/readlist":
+        setSelectedTab(1);
+        break;
+      case "/wishlist":
+        setSelectedTab(2);
+        break;
+      case "/releases":
+        setSelectedTab(3);
+        break;
       default:
         setSelectedTab(0);
         break;
@@ -70,43 +79,43 @@ const UserLibrary = () => {
 
   return (
     <div style={{ marginTop: "40px" }}>
-      <AppBar position="static" className={classes.appBar}>
+      <AppBar position='static' className={classes.appBar}>
         <Tabs
           value={selectedTab}
           onChange={handleTabChange}
           className={classes.tabs}
-          indicatorColor="#fff"
+          indicatorColor='#fff'
           centered={!isMobile}
           variant={isMobile ? "scrollable" : "standard"}
         >
           <Tab
             component={Link}
             to={`/${auth.userId}/collection`}
-            label="Mes livres"
+            label='Mes livres'
             className={selectedTab === 0 ? classes.selectedTab : ""}
           />
           <Tab
             component={Link}
             to={`/${auth.userId}/readlist`}
-            label="Mes lectures"
+            label='Mes lectures'
             className={selectedTab === 1 ? classes.selectedTab : ""}
           />
           <Tab
             component={Link}
             to={`/${auth.userId}/wishlist`}
-            label="Mes souhaits"
+            label='Mes souhaits'
             className={selectedTab === 2 ? classes.selectedTab : ""}
           />
           <Tab
             component={Link}
             to={`/${auth.userId}/releases`}
-            label="Mes sorties"
+            label='Mes sorties'
             className={selectedTab === 3 ? classes.selectedTab : ""}
           />
           <Tab
             component={Link}
             to={`/${auth.userId}/stats`}
-            label="Mes statistiques"
+            label='Mes statistiques'
             className={selectedTab === 4 ? classes.selectedTab : ""}
           />
         </Tabs>

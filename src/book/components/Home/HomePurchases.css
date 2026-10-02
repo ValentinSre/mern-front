@@ -1,0 +1,281 @@
+.home-purchases-container {
+  width: 100%;
+  margin-top: 18px;
+  padding: 8px 0 12px;
+}
+
+/* =============================
+   HEADER
+   ============================= */
+
+.purchase-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+  margin-bottom: 14px;
+}
+
+.purchase-header > div:first-child {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.purchase-month {
+  margin: 15px 0 0 15px;
+  color: #5c5c5c;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+/* =============================
+   MANAGE LINK
+   ============================= */
+
+.purchase-manage-link {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 6px;
+  margin: 0 15px 0 0;
+  padding-bottom: 0;
+  color: #111111;
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.purchase-manage-link span {
+  font-size: 1rem;
+  transition: transform 0.2s ease;
+}
+
+.purchase-manage-link:hover {
+  opacity: 0.65;
+}
+
+.purchase-manage-link:hover span {
+  transform: translateX(3px);
+}
+
+/* =============================
+   BOOK LIST
+   ============================= */
+
+.purchase-list {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 18px;
+  overflow-x: auto;
+  padding: 10px 2px 12px;
+  margin-left: 15px;
+  scrollbar-width: none;
+}
+
+.purchase-list::-webkit-scrollbar {
+  display: none;
+}
+
+.purchase-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 140px;
+  max-width: 140px;
+  cursor: pointer;
+}
+
+.purchase-cover {
+  position: relative;
+  width: 140px;
+}
+
+.purchase-image {
+  display: block;
+  width: 140px;
+  height: 204px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 16px 25px rgba(17, 17, 17, 0.12);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.purchase-item:hover .purchase-image {
+  transform: translateY(-2px);
+  box-shadow: 0 22px 28px rgba(17, 17, 17, 0.18);
+}
+
+/* =============================
+   PURCHASE DATE
+   ============================= */
+
+.purchase-date {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  left: auto;
+  padding: 5px 8px;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.94);
+  color: #111111;
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+/* =============================
+   BOOK INFO
+   ============================= */
+
+.purchase-info {
+  width: 100%;
+  text-align: left;
+}
+
+.purchase-title {
+  margin: 0;
+  padding-top: 4px;
+  padding-bottom: 5px;
+  color: #111111;
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.purchase-type {
+  display: inline-block;
+  margin: 6px 0 0;
+  padding: 3px 7px;
+  border: 1px solid rgba(17, 17, 17, 0.12);
+  border-radius: 5px;
+  background: rgba(17, 17, 17, 0.06);
+  color: #555555;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+/* =============================
+   TABLET
+   ============================= */
+
+@media (min-width: 641px) and (max-width: 980px) {
+  .purchase-header {
+    gap: 10px;
+  }
+
+  .purchase-manage-link {
+    margin-right: 10px;
+    font-size: 0.75rem;
+  }
+
+  .purchase-item {
+    min-width: 130px;
+    max-width: 130px;
+  }
+
+  .purchase-cover {
+    width: 130px;
+  }
+
+  .purchase-image {
+    width: 130px;
+    height: 190px;
+  }
+}
+
+/* =============================
+   MOBILE
+   ============================= */
+
+@media (max-width: 640px) {
+  .home-purchases-container {
+    margin-top: 14px;
+    padding: 6px 0 10px;
+  }
+
+  .purchase-header {
+    align-items: flex-end;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .purchase-header > div:first-child {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  .purchase-month {
+    margin: 15px 0 0 15px;
+    font-size: 0.68rem;
+    line-height: 1.2;
+  }
+
+  .purchase-manage-link {
+    flex-shrink: 0;
+    margin-right: 8px;
+    gap: 4px;
+    font-size: 0.7rem;
+    line-height: 1.2;
+  }
+
+  .purchase-manage-link span {
+    font-size: 0.9rem;
+  }
+
+  /* =============================
+     BOOK LIST
+     ============================= */
+
+  .purchase-list {
+    gap: 14px;
+    padding-top: 8px;
+  }
+
+  .purchase-item {
+    min-width: 112px;
+    max-width: 112px;
+    gap: 8px;
+  }
+
+  .purchase-cover {
+    width: 112px;
+  }
+
+  .purchase-image {
+    width: 112px;
+    height: 164px;
+    border-radius: 10px;
+  }
+
+  .purchase-date {
+    top: 7px;
+    right: 7px;
+    padding: 4px 6px;
+    font-size: 0.6rem;
+  }
+
+  .purchase-title {
+    font-size: 0.74rem;
+  }
+
+  .purchase-type {
+    margin-top: 4px;
+    font-size: 0.56rem;
+  }
+}

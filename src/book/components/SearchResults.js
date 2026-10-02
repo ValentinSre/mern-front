@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const DisplayResultCategory = ({ titles, series, artists }) => {
+const DisplayResultCategory = ({ titles, artists }) => {
   if (titles) {
     const nbTitles = titles.length;
     return nbTitles > 1
@@ -45,9 +45,8 @@ const DisplayBooksByTitle = ({ titles }) => {
     <div className='results-display'>
       <div className='results-display__books_array'>
         {titles.map((book) => (
-          <Tooltip title={makeTitle(book)}>
+          <Tooltip key={book.id || book._id} title={makeTitle(book)}>
             <div
-              key={book.id}
               className='results-display__book'
               onClick={() => history.push(`/book/${book._id}`)}
             >
@@ -67,33 +66,40 @@ const SearchResults = ({ titles, artists }) => {
   return (
     <div className={classes.root}>
       <div className='search-results'>
-        <h1>Résultats</h1>
+        <div className='search-results__header'>
+          <h1>Résultats</h1>
+          <div className='search-results__count'>
+            {(titles?.length || 0) + (artists?.length || 0)} résultats
+          </div>
+        </div>
 
-        {titles.length > 0 && (
+        {titles && titles.length > 0 && (
           <React.Fragment>
-            <Typography className={classes.heading}>Par album</Typography>
-            <Typography className={classes.secondaryHeading}>
-              {" "}
-              {DisplayResultCategory({ titles })}
-            </Typography>
             <section className='search-results-section'>
+              <Typography className='search-results-section__title'>
+                Par album
+              </Typography>
+              <Typography className='search-results-section__sub'>
+                {DisplayResultCategory({ titles })}
+              </Typography>
               <DisplayBooksByTitle titles={titles} />
             </section>
           </React.Fragment>
         )}
 
-        {artists.length > 0 && (
+        {artists && artists.length > 0 && (
           <React.Fragment>
-            <Typography className={classes.secondaryHeading}>
-              {" "}
-              {DisplayResultCategory({ artists })}
-            </Typography>
-            <br />
             <section className='search-results-section'>
+              <Typography className='search-results-section__title'>
+                Par artiste
+              </Typography>
+              <Typography className='search-results-section__sub'>
+                {DisplayResultCategory({ artists })}
+              </Typography>
               <ul className='search-results-list'>
                 {artists.map((artist) => (
                   <li
-                    key={artist.id}
+                    key={artist.id || artist._id}
                     onClick={() => history.push(`/artist/${artist._id}`)}
                   >
                     {artist.nom}

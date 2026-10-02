@@ -18,7 +18,7 @@ const BookLibrary = () => {
   const fetchBooks = async () => {
     try {
       const responseData = await sendRequest(
-        `${process.env.REACT_APP_API_URL}/book?user=${auth.userId}`
+        `${process.env.REACT_APP_API_URL}/book?user=${auth.userId}`,
       );
       setLoadedBooks(responseData.books);
     } catch (err) {}
@@ -37,21 +37,19 @@ const BookLibrary = () => {
           ids_book: bookIds,
           id_user: auth.userId,
           list_name: listName,
-          // add date_achat only if dateObtention is defined
           ...(dateObtention && { date_achat: dateObtention }),
         }),
         {
           "Content-Type": "application/json",
           Authorization: "Bearer " + auth.token,
-        }
+        },
       );
 
       if (responseData.success) {
         history.push(
-          `/${auth.userId}/${listName}?success=${responseData.success}`
+          `/${auth.userId}/${listName}?success=${responseData.success}`,
         );
       }
-      // Refetch the list of books after adding the book to the collection successfully
       await fetchBooks();
     } catch (err) {
       console.log(err);
@@ -67,53 +65,21 @@ const BookLibrary = () => {
   };
 
   const headCells = [
-    {
-      id: "serie",
-      numeric: false,
-      disablePadding: false,
-      label: "Série",
-    },
-    {
-      id: "titre",
-      numeric: false,
-      disablePadding: false,
-      label: "Titre",
-    },
-    {
-      id: "tome",
-      numeric: true,
-      disablePadding: false,
-      label: "Tome",
-    },
-    {
-      id: "editeur",
-      numeric: false,
-      disablePadding: false,
-      label: "Editeur",
-    },
-    {
-      id: "format",
-      numeric: false,
-      disablePadding: false,
-      label: "Format",
-    },
-    {
-      id: "prix",
-      numeric: true,
-      disablePadding: false,
-      label: "Prix",
-    },
+    { id: "serie", numeric: false, disablePadding: false, label: "Série" },
+    { id: "titre", numeric: false, disablePadding: false, label: "Titre" },
+    { id: "tome", numeric: true, disablePadding: false, label: "Tome" },
+    { id: "editeur", numeric: false, disablePadding: false, label: "Editeur" },
+    { id: "format", numeric: false, disablePadding: false, label: "Format" },
+    { id: "prix", numeric: true, disablePadding: false, label: "Prix" },
   ];
 
   const [filterValue, setFilterValue] = useState("all");
+  const [filteredBooks, setFilteredBooks] = useState([]);
+  const [searchText, setSearchText] = useState("");
 
   const handleChangeFilter = (event) => {
     setFilterValue(event.target.value);
   };
-
-  const [filteredBooks, setFilteredBooks] = useState([]);
-
-  const [searchText, setSearchText] = useState("");
 
   useMemo(() => {
     if (loadedBooks) {
@@ -126,10 +92,9 @@ const BookLibrary = () => {
           (book.editeur &&
             book.editeur.toLowerCase().includes(searchText.toLowerCase())) ||
           (book.format &&
-            book.format.toLowerCase().includes(searchText.toLowerCase()))
+            book.format.toLowerCase().includes(searchText.toLowerCase())),
       );
 
-      // Calculate filteredBooks whenever loadedBooks or filterValue changes
       if (filterValue === "all") {
         setFilteredBooks(results);
       } else if (filterValue === "collection") {
@@ -138,7 +103,7 @@ const BookLibrary = () => {
         setFilteredBooks(results.filter((book) => book.souhaite === true));
       } else {
         setFilteredBooks(
-          results.filter((book) => !book.possede && !book.souhaite)
+          results.filter((book) => !book.possede && !book.souhaite),
         );
       }
     }
@@ -150,27 +115,40 @@ const BookLibrary = () => {
 
   return (
     <React.Fragment>
-      <ErrorModal error={error} onClear={clearError} />{" "}
-      {isLoading && (
-        <div className="center">
-          <LoadingSpinner />
+      <ErrorModal error={error} onClear={clearError} />
+
+      <div className='book-library-page'>
+        <div className='book-library-shell'>
+          <div className='book-library-header'>
+            <h1>Catalogue</h1>
+            <span className='header-badge'>Tous les titres</span>
+          </div>
+
+          <div className='book-library-content'>
+            {isLoading && (
+              <div className='center'>
+                <LoadingSpinner />
+              </div>
+            )}
+
+            {!isLoading && loadedBooks && (
+              <div className='book-list'>
+                <BookTable
+                  headCells={headCells}
+                  rows={filteredBooks}
+                  checkbox={auth.isLoggedIn}
+                  handleChangeFilter={handleChangeFilter}
+                  filterValue={filterValue}
+                  searchText={searchText}
+                  handleSearch={handleSearch}
+                  handleAdditionToCollection={handleAddToCollection}
+                  handleAdditionToWishlist={handleAddToWishlist}
+                />
+              </div>
+            )}
+          </div>
         </div>
-      )}
-      {!isLoading && loadedBooks && (
-        <div className="book-list">
-          <BookTable
-            headCells={headCells}
-            rows={filteredBooks}
-            checkbox={auth.isLoggedIn}
-            handleChangeFilter={handleChangeFilter}
-            filterValue={filterValue}
-            searchText={searchText}
-            handleSearch={handleSearch}
-            handleAdditionToCollection={handleAddToCollection}
-            handleAdditionToWishlist={handleAddToWishlist}
-          />
-        </div>
-      )}
+      </div>
     </React.Fragment>
   );
 };

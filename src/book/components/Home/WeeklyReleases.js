@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import makeTitle from "../../../shared/util/makeTitle";
 
@@ -16,12 +16,40 @@ const WEEK_DAYS = {
   0: "Dimanche",
 };
 
-const formalizeDay = (date) => {
-  const formalizedDate = new Date(date);
-  const day = formalizedDate.getDay();
-  const dayNumber = formalizedDate.getDate();
+const getStartOfWeek = (date) => {
+  const result = new Date(date);
+  result.setHours(0, 0, 0, 0);
 
-  return `${WEEK_DAYS[day]} ${dayNumber}`;
+  const day = result.getDay();
+  const daysSinceMonday = day === 0 ? 6 : day - 1;
+
+  result.setDate(result.getDate() - daysSinceMonday);
+
+  return result;
+};
+
+const formatWeekLabel = (weekStart) => {
+  const weekEnd = new Date(weekStart);
+  weekEnd.setDate(weekEnd.getDate() + 6);
+
+  const startDay = weekStart.getDate();
+  const endDay = weekEnd.getDate();
+
+  const startMonth = weekStart.toLocaleDateString("fr-FR", {
+    month: "short",
+  });
+
+  const endMonth = weekEnd.toLocaleDateString("fr-FR", {
+    month: "short",
+  });
+
+  const endYear = weekEnd.getFullYear();
+
+  if (weekStart.getMonth() === weekEnd.getMonth()) {
+    return `${startDay}–${endDay} ${startMonth} ${endYear}`;
+  }
+
+  return `${startDay} ${startMonth} – ${endDay} ${endMonth} ${endYear}`;
 };
 
 const BookItem = ({ book }) => {
@@ -31,18 +59,28 @@ const BookItem = ({ book }) => {
     history.push(`/book/${book.id}`);
   };
 
+  const date = new Date(book.date_parution);
+  const dayName = WEEK_DAYS[date.getDay()].slice(0, 4);
+  const dayNumber = date.getDate();
+
   return (
     <Tooltip title={makeTitle(book)}>
       <div className='calendar_book-item' onClick={openPreview}>
-        <img
-          src={book.image}
-          alt={book.titre}
-          className='calendar_book-image'
-        />
+        <div className='calendar_book-cover'>
+          <img
+            src={book.image}
+            alt={book.titre}
+            className='calendar_book-image'
+          />
+
+          <span className='calendar_book-release-date'>
+            {dayName}. {dayNumber}
+          </span>
+        </div>
+
         <div className='calendar_book-info'>
-          <p className='calendar_book-date'>
-            {formalizeDay(book.date_parution)}
-          </p>
+          <p className='calendar_book-title'>{makeTitle(book)}</p>
+          <p className='calendar_book-type'>{book.type || "Livre"}</p>
         </div>
       </div>
     </Tooltip>
@@ -51,80 +89,84 @@ const BookItem = ({ book }) => {
 
 const WeeklyReleases = ({ books }) => {
   const [expanded, setExpanded] = useState(false);
-  const [currentWeekBooks, setCurrentWeekBooks] = useState([]);
-  const [monthlyBooks, setMonthlyBooks] = useState({});
-
-  const getWeekNumber = (date) => {
-    const d = new Date(date);
-    d.setHours(0, 0, 0, 0);
-    d.setDate(d.getDate() + 3 - ((d.getDay() + 6) % 7));
-    const week1 = new Date(d.getFullYear(), 0, 4);
-    return (
-      1 +
-      Math.round(
-        ((d.getTime() - week1.getTime()) / 86400000 -
-          3 +
-          ((week1.getDay() + 6) % 7)) /
-          7
-      )
-    );
-  };
+  const [displayedWeek, setDisplayedWeek] = useState(null);
+  const [futureWeeks, setFutureWeeks] = useState([]);
 
   const sortBooksByDate = (bookList) =>
-    bookList.sort(
-      (a, b) => new Date(a.date_parution) - new Date(b.date_parution)
+    [...bookList].sort(
+      (a, b) => new Date(a.date_parution) - new Date(b.date_parution),
     );
 
   const groupBooksByWeek = () => {
     const now = new Date();
-    const currentWeek = getWeekNumber(now);
-    const currentYear = now.getFullYear();
-
-    const futureBooks = Object.values(books)
-      .flat()
-      .map((book) => ({
-        ...book,
-        week: getWeekNumber(book.date_parution),
-        year: new Date(book.date_parution).getFullYear(),
-      }))
-      .filter((book) => {
-        const bookDate = new Date(book.date_parution);
-        return (
-          bookDate >= now ||
-          book.year > currentYear ||
-          (book.year === currentYear && book.week >= currentWeek)
-        );
-      });
+    const currentWeekStart = getStartOfWeek(now);
 
     const groupedBooks = {};
-    futureBooks.forEach((book) => {
-      const weekKey = `${book.year}-S${book.week}`;
-      if (!groupedBooks[weekKey]) groupedBooks[weekKey] = [];
-      groupedBooks[weekKey].push(book);
-    });
 
-    Object.keys(groupedBooks).forEach((key) => {
-      groupedBooks[key] = sortBooksByDate(groupedBooks[key]);
-    });
+    Object.values(books)
+      .flat()
+      .forEach((book) => {
+        const bookDate = new Date(book.date_parution);
+        const weekStart = getStartOfWeek(bookDate);
 
-    const sortedWeeks = Object.entries(groupedBooks).sort(([a], [b]) => {
-      const [yearA, weekA] = a.split("-S").map(Number);
-      const [yearB, weekB] = b.split("-S").map(Number);
-      return yearA === yearB ? weekA - weekB : yearA - yearB;
-    });
+        // Ignore uniquement les semaines entièrement passées.
+        if (weekStart < currentWeekStart) {
+          return;
+        }
+
+        const weekKey = weekStart.toISOString().slice(0, 10);
+
+        if (!groupedBooks[weekKey]) {
+          groupedBooks[weekKey] = {
+            start: weekStart,
+            books: [],
+          };
+        }
+
+        groupedBooks[weekKey].books.push(book);
+      });
+
+    const sortedWeeks = Object.values(groupedBooks)
+      .map((week) => ({
+        ...week,
+        books: sortBooksByDate(week.books),
+      }))
+      .sort((a, b) => a.start - b.start);
+
+    const currentWeek = sortedWeeks.find(
+      (week) => week.start.getTime() === currentWeekStart.getTime(),
+    );
+
+    if (currentWeek) {
+      return {
+        displayedWeek: {
+          ...currentWeek,
+          isCurrentWeek: true,
+        },
+        futureWeeks: sortedWeeks.filter(
+          (week) => week.start > currentWeekStart,
+        ),
+      };
+    }
+
+    const firstFutureWeek = sortedWeeks[0];
 
     return {
-      currentWeekBooks: groupedBooks[`${currentYear}-S${currentWeek}`] || [],
-      futureWeeksBooks: Object.fromEntries(
-        sortedWeeks.filter(([key]) => key !== `${currentYear}-S${currentWeek}`)
-      ),
+      displayedWeek: firstFutureWeek
+        ? {
+            ...firstFutureWeek,
+            isCurrentWeek: false,
+          }
+        : null,
+      futureWeeks: sortedWeeks.slice(1),
     };
   };
 
   useEffect(() => {
-    const { currentWeekBooks, futureWeeksBooks } = groupBooksByWeek();
-    setCurrentWeekBooks(currentWeekBooks);
-    setMonthlyBooks(futureWeeksBooks);
+    const { displayedWeek, futureWeeks } = groupBooksByWeek();
+
+    setDisplayedWeek(displayedWeek);
+    setFutureWeeks(futureWeeks);
   }, [books]);
 
   const toggleExpanded = () => setExpanded(!expanded);
@@ -132,39 +174,49 @@ const WeeklyReleases = ({ books }) => {
   return (
     <div className='weekly-releases-container'>
       <div className='calendar_header'>
-        <h2></h2>
-        {/* <h2>Sorties de la semaine</h2> */}
+        <Link to='/releases' className='section-kicker my-releases-link'>
+          <span className='releases-label-default'>Sorties à venir</span>
+          <span className='releases-label-hover'>
+            Mes sorties (wishlist à venir)
+          </span>
+        </Link>
+
         <button className='expand-calendar-btn' onClick={toggleExpanded}>
           {expanded ? "Réduire" : "Voir tout"}
         </button>
       </div>
 
       <div className='releases-list'>
-        <div className='date-section'>
-          <h3 className='release-date'>Cette semaine</h3>
-          <div className='calendar_book-list horizontal-scroll'>
-            {currentWeekBooks.map((book, idx) => (
-              <BookItem key={idx} book={book} />
-            ))}
+        {displayedWeek && (
+          <div className='date-section'>
+            <h3 className='release-date'>
+              {displayedWeek.isCurrentWeek
+                ? "Cette semaine"
+                : `Semaine du ${formatWeekLabel(displayedWeek.start)}`}
+            </h3>
+
+            <div className='calendar_book-list horizontal-scroll'>
+              {displayedWeek.books.map((book) => (
+                <BookItem key={book.id} book={book} />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {expanded &&
-          Object.keys(monthlyBooks).map((weekKey) => {
-            const [year, week] = weekKey.split("-S");
-            return (
-              <div key={weekKey} className='date-section past-release'>
-                <h3 className='release-date'>
-                  Semaine {week} (<i>{year}</i>)
-                </h3>
-                <div className='calendar_book-list horizontal-scroll'>
-                  {monthlyBooks[weekKey].map((book, idx) => (
-                    <BookItem key={idx} book={book} />
-                  ))}
-                </div>
+          futureWeeks.map((week) => (
+            <div key={week.start.toISOString()} className='date-section'>
+              <h3 className='release-date'>
+                Semaine du {formatWeekLabel(week.start)}
+              </h3>
+
+              <div className='calendar_book-list horizontal-scroll'>
+                {week.books.map((book) => (
+                  <BookItem key={book.id} book={book} />
+                ))}
               </div>
-            );
-          })}
+            </div>
+          ))}
       </div>
     </div>
   );
@@ -180,9 +232,10 @@ WeeklyReleases.propTypes = {
         titre: PropTypes.string.isRequired,
         tome: PropTypes.number,
         version: PropTypes.string,
+        type: PropTypes.string,
         id: PropTypes.string.isRequired,
-      })
-    )
+      }),
+    ),
   ).isRequired,
 };
 
