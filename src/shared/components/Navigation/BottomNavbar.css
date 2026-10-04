@@ -6,10 +6,10 @@
 
   display: flex;
   align-items: center;
-  justify-content: space-around;
-  gap: 8px;
+  justify-content: center;
 
   width: min(92vw, 760px);
+  min-height: 72px;
   padding: 10px 14px 12px;
 
   box-sizing: border-box;
@@ -24,6 +24,31 @@
   box-shadow: 0 22px 40px rgba(17, 17, 17, 0.12);
 
   transform: translateX(-50%);
+}
+
+/* =============================
+   NAV CONTENT
+   ============================= */
+
+.bottom-navbar-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 8px;
+  width: 100%;
+
+  opacity: 1;
+  transform: scale(1);
+
+  transition:
+    opacity 0.2s ease,
+    transform 0.25s ease;
+}
+
+.bottom-navbar-content--hidden {
+  opacity: 0;
+  transform: scale(0.96);
+  pointer-events: none;
 }
 
 /* =============================
@@ -127,9 +152,31 @@
    ============================= */
 
 .bottom-navbar-search-wrapper {
+  position: absolute;
+  inset: 0;
+
   display: flex;
   align-items: center;
+
   width: 100%;
+  padding: 0 14px;
+
+  box-sizing: border-box;
+
+  opacity: 0;
+  transform: scale(0.96);
+
+  pointer-events: none;
+
+  transition:
+    opacity 0.2s ease,
+    transform 0.25s ease;
+}
+
+.bottom-navbar-search-wrapper--visible {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
 }
 
 .bottom-navbar-search-wrapper .globalSearchBarWrapper {
@@ -143,9 +190,13 @@
 @media (max-width: 640px) {
   .bottom-navbar {
     bottom: 12px;
+
     width: min(94vw, 680px);
+    min-height: 66px;
+
     padding: 8px 8px 10px;
     gap: 4px;
+
     border-radius: 26px;
   }
 
@@ -153,7 +204,9 @@
     min-width: 0;
     min-height: 46px;
     padding: 5px 4px;
+
     border-radius: 12px;
+
     font-size: 0.58rem;
   }
 
@@ -169,5 +222,9 @@
 
   .bottom-navbar-add svg {
     font-size: 1.8rem !important;
+  }
+
+  .bottom-navbar-search-wrapper {
+    padding: 0 10px;
   }
 }

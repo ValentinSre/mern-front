@@ -48,71 +48,79 @@ const BottomNavbar = () => {
 
   return (
     <nav className='bottom-navbar' aria-label='Navigation principale'>
-      {!searchMode ? (
-        <>
+      <div
+        className={`bottom-navbar-content ${
+          searchMode ? "bottom-navbar-content--hidden" : ""
+        }`}
+        aria-hidden={searchMode}
+      >
+        <NavLink
+          to='/'
+          exact
+          className='bottom-navbar-item'
+          activeClassName='active'
+        >
+          <HomeIcon className='bottom-navbar-icon' />
+          <span>Accueil</span>
+        </NavLink>
+
+        <NavLink
+          to='/books'
+          className='bottom-navbar-item'
+          activeClassName='active'
+        >
+          <CollectionsBookmarkIcon className='bottom-navbar-icon' />
+          <span>Catalogue</span>
+        </NavLink>
+
+        {auth.isAdmin && (
           <NavLink
-            to='/'
-            exact
+            to='/book/new'
+            className='bottom-navbar-add'
+            activeClassName='active'
+            aria-label='Ajouter un livre'
+            title='Ajouter un livre'
+          >
+            <AddCircleIcon />
+          </NavLink>
+        )}
+
+        <button
+          type='button'
+          className='bottom-navbar-item bottom-navbar-search'
+          onClick={toggleSearchBar}
+          aria-label='Rechercher'
+        >
+          <SearchIcon className='bottom-navbar-icon' />
+          <span>Recherche</span>
+        </button>
+
+        {auth.isLoggedIn && (
+          <NavLink
+            to={`/${auth.userId}/collection`}
             className='bottom-navbar-item'
             activeClassName='active'
           >
-            <HomeIcon className='bottom-navbar-icon' />
-            <span>Accueil</span>
+            <BookIcon className='bottom-navbar-icon' />
+            <span>Collection</span>
           </NavLink>
+        )}
+      </div>
 
-          <NavLink
-            to='/books'
-            className='bottom-navbar-item'
-            activeClassName='active'
-          >
-            <CollectionsBookmarkIcon className='bottom-navbar-icon' />
-            <span>Catalogue</span>
-          </NavLink>
-
-          {auth.isAdmin && (
-            <NavLink
-              to='/book/new'
-              className='bottom-navbar-add'
-              activeClassName='active'
-              aria-label='Ajouter un livre'
-              title='Ajouter un livre'
-            >
-              <AddCircleIcon />
-            </NavLink>
-          )}
-
-          <button
-            type='button'
-            className='bottom-navbar-item bottom-navbar-search'
-            onClick={toggleSearchBar}
-            aria-label='Rechercher'
-          >
-            <SearchIcon className='bottom-navbar-icon' />
-            <span>Recherche</span>
-          </button>
-
-          {auth.isLoggedIn && (
-            <NavLink
-              to={`/${auth.userId}/collection`}
-              className='bottom-navbar-item'
-              activeClassName='active'
-            >
-              <BookIcon className='bottom-navbar-icon' />
-              <span>Collection</span>
-            </NavLink>
-          )}
-        </>
-      ) : (
-        <div className='bottom-navbar-search-wrapper'>
-          <GlobalSearchBar
-            placeHolder={placeholder}
-            searchText={searchText}
-            handleSearch={handleSearch}
-            globalSearch
-            toggleSearchBar={toggleSearchBar}
-          />
-        </div>
-      )}
+      <div
+        className={`bottom-navbar-search-wrapper ${
+          searchMode ? "bottom-navbar-search-wrapper--visible" : ""
+        }`}
+        aria-hidden={!searchMode}
+      >
+        <GlobalSearchBar
+          placeHolder={placeholder}
+          searchText={searchText}
+          handleSearch={handleSearch}
+          globalSearch
+          toggleSearchBar={toggleSearchBar}
+        />
+      </div>
     </nav>
   );
 };
