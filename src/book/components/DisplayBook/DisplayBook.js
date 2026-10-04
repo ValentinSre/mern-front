@@ -264,11 +264,20 @@ const DisplayBook = ({ book: initialBook }) => {
         <React.Fragment>
           <div className='book-details__admin'>
             <CustomButtons
-              addBook={handleBookEdition}
-              deleteBook={handleBookDeletion}
-              editBook={handleBookEdition}
+              buttonType='edit'
+              title='Modifier'
+              onClick={handleBookEdition}
+            />
+            <CustomButtons
+              buttonType='delete'
+              title='Supprimer'
+              onClick={handleBookDeletion}
             />
           </div>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
         </React.Fragment>
       )}
     </React.Fragment>
