@@ -1,7 +1,8 @@
-import React, { useMemo, useState } from "react";
-import PropTypes from "prop-types";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useHistory } from "react-router-dom";
 import makeTitle from "../../../shared/util/makeTitle";
+import { AuthContext } from "../../../shared/context/auth-context";
+import { useHttpClient } from "../../../shared/hooks/http-hook";
 
 import "./HomeActivity.css";
 
@@ -11,10 +12,40 @@ const FILTERS = {
   purchases: "Mes achats",
 };
 
-const HomeActivity = ({ activities }) => {
+const HomeActivity = () => {
+  const auth = useContext(AuthContext);
+  const { isLoading, error, sendRequest } = useHttpClient();
+
   const history = useHistory();
+
+  const [activities, setActivities] = useState([]);
   const [activeFilter, setActiveFilter] = useState("all");
   const [expandedGroups, setExpandedGroups] = useState({});
+
+  useEffect(() => {
+    const fetchActivities = async () => {
+      if (!auth.userId) {
+        return;
+      }
+
+      try {
+        const responseData = await sendRequest(
+          `${process.env.REACT_APP_API_URL}/collection/home-activity/${auth.userId}`,
+          "GET",
+          null,
+          {
+            Authorization: "Bearer " + auth.token,
+          },
+        );
+
+        setActivities(responseData.activities || []);
+      } catch (err) {
+        setActivities([]);
+      }
+    };
+
+    fetchActivities();
+  }, [sendRequest, auth.userId, auth.token]);
 
   const filteredActivities = useMemo(() => {
     if (activeFilter === "purchases") {
@@ -62,8 +93,46 @@ const HomeActivity = ({ activities }) => {
       }
     });
 
-    Object.values(groups).forEach((group) => {
-      group.sort((a, b) =>
+    Object.keys(groups).forEach((groupKey) => {
+      const group = groups[groupKey];
+
+      if (activeFilter !== "all") {
+        group.sort((a, b) =>
+          makeTitle(a.book).localeCompare(makeTitle(b.book), "fr", {
+            sensitivity: "base",
+          }),
+        );
+
+        return;
+      }
+
+      const groupedByBook = {};
+
+      group.forEach((activity) => {
+        const bookId = activity.book.id;
+
+        if (!groupedByBook[bookId]) {
+          groupedByBook[bookId] = {
+            ...activity,
+            types: [activity.type],
+          };
+        } else if (!groupedByBook[bookId].types.includes(activity.type)) {
+          groupedByBook[bookId].types.push(activity.type);
+        }
+      });
+
+      Object.values(groupedByBook).forEach((activity) => {
+        activity.types.sort((a, b) => {
+          const order = {
+            purchase: 0,
+            reading: 1,
+          };
+
+          return order[a] - order[b];
+        });
+      });
+
+      groups[groupKey] = Object.values(groupedByBook).sort((a, b) =>
         makeTitle(a.book).localeCompare(makeTitle(b.book), "fr", {
           sensitivity: "base",
         }),
@@ -71,16 +140,12 @@ const HomeActivity = ({ activities }) => {
     });
 
     return groups;
-  }, [filteredActivities]);
+  }, [filteredActivities, activeFilter]);
 
   const totalVisibleActivities =
     groupedActivities.today.length +
     groupedActivities.week.length +
     groupedActivities.month.length;
-
-  if (!activities || activities.length === 0) {
-    return null;
-  }
 
   const openBook = (book) => {
     history.push(`/book/${book.id}`);
@@ -109,7 +174,7 @@ const HomeActivity = ({ activities }) => {
         <div className='activity-list'>
           {visibleItems.map((activity) => (
             <div
-              key={activity.id}
+              key={activity.book.id}
               className='activity-item'
               onClick={() => openBook(activity.book)}
             >
@@ -123,9 +188,17 @@ const HomeActivity = ({ activities }) => {
                 <p className='activity-title'>{makeTitle(activity.book)}</p>
 
                 <p className='activity-action'>
-                  {activity.type === "purchase"
-                    ? "Ajouté à votre collection"
-                    : "Lu"}
+                  {activity.types
+                    ? activity.types
+                        .map((type) =>
+                          type === "purchase"
+                            ? "Ajouté à votre collection"
+                            : "Lu",
+                        )
+                        .join(" · ")
+                    : activity.type === "purchase"
+                      ? "Ajouté à votre collection"
+                      : "Lu"}
                 </p>
               </div>
             </div>
@@ -146,6 +219,50 @@ const HomeActivity = ({ activities }) => {
       </div>
     );
   };
+
+  if (isLoading) {
+    return (
+      <section className='home-activity-container'>
+        <div className='activity-header'>
+          <div>
+            <span className='section-kicker'>Mon activité</span>
+            <div className='activity-skeleton-summary' />
+          </div>
+        </div>
+
+        <div className='activity-skeleton-list'>
+          {[1, 2, 3].map((item) => (
+            <div key={item} className='activity-skeleton-item'>
+              <div className='activity-skeleton-image' />
+
+              <div className='activity-skeleton-content'>
+                <div className='activity-skeleton-line' />
+                <div className='activity-skeleton-line short' />
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className='home-activity-container'>
+        <div className='activity-header'>
+          <div>
+            <span className='section-kicker'>Mon activité</span>
+          </div>
+        </div>
+
+        <p className='activity-empty'>Impossible de charger votre activité.</p>
+      </section>
+    );
+  }
+
+  if (activities.length === 0) {
+    return null;
+  }
 
   return (
     <section className='home-activity-container'>
@@ -194,25 +311,6 @@ const HomeActivity = ({ activities }) => {
       )}
     </section>
   );
-};
-
-HomeActivity.propTypes = {
-  activities: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(["purchase", "reading"]).isRequired,
-      date: PropTypes.string.isRequired,
-      book: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        titre: PropTypes.string.isRequired,
-        serie: PropTypes.string,
-        tome: PropTypes.number,
-        version: PropTypes.string,
-        image: PropTypes.string.isRequired,
-        type: PropTypes.string,
-      }).isRequired,
-    }),
-  ).isRequired,
 };
 
 export default HomeActivity;

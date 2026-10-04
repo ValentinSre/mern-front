@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
-import PropTypes from "prop-types";
+
+import { useHttpClient } from "../../../shared/hooks/http-hook";
+import { AuthContext } from "../../../shared/context/auth-context";
 import makeTitle from "../../../shared/util/makeTitle";
 
 import "./HomePurchases.css";
@@ -14,11 +16,101 @@ const formatPurchaseDate = (date) => {
   });
 };
 
-const HomePurchases = ({ purchases, userId }) => {
+const HomePurchases = () => {
+  const auth = useContext(AuthContext);
   const history = useHistory();
+  const { isLoading, error, sendRequest } = useHttpClient();
 
-  if (!purchases || purchases.length === 0) {
+  const [purchases, setPurchases] = useState([]);
+
+  useEffect(() => {
+    const fetchPurchases = async () => {
+      if (!auth.isLoggedIn || !auth.userId) return;
+
+      try {
+        const responseData = await sendRequest(
+          `${process.env.REACT_APP_API_URL}/collection/home-purchases/${auth.userId}`,
+          "GET",
+          null,
+          {
+            Authorization: "Bearer " + auth.token,
+          },
+        );
+
+        setPurchases(responseData.purchases || []);
+      } catch (err) {
+        setPurchases([]);
+      }
+    };
+
+    fetchPurchases();
+  }, [sendRequest, auth.isLoggedIn, auth.userId, auth.token]);
+
+  if (!auth.isLoggedIn) {
     return null;
+  }
+
+  if (isLoading) {
+    return (
+      <section className='home-purchases-container'>
+        <div className='purchase-header'>
+          <div>
+            <span className='section-kicker'>Mes derniers achats</span>
+          </div>
+        </div>
+
+        <div className='purchase-list purchase-skeleton-list'>
+          {[1, 2, 3, 4, 5].map((item) => (
+            <div key={item} className='purchase-item purchase-skeleton-item'>
+              <div className='purchase-skeleton-cover' />
+
+              <div className='purchase-skeleton-info'>
+                <div className='purchase-skeleton-line' />
+                <div className='purchase-skeleton-line short' />
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className='home-purchases-container'>
+        <div className='purchase-header'>
+          <div>
+            <span className='section-kicker'>Mes derniers achats</span>
+          </div>
+        </div>
+
+        <p className='purchases-message'>
+          Impossible de charger vos derniers achats.
+        </p>
+      </section>
+    );
+  }
+
+  if (purchases.length === 0) {
+    return (
+      <section className='home-purchases-container'>
+        <div className='purchase-header'>
+          <div>
+            <span className='section-kicker'>Mes derniers achats</span>
+          </div>
+
+          <Link
+            to={`/${auth.userId}/real-purchase`}
+            className='purchase-manage-link'
+          >
+            Renseigner
+            <span>→</span>
+          </Link>
+        </div>
+
+        <p className='purchases-empty'>Aucun achat récent à afficher.</p>
+      </section>
+    );
   }
 
   const purchaseMonth = new Date(purchases[0].date_achat).toLocaleDateString(
@@ -41,7 +133,10 @@ const HomePurchases = ({ purchases, userId }) => {
           <h3 className='purchase-month'>{purchaseMonth}</h3>
         </div>
 
-        <Link to={`/${userId}/real-purchase`} className='purchase-manage-link'>
+        <Link
+          to={`/${auth.userId}/real-purchase`}
+          className='purchase-manage-link'
+        >
           Renseigner
           <span>→</span>
         </Link>
@@ -78,22 +173,6 @@ const HomePurchases = ({ purchases, userId }) => {
       </div>
     </section>
   );
-};
-
-HomePurchases.propTypes = {
-  purchases: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      titre: PropTypes.string.isRequired,
-      serie: PropTypes.string,
-      tome: PropTypes.number,
-      version: PropTypes.string,
-      image: PropTypes.string.isRequired,
-      type: PropTypes.string,
-      date_achat: PropTypes.string.isRequired,
-    }),
-  ).isRequired,
-  userId: PropTypes.string.isRequired,
 };
 
 export default HomePurchases;

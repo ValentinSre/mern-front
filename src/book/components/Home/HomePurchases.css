@@ -279,3 +279,56 @@
     font-size: 0.56rem;
   }
 }
+
+.purchases-empty,
+.purchases-message {
+  margin: 20px 15px 10px;
+  color: #777777;
+  font-size: 0.85rem;
+}
+
+.purchase-skeleton-list {
+  cursor: default;
+}
+
+.purchase-skeleton-item {
+  cursor: default;
+}
+
+.purchase-skeleton-cover {
+  width: 140px;
+  height: 204px;
+  border-radius: 12px;
+  background: #e3ddd5;
+}
+
+.purchase-skeleton-info {
+  width: 100%;
+}
+
+.purchase-skeleton-line {
+  width: 90%;
+  height: 13px;
+  border-radius: 6px;
+  background: #e3ddd5;
+}
+
+.purchase-skeleton-line.short {
+  width: 55%;
+  margin-top: 8px;
+}
+
+@media (min-width: 641px) and (max-width: 980px) {
+  .purchase-skeleton-cover {
+    width: 130px;
+    height: 190px;
+  }
+}
+
+@media (max-width: 640px) {
+  .purchase-skeleton-cover {
+    width: 112px;
+    height: 164px;
+    border-radius: 10px;
+  }
+}

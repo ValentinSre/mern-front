@@ -8,38 +8,39 @@ import HomeSuggestions from "./HomeSuggestions";
 import HomeReadlist from "./HomeReadlist";
 import HomeLists from "./HomeLists";
 
-const HomeLoaded = ({ booksToRelease, homePurchases, homeActivities }) => {
+import "./HomeLoaded.css";
+
+const HomeLoaded = () => {
   const auth = useContext(AuthContext);
 
-  const booksByDate = booksToRelease.reduce((acc, book) => {
-    const { date_parution } = book;
-    const releaseDate = new Date(date_parution).toISOString().slice(0, 10);
-
-    if (!acc[releaseDate]) {
-      acc[releaseDate] = [];
-    }
-
-    acc[releaseDate].push(book);
-    return acc;
-  }, {});
-
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        width: "100%",
-        alignItems: "center",
-      }}
-    >
-      <WeeklyReleases books={booksByDate} isLoggedIn={auth.isLoggedIn} />
+    <div className='home-loaded'>
+      <div className='home-section'>
+        <WeeklyReleases />
+      </div>
 
-      {auth.isLoggedIn && <HomeActivity activities={homeActivities} />}
-      {auth.isLoggedIn && <HomeReadlist />}
-      {auth.isLoggedIn && <HomeLists />}
-      {auth.isLoggedIn && <HomeSuggestions />}
       {auth.isLoggedIn && (
-        <HomePurchases purchases={homePurchases} userId={auth.userId} />
+        <>
+          <div className='home-section'>
+            <HomeActivity />
+          </div>
+
+          <div className='home-section'>
+            <HomeReadlist />
+          </div>
+
+          <div className='home-section'>
+            <HomeLists />
+          </div>
+
+          <div className='home-section'>
+            <HomeSuggestions />
+          </div>
+
+          <div className='home-section'>
+            <HomePurchases />
+          </div>
+        </>
       )}
     </div>
   );

@@ -10,7 +10,7 @@ import "./HomeSuggestions.css";
 const HomeSuggestions = () => {
   const auth = useContext(AuthContext);
   const history = useHistory();
-  const { sendRequest } = useHttpClient();
+  const { isLoading, error, sendRequest } = useHttpClient();
 
   const [suggestions, setSuggestions] = useState([]);
 
@@ -37,8 +37,69 @@ const HomeSuggestions = () => {
     fetchSuggestions();
   }, [sendRequest, auth.isLoggedIn, auth.userId, auth.token]);
 
-  if (!auth.isLoggedIn || suggestions.length === 0) {
+  if (!auth.isLoggedIn) {
     return null;
+  }
+
+  if (isLoading) {
+    return (
+      <section className='home-suggestions-container'>
+        <div className='suggestions-header'>
+          <span className='section-kicker'>Nos suggestions</span>
+        </div>
+
+        <div className='suggestions-list suggestions-skeleton-list'>
+          {[1, 2, 3, 4, 5].map((item) => (
+            <div
+              key={item}
+              className='suggestion-item suggestions-skeleton-item'
+            >
+              <div className='suggestions-skeleton-cover' />
+
+              <div className='suggestions-skeleton-info'>
+                <div className='suggestions-skeleton-line' />
+                <div className='suggestions-skeleton-line short' />
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className='home-suggestions-container'>
+        <div className='suggestions-header'>
+          <span className='section-kicker'>Nos suggestions</span>
+        </div>
+
+        <p className='suggestions-message'>
+          Impossible de charger vos suggestions.
+        </p>
+      </section>
+    );
+  }
+
+  if (suggestions.length === 0) {
+    return (
+      <section className='home-suggestions-container'>
+        <div className='suggestions-header'>
+          <span className='section-kicker'>Nos suggestions</span>
+
+          <button
+            type='button'
+            className='suggestions-link'
+            onClick={() => history.push("/suggestions")}
+          >
+            Voir tout
+            <span>→</span>
+          </button>
+        </div>
+
+        <p className='suggestions-empty'>Aucune suggestion pour le moment.</p>
+      </section>
+    );
   }
 
   return (

@@ -9,7 +9,7 @@ import "./HomeLists.css";
 const HomeLists = () => {
   const auth = useContext(AuthContext);
   const history = useHistory();
-  const { sendRequest } = useHttpClient();
+  const { isLoading, error, sendRequest } = useHttpClient();
 
   const [lists, setLists] = useState([]);
 
@@ -40,8 +40,57 @@ const HomeLists = () => {
     fetchLists();
   }, [sendRequest, auth.isLoggedIn, auth.token]);
 
-  if (!auth.isLoggedIn || lists.length === 0) {
+  if (!auth.isLoggedIn) {
     return null;
+  }
+
+  if (isLoading) {
+    return (
+      <section className='home-lists-container'>
+        <div className='lists-header'>
+          <span className='section-kicker'>Mes listes</span>
+        </div>
+
+        <div className='lists-list'>
+          {[1, 2, 3, 4].map((item) => (
+            <div key={item} className='home-list-item lists-skeleton-item'>
+              <div className='lists-skeleton-cover' />
+
+              <div className='lists-skeleton-line' />
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className='home-lists-container'>
+        <div className='lists-header'>
+          <span className='section-kicker'>Mes listes</span>
+        </div>
+
+        <p className='lists-message'>Impossible de charger vos listes.</p>
+      </section>
+    );
+  }
+
+  if (lists.length === 0) {
+    return (
+      <section className='home-lists-container'>
+        <div className='lists-header'>
+          <span className='section-kicker'>Mes listes</span>
+
+          <Link to='/lists' className='lists-link'>
+            Voir tout
+            <span>→</span>
+          </Link>
+        </div>
+
+        <p className='lists-empty'>Vous n'avez encore créé aucune liste.</p>
+      </section>
+    );
   }
 
   return (
@@ -56,7 +105,7 @@ const HomeLists = () => {
       </div>
 
       <div className='lists-list'>
-        {lists.slice(0, 6).map((list) => (
+        {lists.map((list) => (
           <div
             key={list._id}
             className='home-list-item'

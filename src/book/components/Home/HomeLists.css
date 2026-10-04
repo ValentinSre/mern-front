@@ -120,3 +120,35 @@
     height: 110px;
   }
 }
+
+.lists-empty,
+.lists-message {
+  margin: 20px 15px 10px;
+  color: #777777;
+  font-size: 0.85rem;
+}
+
+.lists-skeleton-item {
+  cursor: default;
+}
+
+.lists-skeleton-cover {
+  width: 220px;
+  height: 135px;
+  border-radius: 12px;
+  background: #e3ddd5;
+}
+
+.lists-skeleton-line {
+  width: 75%;
+  height: 14px;
+  border-radius: 6px;
+  background: #e3ddd5;
+}
+
+@media (max-width: 640px) {
+  .lists-skeleton-cover {
+    width: 180px;
+    height: 110px;
+  }
+}

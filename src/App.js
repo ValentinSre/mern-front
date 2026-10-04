@@ -6,10 +6,10 @@ import {
   Switch,
 } from "react-router-dom";
 import LoadingSpinner from "./shared/components/UIElements/LoadingSpinner";
+import AppLayout from "./shared/components/Navigation/AppLayout";
 import { AuthContext } from "./shared/context/auth-context";
 import { useAuth } from "./shared/hooks/auth-hook";
 import routeConfigs from "./routes";
-import BottomNavbar from "./shared/components/Navigation/BottomNavbar";
 
 const App = () => {
   const { userId, isAdmin, token, name, login, logout } = useAuth();
@@ -55,10 +55,9 @@ const App = () => {
               </div>
             }
           >
-            {renderedRoutes}
+            <AppLayout>{renderedRoutes}</AppLayout>
           </Suspense>
         </main>
-        <BottomNavbar />
       </Router>
     </AuthContext.Provider>
   );

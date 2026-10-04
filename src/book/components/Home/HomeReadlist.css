@@ -299,3 +299,59 @@
     font-size: 0.56rem;
   }
 }
+
+.readlist-empty,
+.readlist-message {
+  margin: 20px 15px 10px;
+  color: #777777;
+  font-size: 0.85rem;
+}
+
+.readlist-skeleton-list {
+  cursor: default;
+}
+
+.readlist-skeleton-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 140px;
+  max-width: 140px;
+}
+
+.readlist-skeleton-cover {
+  width: 140px;
+  height: 204px;
+  border-radius: 12px;
+  background: #e3ddd5;
+}
+
+.readlist-skeleton-info {
+  width: 100%;
+}
+
+.readlist-skeleton-line {
+  width: 90%;
+  height: 13px;
+  border-radius: 6px;
+  background: #e3ddd5;
+}
+
+.readlist-skeleton-line.short {
+  width: 55%;
+  margin-top: 8px;
+}
+
+@media (max-width: 640px) {
+  .readlist-skeleton-item {
+    min-width: 112px;
+    max-width: 112px;
+  }
+
+  .readlist-skeleton-cover {
+    width: 112px;
+    height: 164px;
+    border-radius: 10px;
+  }
+}

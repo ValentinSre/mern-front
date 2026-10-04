@@ -1,120 +1,173 @@
-.navbar {
-    position: fixed;
-    left: 50%;
-    bottom: 18px;
-    transform: translateX(-50%);
-    width: min(92vw, 760px);
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    gap: 8px;
-    padding: 10px 14px 12px;
-    border-radius: 30px;
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(17, 17, 17, 0.06);
-    box-shadow: 0 22px 40px rgba(17, 17, 17, 0.12);
-    z-index: 20;
-  }
-  
-  .navbar-item,
-.navbar-add {
-  text-decoration: none;
-  color: #3d3d3d;
-  display: inline-flex;
+.bottom-navbar {
+  position: fixed;
+  left: 50%;
+  bottom: 18px;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 8px;
+
+  width: min(92vw, 760px);
+  padding: 10px 14px 12px;
+
+  box-sizing: border-box;
+
+  border: 1px solid rgba(17, 17, 17, 0.07);
+  border-radius: 30px;
+
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  box-shadow: 0 22px 40px rgba(17, 17, 17, 0.12);
+
+  transform: translateX(-50%);
+}
+
+/* =============================
+   NAV ITEMS
+   ============================= */
+
+.bottom-navbar-item {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-width: 42px;
-  min-height: 42px;
-  border-radius: 16px;
-  transition: all 0.2s ease;
+  gap: 3px;
+
+  min-width: 64px;
+  min-height: 48px;
+  padding: 5px 8px;
+
+  border: 0;
+  border-radius: 14px;
+
+  background: transparent;
+  color: #666666;
+
+  font: inherit;
+  font-size: 0.62rem;
+  font-weight: 700;
+  line-height: 1;
+
+  text-decoration: none;
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease,
+    transform 0.2s ease;
 }
 
-.navbar-item {
-  flex: 1;
-}
-
-.navbar-item:hover,
-.navbar-add:hover {
+.bottom-navbar-item:hover {
   color: #111111;
   background: rgba(17, 17, 17, 0.04);
 }
 
-.navbar-item.active {
-  background: rgba(17, 17, 17, 0.06);
+.bottom-navbar-item.active {
   color: #111111;
+  background: rgba(17, 17, 17, 0.06);
 }
 
-.icon {
-  font-size: 1.5rem !important;
+.bottom-navbar-icon {
+  font-size: 1.45rem !important;
 }
 
-.navbar-add {
+/* =============================
+   ADD BUTTON
+   ============================= */
+
+.bottom-navbar-add {
   position: relative;
-  margin-top: -30px;
-}
 
-.add-button {
-  width: 58px;
-  height: 58px;
-  border: 0;
-  border-radius: 50%;
-  background: #111111;
-  color: #fff;
   display: flex;
+  flex: 0 0 auto;
   align-items: center;
   justify-content: center;
+
+  width: 58px;
+  height: 58px;
+  margin-top: -30px;
+
+  border: 0;
+  border-radius: 50%;
+
+  background: #111111;
+  color: #f8f5f0;
+
   box-shadow: 0 18px 25px rgba(17, 17, 17, 0.2);
-  cursor: pointer;
+
+  text-decoration: none;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
 }
 
-.add-button svg {
+.bottom-navbar-add svg {
   font-size: 2rem !important;
 }
 
-.globalSearchBarWrapper {
+.bottom-navbar-add:hover {
+  transform: translateY(-3px);
+  background: #222222;
+  box-shadow: 0 22px 30px rgba(17, 17, 17, 0.24);
+}
+
+.bottom-navbar-add:active {
+  transform: translateY(-1px);
+}
+
+/* =============================
+   SEARCH MODE
+   ============================= */
+
+.bottom-navbar-search-wrapper {
   display: flex;
-  justify-content: center;
   align-items: center;
   width: 100%;
 }
 
-.globalSearchBar {
-  display: flex;
-  align-items: center;
+.bottom-navbar-search-wrapper .globalSearchBarWrapper {
   width: 100%;
-  max-width: 640px;
-  padding: 8px 10px 8px 12px;
-  border-radius: 18px;
-  background: rgba(17, 17, 17, 0.03);
-  border: 1px solid rgba(17, 17, 17, 0.06);
 }
 
-.globalSearchBar .MuiInputBase-root {
-  flex: 1;
-  margin-left: 8px;
-}
+/* =============================
+   MOBILE
+   ============================= */
 
-.globalSearchBar .MuiInputBase-input {
-  font-size: 0.96rem;
-}
-
-@media (max-width: 420px) {
-  .navbar {
+@media (max-width: 640px) {
+  .bottom-navbar {
+    bottom: 12px;
     width: min(94vw, 680px);
-    padding-left: 8px;
-    padding-right: 8px;
+    padding: 8px 8px 10px;
+    gap: 4px;
+    border-radius: 26px;
   }
 
-  .icon {
+  .bottom-navbar-item {
+    min-width: 0;
+    min-height: 46px;
+    padding: 5px 4px;
+    border-radius: 12px;
+    font-size: 0.58rem;
+  }
+
+  .bottom-navbar-icon {
     font-size: 1.3rem !important;
   }
 
-  .add-button {
+  .bottom-navbar-add {
     width: 52px;
     height: 52px;
+    margin-top: -26px;
+  }
+
+  .bottom-navbar-add svg {
+    font-size: 1.8rem !important;
   }
 }
-
-

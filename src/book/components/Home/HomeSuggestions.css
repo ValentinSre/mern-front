@@ -242,3 +242,56 @@
     font-size: 0.56rem;
   }
 }
+
+.suggestions-empty,
+.suggestions-message {
+  margin: 20px 15px 10px;
+  color: #777777;
+  font-size: 0.85rem;
+}
+
+.suggestions-skeleton-list {
+  cursor: default;
+}
+
+.suggestions-skeleton-item {
+  cursor: default;
+}
+
+.suggestions-skeleton-cover {
+  width: 140px;
+  height: 204px;
+  border-radius: 12px;
+  background: #e3ddd5;
+}
+
+.suggestions-skeleton-info {
+  width: 100%;
+}
+
+.suggestions-skeleton-line {
+  width: 90%;
+  height: 13px;
+  border-radius: 6px;
+  background: #e3ddd5;
+}
+
+.suggestions-skeleton-line.short {
+  width: 55%;
+  margin-top: 8px;
+}
+
+@media (min-width: 641px) and (max-width: 980px) {
+  .suggestions-skeleton-cover {
+    width: 130px;
+    height: 190px;
+  }
+}
+
+@media (max-width: 640px) {
+  .suggestions-skeleton-cover {
+    width: 112px;
+    height: 164px;
+    border-radius: 10px;
+  }
+}

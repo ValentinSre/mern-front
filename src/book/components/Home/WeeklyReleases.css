@@ -285,3 +285,60 @@
     font-size: 0.58rem;
   }
 }
+
+.weekly-releases-skeleton {
+  display: flex;
+  gap: 18px;
+  overflow: hidden;
+  margin-top: 20px;
+  padding: 10px 2px 12px;
+}
+
+.weekly-releases-skeleton-card {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 150px;
+  gap: 10px;
+}
+
+.weekly-releases-skeleton-cover {
+  width: 150px;
+  height: 219px;
+  border-radius: 12px;
+  background: #e3ddd5;
+}
+
+.weekly-releases-skeleton-line {
+  width: 85%;
+  height: 14px;
+  margin-top: 0;
+  border-radius: 6px;
+  background: #e3ddd5;
+}
+
+.weekly-releases-skeleton-line.short {
+  width: 55%;
+  margin-top: 2px;
+}
+
+.weekly-releases-message {
+  margin: 20px 0 0;
+  color: #777;
+}
+
+@media (max-width: 640px) {
+  .weekly-releases-skeleton {
+    gap: 14px;
+    padding-top: 8px;
+  }
+
+  .weekly-releases-skeleton-card {
+    flex-basis: 120px;
+  }
+
+  .weekly-releases-skeleton-cover {
+    width: 120px;
+    height: 175px;
+    border-radius: 10px;
+  }
+}

@@ -10,7 +10,7 @@ import "./HomeReadlist.css";
 const HomeReadlist = () => {
   const auth = useContext(AuthContext);
   const history = useHistory();
-  const { sendRequest } = useHttpClient();
+  const { isLoading, error, sendRequest } = useHttpClient();
 
   const [unreadlist, setUnreadlist] = useState([]);
   const [sortMode, setSortMode] = useState("title");
@@ -50,8 +50,70 @@ const HomeReadlist = () => {
     });
   }, [unreadlist, sortMode]);
 
-  if (!auth.isLoggedIn || unreadlist.length === 0) {
+  if (!auth.isLoggedIn) {
     return null;
+  }
+
+  if (isLoading) {
+    return (
+      <section className='home-readlist-container'>
+        <div className='readlist-header'>
+          <div className='readlist-header-left'>
+            <span className='section-kicker'>Ma pile à lire</span>
+          </div>
+        </div>
+
+        <div className='readlist-list readlist-skeleton-list'>
+          {[1, 2, 3, 4, 5].map((item) => (
+            <div key={item} className='readlist-skeleton-item'>
+              <div className='readlist-skeleton-cover' />
+
+              <div className='readlist-skeleton-info'>
+                <div className='readlist-skeleton-line' />
+                <div className='readlist-skeleton-line short' />
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className='home-readlist-container'>
+        <div className='readlist-header'>
+          <div className='readlist-header-left'>
+            <span className='section-kicker'>Ma pile à lire</span>
+          </div>
+        </div>
+
+        <p className='readlist-message'>
+          Impossible de charger votre pile à lire.
+        </p>
+      </section>
+    );
+  }
+
+  if (unreadlist.length === 0) {
+    return (
+      <section className='home-readlist-container'>
+        <div className='readlist-header'>
+          <div className='readlist-header-left'>
+            <span className='section-kicker'>Ma pile à lire</span>
+          </div>
+
+          <Link to='/readlist' className='readlist-link'>
+            Voir tout
+            <span>→</span>
+          </Link>
+        </div>
+
+        <p className='readlist-empty'>
+          Votre pile à lire est vide pour le moment.
+        </p>
+      </section>
+    );
   }
 
   return (

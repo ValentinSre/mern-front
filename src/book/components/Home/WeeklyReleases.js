@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { useHistory, Link } from "react-router-dom";
-import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
+import { Link, useHistory } from "react-router-dom";
+import { Tooltip } from "@material-ui/core";
 import makeTitle from "../../../shared/util/makeTitle";
+import { useHttpClient } from "../../../shared/hooks/http-hook";
 
 import "./WeeklyReleases.css";
-import { Tooltip } from "@material-ui/core";
 
 const WEEK_DAYS = {
   1: "Lundi",
@@ -87,25 +87,43 @@ const BookItem = ({ book }) => {
   );
 };
 
-const WeeklyReleases = ({ books }) => {
+const WeeklyReleases = () => {
+  const { isLoading, error, sendRequest } = useHttpClient();
+
+  const [books, setBooks] = useState([]);
   const [expanded, setExpanded] = useState(false);
   const [displayedWeek, setDisplayedWeek] = useState(null);
   const [futureWeeks, setFutureWeeks] = useState([]);
 
-  const sortBooksByDate = (bookList) =>
-    [...bookList].sort(
-      (a, b) => new Date(a.date_parution) - new Date(b.date_parution),
-    );
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        const responseData = await sendRequest(
+          `${process.env.REACT_APP_API_URL}/book/future-releases`,
+        );
 
-  const groupBooksByWeek = () => {
-    const now = new Date();
-    const currentWeekStart = getStartOfWeek(now);
+        setBooks(responseData.books || []);
+      } catch (err) {
+        setBooks([]);
+      }
+    };
 
-    const groupedBooks = {};
+    fetchBooks();
+  }, [sendRequest]);
 
-    Object.values(books)
-      .flat()
-      .forEach((book) => {
+  useEffect(() => {
+    const sortBooksByDate = (bookList) =>
+      [...bookList].sort(
+        (a, b) => new Date(a.date_parution) - new Date(b.date_parution),
+      );
+
+    const groupBooksByWeek = () => {
+      const now = new Date();
+      const currentWeekStart = getStartOfWeek(now);
+
+      const groupedBooks = {};
+
+      books.forEach((book) => {
         const bookDate = new Date(book.date_parution);
         const weekStart = getStartOfWeek(bookDate);
 
@@ -126,43 +144,42 @@ const WeeklyReleases = ({ books }) => {
         groupedBooks[weekKey].books.push(book);
       });
 
-    const sortedWeeks = Object.values(groupedBooks)
-      .map((week) => ({
-        ...week,
-        books: sortBooksByDate(week.books),
-      }))
-      .sort((a, b) => a.start - b.start);
+      const sortedWeeks = Object.values(groupedBooks)
+        .map((week) => ({
+          ...week,
+          books: sortBooksByDate(week.books),
+        }))
+        .sort((a, b) => a.start - b.start);
 
-    const currentWeek = sortedWeeks.find(
-      (week) => week.start.getTime() === currentWeekStart.getTime(),
-    );
+      const currentWeek = sortedWeeks.find(
+        (week) => week.start.getTime() === currentWeekStart.getTime(),
+      );
 
-    if (currentWeek) {
+      if (currentWeek) {
+        return {
+          displayedWeek: {
+            ...currentWeek,
+            isCurrentWeek: true,
+          },
+          futureWeeks: sortedWeeks.filter(
+            (week) => week.start > currentWeekStart,
+          ),
+        };
+      }
+
+      const firstFutureWeek = sortedWeeks[0];
+
       return {
-        displayedWeek: {
-          ...currentWeek,
-          isCurrentWeek: true,
-        },
-        futureWeeks: sortedWeeks.filter(
-          (week) => week.start > currentWeekStart,
-        ),
+        displayedWeek: firstFutureWeek
+          ? {
+              ...firstFutureWeek,
+              isCurrentWeek: false,
+            }
+          : null,
+        futureWeeks: sortedWeeks.slice(1),
       };
-    }
-
-    const firstFutureWeek = sortedWeeks[0];
-
-    return {
-      displayedWeek: firstFutureWeek
-        ? {
-            ...firstFutureWeek,
-            isCurrentWeek: false,
-          }
-        : null,
-      futureWeeks: sortedWeeks.slice(1),
     };
-  };
 
-  useEffect(() => {
     const { displayedWeek, futureWeeks } = groupBooksByWeek();
 
     setDisplayedWeek(displayedWeek);
@@ -170,6 +187,44 @@ const WeeklyReleases = ({ books }) => {
   }, [books]);
 
   const toggleExpanded = () => setExpanded(!expanded);
+
+  if (isLoading) {
+    return (
+      <div className='weekly-releases-container'>
+        <div className='calendar_header'>
+          <span className='section-kicker'>Sorties à venir</span>
+        </div>
+
+        <div className='weekly-releases-skeleton'>
+          <div className='weekly-releases-skeleton-title' />
+
+          <div className='calendar_book-list horizontal-scroll'>
+            {[1, 2, 3, 4, 5].map((item) => (
+              <div key={item} className='weekly-releases-skeleton-card'>
+                <div className='weekly-releases-skeleton-cover' />
+                <div className='weekly-releases-skeleton-line' />
+                <div className='weekly-releases-skeleton-line short' />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className='weekly-releases-container'>
+        <div className='calendar_header'>
+          <span className='section-kicker'>Sorties à venir</span>
+        </div>
+
+        <p className='weekly-releases-message'>
+          Impossible de charger les sorties à venir.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className='weekly-releases-container'>
@@ -220,23 +275,6 @@ const WeeklyReleases = ({ books }) => {
       </div>
     </div>
   );
-};
-
-WeeklyReleases.propTypes = {
-  books: PropTypes.objectOf(
-    PropTypes.arrayOf(
-      PropTypes.shape({
-        date_parution: PropTypes.string.isRequired,
-        image: PropTypes.string.isRequired,
-        serie: PropTypes.string,
-        titre: PropTypes.string.isRequired,
-        tome: PropTypes.number,
-        version: PropTypes.string,
-        type: PropTypes.string,
-        id: PropTypes.string.isRequired,
-      }),
-    ),
-  ).isRequired,
 };
 
 export default WeeklyReleases;
