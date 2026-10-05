@@ -77,6 +77,18 @@ const AdminPage = () => {
     }));
   };
 
+  const handleCheckIsbn = (isbn) => {
+    const cleanIsbn = String(isbn || "").replace(/[-\s]/g, "");
+
+    if (!cleanIsbn) return;
+
+    window.open(
+      `https://www.canalbd.net/recherche/?q=${encodeURIComponent(cleanIsbn)}`,
+      "_blank",
+      "noopener,noreferrer",
+    );
+  };
+
   const handleSave = async () => {
     const booksToSave = Object.entries(results)
       .filter(([, result]) => result.isbn)
@@ -211,7 +223,7 @@ const AdminPage = () => {
                       </span>
                     </div>
 
-                    <div>
+                    <div className='admin-isbn-wrapper'>
                       <input
                         className='admin-isbn-input'
                         type='text'
@@ -221,6 +233,17 @@ const AdminPage = () => {
                           handleIsbnChange(book._id, event.target.value)
                         }
                       />
+
+                      <button
+                        type='button'
+                        className='admin-isbn-check'
+                        onClick={() => handleCheckIsbn(result?.isbn)}
+                        disabled={!result?.isbn}
+                        title='Vérifier cet ISBN sur CanalBD'
+                        aria-label='Vérifier cet ISBN sur CanalBD'
+                      >
+                        👁
+                      </button>
                     </div>
                   </div>
                 );

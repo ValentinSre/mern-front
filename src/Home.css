@@ -30,7 +30,7 @@ body {
 }
 
 .home-admin-button--settings {
-  bottom: 90px;
+  bottom: 92px;
 }
 
 /* =============================
@@ -374,6 +374,10 @@ body {
   height: 30px;
 }
 
+.home-admin-button--settings {
+  bottom: 88px;
+}
+
 .home-admin-button:hover {
   transform: translateY(-3px);
   box-shadow: 0 16px 34px rgba(17, 17, 17, 0.26);
@@ -593,5 +597,9 @@ body {
   .home-admin-button svg {
     width: 27px;
     height: 27px;
+  }
+
+  .home-admin-button--settings {
+    bottom: 72px;
   }
 }
