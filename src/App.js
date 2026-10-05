@@ -17,12 +17,17 @@ const App = () => {
   const renderedRoutes = (
     <Switch>
       {routeConfigs.map((config, index) => {
-        const { path, component: Component, exact, loggedInOnly } = config;
+        const {
+          path,
+          component: Component,
+          exact,
+          loggedInOnly,
+          adminOnly,
+        } = config;
         const key = `route-${index}`;
 
-        if (loggedInOnly && !token) {
-          return null;
-        }
+        if (loggedInOnly && !token) return null;
+        if (adminOnly && !isAdmin) return null;
 
         return (
           <Route key={key} path={path} exact={exact}>

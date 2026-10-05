@@ -15,6 +15,7 @@ const UserLibrary = React.lazy(() => import("./collection/pages/UserLibrary"));
 const SearchBooks = React.lazy(() => import("./book/pages/SearchBooks"));
 const ArtistBooks = React.lazy(() => import("./book/pages/ArtistBooks"));
 const Suggestions = React.lazy(() => import("./collection/pages/Suggestions"));
+const AdminPage = React.lazy(() => import("./admin/pages/AdminPage"));
 
 const routeConfigs = [
   {
@@ -126,6 +127,13 @@ const routeConfigs = [
     component: UserLibrary,
     exact: true,
     loggedInOnly: true,
+  },
+  {
+    path: "/admin",
+    component: AdminPage,
+    exact: true,
+    loggedInOnly: true,
+    adminOnly: true,
   },
 ];
 

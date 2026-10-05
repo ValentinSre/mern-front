@@ -7,6 +7,7 @@ import { AuthContext } from "./shared/context/auth-context";
 import logo from "./shared/images/logo.png";
 
 import AddCircleIcon from "@material-ui/icons/AddCircle";
+import { Settings } from "@material-ui/icons";
 
 import "./Home.css";
 
@@ -210,14 +211,25 @@ const Home = () => {
       </div>
 
       {isLoggedIn && auth.isAdmin && (
-        <Link
-          to='/book/new'
-          className='home-admin-button'
-          aria-label='Ajouter un livre'
-          title='Ajouter un livre'
-        >
-          <AddCircleIcon />
-        </Link>
+        <React.Fragment>
+          <Link
+            to='/book/new'
+            className='home-admin-button'
+            aria-label='Ajouter un livre'
+            title='Ajouter un livre'
+          >
+            <AddCircleIcon />
+          </Link>
+
+          <Link
+            to='/admin'
+            className='home-admin-button home-admin-button--settings'
+            aria-label="Gérer l'application"
+            title="Gérer l'application"
+          >
+            <Settings />
+          </Link>
+        </React.Fragment>
       )}
     </div>
   );

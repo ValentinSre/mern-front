@@ -29,6 +29,10 @@ body {
   padding: 28px 24px 120px;
 }
 
+.home-admin-button--settings {
+  bottom: 90px;
+}
+
 /* =============================
    HEADER
    ============================= */
