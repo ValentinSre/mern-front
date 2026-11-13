@@ -1,0 +1,342 @@
+
+.collection-filter {
+  padding: 20px 24px;
+  border-bottom: 1px solid #eee9e2;
+  background: #fff;
+}
+
+.collection-filter__main {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.collection-filter__search {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  height: 46px;
+  padding: 0 15px;
+  background: #f7f5f1;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.collection-filter__search:focus-within {
+  background: #fff;
+  border-color: #e5c94e;
+}
+
+.collection-filter__search-icon {
+  flex-shrink: 0;
+  color: #999;
+  font-size: 14px;
+}
+
+.collection-filter__search input {
+  width: 100%;
+  min-width: 0;
+  margin-left: 12px;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #292929;
+  font-size: 14px;
+}
+
+.collection-filter__search input::placeholder {
+  color: #999;
+}
+
+.collection-filter__advanced-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 46px;
+  padding: 0 16px;
+  border: 1px solid #e9e5de;
+  border-radius: 10px;
+  background: #fff;
+  color: #555;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.collection-filter__advanced-button:hover,
+.collection-filter__advanced-button--active {
+  background: #faf7eb;
+  border-color: #e5c94e;
+  color: #292929;
+}
+
+.collection-filter__badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 19px;
+  height: 19px;
+  padding: 0 5px;
+  border-radius: 20px;
+  background: #ffde59;
+  color: #292929;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.collection-filter__chevron {
+  font-size: 10px;
+  transition: transform 0.2s;
+}
+
+.collection-filter__chevron--open {
+  transform: rotate(180deg);
+}
+
+.collection-filter__advanced {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 22px;
+  padding: 22px;
+  border: 1px solid #eee9e2;
+  border-radius: 12px;
+  background: #fcfbf9;
+}
+
+.collection-filter__dropdowns-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.collection-filter__section {
+  position: relative;
+  min-width: 0;
+}
+
+.collection-filter__section h3 {
+  margin: 0 0 12px;
+  color: #444;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.collection-filter__dropdown {
+  position: relative;
+  width: 100%;
+}
+
+.collection-filter__dropdown-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 43px;
+  padding: 0 13px;
+  border: 1px solid #e9e5de;
+  border-radius: 8px;
+  background: #fff;
+  color: #555;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.collection-filter__dropdown-trigger:hover {
+  border-color: #d5c36c;
+}
+
+.collection-filter__dropdown-trigger svg {
+  flex-shrink: 0;
+  margin-left: 10px;
+  color: #999;
+  font-size: 10px;
+}
+
+.collection-filter__dropdown-menu {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 6px);
+  left: 0;
+  width: 100%;
+  max-height: 280px;
+  overflow-y: auto;
+  padding: 10px 14px;
+  border: 1px solid #eee9e2;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.collection-filter__dropdown-menu .MuiFormControlLabel-root {
+  display: flex;
+  min-height: 36px;
+  margin: 0;
+  color: #555;
+  font-size: 13px;
+}
+
+.collection-filter__dropdown-menu .MuiFormControlLabel-label {
+  font-size: 13px;
+}
+
+.collection-filter__publisher-menu {
+  padding: 10px;
+}
+
+.collection-filter__publisher-search {
+  position: sticky;
+  top: -10px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px;
+  margin: -10px -10px 8px;
+  border-bottom: 1px solid #eee9e2;
+  background: #fff;
+}
+
+.collection-filter__publisher-search svg {
+  flex-shrink: 0;
+  color: #999;
+  font-size: 12px;
+}
+
+.collection-filter__publisher-search input {
+  width: 100%;
+  min-width: 0;
+  border: none;
+  outline: none;
+  color: #292929;
+  font-size: 13px;
+}
+
+.collection-filter__publisher-search input::placeholder {
+  color: #aaa;
+}
+
+.collection-filter__publisher-list {
+  max-height: 210px;
+  overflow-y: auto;
+}
+
+.collection-filter__empty {
+  padding: 10px;
+  margin: 0;
+  color: #999;
+  font-size: 13px;
+  text-align: center;
+}
+
+.collection-filter__display-section {
+  padding-top: 20px;
+  border-top: 1px solid #eee9e2;
+}
+
+.collection-filter__view-toggle.MuiToggleButtonGroup-root {
+  padding: 3px;
+  background: #f1eee8;
+  border-radius: 9px;
+}
+
+.collection-filter__view-toggle .MuiToggleButton-root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-width: 125px;
+  min-height: 42px;
+  padding: 0 18px;
+  border: none;
+  border-radius: 7px !important;
+  color: #777;
+  font-size: 13px;
+  text-transform: none;
+}
+
+.collection-filter__view-toggle .MuiToggleButton-root svg {
+  flex-shrink: 0;
+  font-size: 15px;
+}
+
+.collection-filter__view-toggle .MuiToggleButton-root span {
+  white-space: nowrap;
+}
+
+.collection-filter__view-toggle .MuiToggleButton-root.Mui-selected {
+  background: #fff;
+  color: #292929;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.collection-filter__selects {
+  display: flex;
+  gap: 16px;
+}
+
+.collection-filter__select {
+  flex: 1;
+  min-width: 0;
+}
+
+.collection-filter__select .MuiInputLabel-root {
+  position: static;
+  margin-bottom: 7px;
+  color: #777;
+  font-size: 12px;
+  transform: none;
+}
+
+.collection-filter__select .MuiInputLabel-shrink {
+  transform: none;
+}
+
+.collection-filter__select .MuiInputBase-root {
+  min-height: 42px;
+  padding: 0 10px;
+  border: 1px solid #e9e5de;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 13px;
+}
+
+.collection-filter__select .MuiInput-underline::before,
+.collection-filter__select .MuiInput-underline::after {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .collection-filter {
+    padding: 16px;
+  }
+
+  .collection-filter__advanced {
+    padding: 16px;
+  }
+
+  .collection-filter__dropdowns-row {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+}
+
+@media (max-width: 420px) {
+  .collection-filter__view-toggle .MuiToggleButton-root {
+    min-width: 0;
+    gap: 13px;
+    padding: 0 12px;
+    font-size: 12px;
+  }
+
+  .collection-filter__selects {
+    flex-direction: column;
+    gap: 14px;
+  }
+}

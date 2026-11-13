@@ -7,6 +7,28 @@ import CollectionContent from "../components/CollectionContent";
 
 import "./DisplayCollection.css";
 
+const getCollectionStats = (collection, displayMode) => {
+  if (!Array.isArray(collection)) {
+    return { albums: 0, series: 0 };
+  }
+
+  const books =
+    displayMode === "bySeries"
+      ? collection.flatMap((serie) => serie.books || [])
+      : collection;
+
+  const availableBooks = books.filter((book) => !book.revendu);
+
+  const series = new Set(
+    availableBooks.map((book) => book.serie?.trim()).filter(Boolean),
+  );
+
+  return {
+    albums: availableBooks.length,
+    series: series.size,
+  };
+};
+
 const DisplayCollection = () => {
   const auth = useContext(AuthContext);
   const {
@@ -34,7 +56,7 @@ const DisplayCollection = () => {
         `${process.env.REACT_APP_API_URL}/collection/${auth.userId}?displayMode=${displayMode}`,
         "GET",
         null,
-        { Authorization: "Bearer " + auth.token }
+        { Authorization: "Bearer " + auth.token },
       );
 
       setOriginalCollection(responseData.collection);
@@ -115,6 +137,8 @@ const DisplayCollection = () => {
     });
   };
 
+  const collectionStats = getCollectionStats(originalCollection, displayMode);
+
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />
@@ -125,6 +149,7 @@ const DisplayCollection = () => {
         displayMode={displayMode}
         selectedSort={selectedSort}
         selectedGroupment={selectedGroupment}
+        collectionStats={collectionStats}
         selectedEditeurs={selectedEditeurs}
         handleSortChange={handleSortChange}
         handleGroupmentChange={handleGroupmentChange}

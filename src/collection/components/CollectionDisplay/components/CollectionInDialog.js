@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useHistory } from "react-router-dom";
 import Dialog from "@material-ui/core/Dialog";
 import RadioGroup from "@material-ui/core/RadioGroup";
@@ -7,25 +7,52 @@ import Radio from "../../../../shared/components/UIElements/ThemedRadioButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-import Card from "@material-ui/core/Card";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Checkbox from "../../../../shared/components/UIElements/ThemedCheckbox";
 import { Typography } from "@material-ui/core";
+
 import { BsBookmarkCheckFill, BsBookmarkX } from "react-icons/bs";
 import { MdRateReview, MdChatBubbleOutline } from "react-icons/md";
+import { FaStar } from "react-icons/fa";
 
-import Rating from "../../../../shared/components/UIElements/Rating";
 import makeTitle from "../../../../shared/util/makeTitle";
 
-const EXISTING_STYLE = { color: "#45b061", fontSize: "20px" };
-const MISSING_STYLE = { color: "#e74c3c", fontSize: "20px" };
+import "./CollectionInDialog.css";
+
+const ITEMS_PER_PAGE = 40;
+
+const getSeriesLabel = (book) => {
+  if (!book.serie) return book.titre;
+
+  const seriesName =
+    typeof book.serie === "string"
+      ? book.serie
+      : book.serie.titre || book.serie.nom || "";
+
+  if (!seriesName) return book.titre;
+
+  if (book.tome === undefined || book.tome === null || book.tome === "") {
+    return seriesName;
+  }
+
+  return `${seriesName} (T${String(book.tome).padStart(2, "0")})`;
+};
+
+const getPublicationYear = (date) => {
+  if (!date) return null;
+
+  const match = String(date).match(/\d{4}/);
+  return match ? match[0] : null;
+};
 
 const CollectionInDialog = (props) => {
   const history = useHistory();
-  const { title, open, books, onClose, filters } = props;
+  const { title, open, books = [], onClose, filters } = props;
 
   const [sortOrder, setSortOrder] = useState("default");
+  const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
+
   const [checkedValues, setCheckedValues] = useState({
     BD: true,
     Comics: true,
@@ -33,202 +60,263 @@ const CollectionInDialog = (props) => {
     Roman: true,
   });
 
-  const handleSortChange = (event) => {
-    setSortOrder(event.target.value);
-  };
+  useEffect(() => {
+    if (open) {
+      setVisibleCount(ITEMS_PER_PAGE);
+    }
+  }, [open]);
+
+  const filteredBooks = useMemo(
+    () =>
+      books.filter((book) => {
+        if (checkedValues.BD && book.type === "BD") return true;
+        if (checkedValues.Comics && book.type === "Comics") return true;
+        if (checkedValues.Manga && book.type === "Manga") return true;
+        if (checkedValues.Roman && book.type === "Roman") return true;
+
+        return false;
+      }),
+    [books, checkedValues],
+  );
+
+  const sortedBooks = useMemo(() => {
+    const result = [...filteredBooks];
+
+    if (filters && sortOrder === "sizeAscending") {
+      result.sort(
+        (a, b) => (Number(a.planches) || 0) - (Number(b.planches) || 0),
+      );
+    } else if (filters && sortOrder === "dateAscending") {
+      result.sort((a, b) => {
+        if (!a.date_achat) return 1;
+        if (!b.date_achat) return -1;
+
+        return (
+          new Date(a.date_achat).getTime() - new Date(b.date_achat).getTime()
+        );
+      });
+    }
+
+    return result;
+  }, [filteredBooks, filters, sortOrder]);
 
   const handleCheckedChange = (event) => {
-    setCheckedValues({
-      ...checkedValues,
+    setCheckedValues((previous) => ({
+      ...previous,
       [event.target.name]: event.target.checked,
-    });
+    }));
+
+    setVisibleCount(ITEMS_PER_PAGE);
   };
 
-  // Filtrage des livres selon les cases cochées
-  const filteredBooks = books.filter((book) => {
-    if (checkedValues.BD && book.type === "BD") return true;
-    if (checkedValues.Comics && book.type === "Comics") return true;
-    if (checkedValues.Manga && book.type === "Manga") return true;
-    if (checkedValues.Roman && book.type === "Roman") return true;
-    return false;
-  });
+  const renderBookStatus = (book) => (
+    <div className='collection-dialog__status'>
+      <Tooltip title={book.lu ? "Livre lu" : "Livre non lu"}>
+        <span className={book.lu ? "is-active" : "is-inactive"}>
+          {book.lu ? <BsBookmarkCheckFill /> : <BsBookmarkX />}
+        </span>
+      </Tooltip>
 
-  // Tri des livres si des filtres sont actifs
-  const sortedBooks = [...filteredBooks];
+      <Tooltip title={book.critique ? "Critique rédigée" : "Pas de critique"}>
+        <span className={book.critique ? "is-active" : "is-inactive"}>
+          {book.critique ? <MdRateReview /> : <MdChatBubbleOutline />}
+        </span>
+      </Tooltip>
+    </div>
+  );
 
-  if (filters && sortOrder === "sizeAscending") {
-    sortedBooks.sort((a, b) => a.planches - b.planches);
-  } else if (filters && sortOrder === "dateAscending") {
-    sortedBooks.sort((a, b) => {
-      if (!a.date_achat) return 1;
-      if (!b.date_achat) return -1;
-      return (
-        new Date(a.date_achat).getTime() - new Date(b.date_achat).getTime()
-      );
-    });
-  }
+  const renderBook = (book) => {
+    const year = getPublicationYear(book.date_parution);
+    const seriesLabel = getSeriesLabel(book);
 
-  const bookState = (book) => {
-    const { lu, critique } = book;
+    return (
+      <Tooltip title={makeTitle(book)} key={book.id || book.id_book}>
+        <button
+          type='button'
+          className='collection-dialog__book'
+          onClick={() => history.push(`/book/${book.id_book}`)}
+        >
+          <div className='collection-dialog__cover'>
+            <img
+              src={book.image}
+              alt={book.titre}
+              loading='lazy'
+              decoding='async'
+            />
 
-    if (lu) {
-      return (
-        <div className='collection-display__book-state'>
-          <Tooltip title='Livre lu'>
-            <div className='collection-display__book-state__read'>
-              <BsBookmarkCheckFill style={EXISTING_STYLE} />
+            {book.type && (
+              <span className='collection-dialog__type'>{book.type}</span>
+            )}
+          </div>
+
+          <div className='collection-dialog__info'>
+            <div className='collection-dialog__title' title={book.titre}>
+              {book.titre}
             </div>
-          </Tooltip>
-          {critique ? (
-            <Tooltip title='Critique rédigée'>
-              <div className='collection-display__book-state__review'>
-                <MdRateReview style={EXISTING_STYLE} />
-                <i className='fas fa-comment'></i>
+
+            <div className='collection-dialog__series' title={seriesLabel}>
+              {seriesLabel}
+            </div>
+
+            <div className='collection-dialog__details'>
+              {[book.format, year].filter(Boolean).join(" · ") || "\u00A0"}
+            </div>
+
+            <div className='collection-dialog__footer'>
+              <div className='collection-dialog__rating'>
+                {typeof book.note === "number" ? (
+                  <>
+                    <FaStar />
+                    <span>{book.note}</span>
+                    <span className='collection-dialog__rating-scale'>/5</span>
+                  </>
+                ) : (
+                  <span>Non noté</span>
+                )}
               </div>
-            </Tooltip>
-          ) : (
-            <Tooltip title='Pas de critique'>
-              <div className='collection-display__book-state__review'>
-                <MdChatBubbleOutline style={MISSING_STYLE} />
-                <i className='fas fa-comment'></i>
-              </div>
-            </Tooltip>
-          )}
-        </div>
-      );
-    } else {
-      return (
-        <div className='collection-display__book-state'>
-          <Tooltip title='Livre non lu'>
-            <div className='collection-display__book-state__read'>
-              <BsBookmarkX style={MISSING_STYLE} />
-              <i className='fas fa-times'></i>
+
+              {renderBookStatus(book)}
             </div>
-          </Tooltip>
-          <Tooltip title='Pas de critique'>
-            <div className='collection-display__book-state__review'>
-              <MdChatBubbleOutline style={MISSING_STYLE} />
-              <i className='fas fa-comment'></i>
-            </div>
-          </Tooltip>
-        </div>
-      );
-    }
+          </div>
+        </button>
+      </Tooltip>
+    );
   };
 
-  const dialogTitle =
-    books.length === filteredBooks.length
-      ? `Ma collection : ${title}`
-      : `Ma collection : Livres non lus (${filteredBooks.length})`;
+  const hasMoreBooks = sortedBooks.length > visibleCount;
 
   return (
-    <Dialog fullScreen open={open} onClose={onClose}>
-      <AppBar sx={{ position: "relative" }}>
-        <Toolbar>
-          <IconButton
-            edge='start'
-            color='inherit'
-            onClick={onClose}
-            aria-label='close'
-          >
-            <CloseIcon />
-          </IconButton>
-          <Typography sx={{ ml: 2, flex: 1 }} variant='h6' component='div'>
-            {dialogTitle}
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <div className='collection-display' style={{ paddingTop: "30px" }}>
-        {filters && (
-          <Card style={{ padding: "20px", margin: "20px" }}>
-            <RadioGroup
-              aria-label='sort-order'
-              name='sort-order'
-              value={sortOrder}
-              onChange={handleSortChange}
-              style={{ flexDirection: "row", marginRight: "20px" }}
-            >
-              <FormControlLabel
-                value='default'
-                control={<Radio />}
-                label='Par défaut'
-              />
-              <FormControlLabel
-                value='sizeAscending'
-                control={<Radio />}
-                label='Par taille (croissant)'
-              />
-              <FormControlLabel
-                value='dateAscending'
-                control={<Radio />}
-                label='Par date (croissant)'
-              />
-            </RadioGroup>
-            <div>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={checkedValues.BD}
-                    onChange={handleCheckedChange}
-                    name='BD'
-                  />
-                }
-                label='Bande dessinée'
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={checkedValues.Comics}
-                    onChange={handleCheckedChange}
-                    name='Comics'
-                  />
-                }
-                label='Comics'
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={checkedValues.Manga}
-                    onChange={handleCheckedChange}
-                    name='Manga'
-                  />
-                }
-                label='Manga'
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={checkedValues.Roman}
-                    onChange={handleCheckedChange}
-                    name='Roman'
-                  />
-                }
-                label='Roman'
-              />
-            </div>
-          </Card>
-        )}
-        <div className='collection-display__books_array'>
-          {sortedBooks.map((book) => (
-            <Tooltip title={makeTitle(book)} key={book.id}>
-              <div
-                className='collection-display__book'
-                onClick={() => history.push(`/book/${book.id_book}`)}
+    <Dialog
+      fullScreen
+      open={open}
+      onClose={onClose}
+      className='collection-dialog'
+    >
+      {open && (
+        <>
+          <AppBar className='collection-dialog__appbar' position='static'>
+            <Toolbar>
+              <IconButton
+                edge='start'
+                color='inherit'
+                onClick={onClose}
+                aria-label='Fermer'
               >
-                <div style={{ padding: "10px" }}>
-                  <Rating
-                    rating={book.note}
-                    size={"1em"}
-                    real={typeof book.note === "number"}
-                  />
-                </div>
-                <img src={book.image} alt={book.titre} />
-                {bookState(book)}
+                <CloseIcon />
+              </IconButton>
+
+              <div className='collection-dialog__heading'>
+                <Typography
+                  className='collection-dialog__heading-title'
+                  variant='h6'
+                  component='div'
+                >
+                  {title || "Ma collection"}
+                </Typography>
+
+                <span className='collection-dialog__heading-count'>
+                  {sortedBooks.length}{" "}
+                  {sortedBooks.length > 1 ? "albums" : "album"}
+                </span>
               </div>
-            </Tooltip>
-          ))}
-        </div>
-      </div>
+            </Toolbar>
+          </AppBar>
+
+          <div className='collection-dialog__content'>
+            {filters && (
+              <div className='collection-dialog__filters'>
+                <div className='collection-dialog__sort'>
+                  <span className='collection-dialog__filter-label'>
+                    Trier par
+                  </span>
+
+                  <RadioGroup
+                    aria-label='Ordre de tri'
+                    name='sort-order'
+                    value={sortOrder}
+                    onChange={(event) => setSortOrder(event.target.value)}
+                    className='collection-dialog__radio-group'
+                  >
+                    <FormControlLabel
+                      value='default'
+                      control={<Radio />}
+                      label='Par défaut'
+                    />
+
+                    <FormControlLabel
+                      value='sizeAscending'
+                      control={<Radio />}
+                      label='Taille'
+                    />
+
+                    <FormControlLabel
+                      value='dateAscending'
+                      control={<Radio />}
+                      label="Date d'achat"
+                    />
+                  </RadioGroup>
+                </div>
+
+                <div className='collection-dialog__type-filters'>
+                  <span className='collection-dialog__filter-label'>Types</span>
+
+                  {[
+                    { name: "BD", label: "BD" },
+                    { name: "Comics", label: "Comics" },
+                    { name: "Manga", label: "Manga" },
+                    { name: "Roman", label: "Roman" },
+                  ].map((type) => (
+                    <FormControlLabel
+                      key={type.name}
+                      control={
+                        <Checkbox
+                          checked={checkedValues[type.name]}
+                          onChange={handleCheckedChange}
+                          name={type.name}
+                        />
+                      }
+                      label={type.label}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {sortedBooks.length > 0 ? (
+              <>
+                <div className='collection-dialog__grid'>
+                  {sortedBooks
+                    .slice(0, visibleCount)
+                    .map((book) => renderBook(book))}
+                </div>
+
+                {hasMoreBooks && (
+                  <button
+                    type='button'
+                    className='collection-dialog__load-more'
+                    onClick={() =>
+                      setVisibleCount((count) => count + ITEMS_PER_PAGE)
+                    }
+                  >
+                    Afficher les albums suivants
+                    <span>
+                      {Math.min(
+                        ITEMS_PER_PAGE,
+                        sortedBooks.length - visibleCount,
+                      )}{" "}
+                      albums supplémentaires
+                    </span>
+                  </button>
+                )}
+              </>
+            ) : (
+              <div className='collection-dialog__empty'>
+                Aucun album ne correspond à ces filtres.
+              </div>
+            )}
+          </div>
+        </>
+      )}
     </Dialog>
   );
 };

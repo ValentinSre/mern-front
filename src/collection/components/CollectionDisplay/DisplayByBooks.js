@@ -1,4 +1,5 @@
 import React from "react";
+import { FaLayerGroup } from "react-icons/fa";
 
 import CollectionInMosaic from "./components/CollectionInMosaic";
 import CollectionInLists from "./components/CollectionInLists";
@@ -17,6 +18,16 @@ const GROUPMENT_IDS = {
   1: "editeur",
   2: "type",
   3: "etat",
+};
+
+const getSeriesKey = (book) => {
+  if (!book.serie) return book.titre || book.id_book;
+
+  if (typeof book.serie === "string") {
+    return book.serie.trim() || book.titre || book.id_book;
+  }
+
+  return book.serie.titre || book.serie.nom || book.titre || book.id_book;
 };
 
 const DisplayByBooks = ({
@@ -67,7 +78,7 @@ const DisplayByBooks = ({
 
   const sortCollection = (collection, sort) => {
     if (sort) {
-      // tri par note (si note = undefined, on le met à la fin) par ordre décroissant
+      // Tri par note décroissante, les albums sans note étant placés à la fin.
       if (sort === 2) {
         return collection.sort((a, b) => {
           if (a[SORT_IDS[sort]] === undefined) {
@@ -79,8 +90,8 @@ const DisplayByBooks = ({
           return a[SORT_IDS[sort]] < b[SORT_IDS[sort]]
             ? 1
             : a[SORT_IDS[sort]] > b[SORT_IDS[sort]]
-            ? -1
-            : 0;
+              ? -1
+              : 0;
         });
       }
 
@@ -91,8 +102,8 @@ const DisplayByBooks = ({
         return a[SORT_IDS[sort]] < b[SORT_IDS[sort]]
           ? -1
           : a[SORT_IDS[sort]] > b[SORT_IDS[sort]]
-          ? 1
-          : 0;
+            ? 1
+            : 0;
       });
     }
     return collection;
@@ -103,19 +114,23 @@ const DisplayByBooks = ({
     return checkedValues[type] && selectedEditeurs[editeur];
   });
 
-  const nbBooks = filteredBooks.length;
+  const availableBooks = filteredBooks.filter((book) => !book.revendu);
+  const nbBooks = availableBooks.length;
+  const nbSeries = new Set(availableBooks.map(getSeriesKey)).size;
+
   const groupedCollection = groupCollection(filteredBooks, groupment);
 
   return (
     <div>
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <div style={{ marginLeft: "30px", marginBottom: "20px" }}>
-          <strong>
-            {nbBooks === 1 ? nbBooks + " album" : nbBooks + " albums"}{" "}
-          </strong>{" "}
-          :
+      <div className='series-collection__summary'>
+        <div className='series-collection__summary-icon'>
+          <FaLayerGroup />
         </div>
+        <span>
+          <strong>{nbSeries} séries</strong> / {nbBooks} albums
+        </span>
       </div>
+
       {!groupment ? (
         <CollectionInMosaic
           collection={filteredBooks}
@@ -133,6 +148,7 @@ const DisplayByBooks = ({
           sortCollection={sortCollection}
         />
       )}
+
       {filteredBooks.length === 0 && (
         <div style={{ textAlign: "center", paddingBottom: "20px" }}>
           <h3>Aucun album ne correspond à votre sélection</h3>

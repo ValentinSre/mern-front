@@ -1,24 +1,23 @@
 import React from "react";
 import {
-  Chip,
-  InputLabel,
+  FormControlLabel,
   MenuItem,
   Select,
-  IconButton,
-  FormControlLabel,
+  InputLabel,
 } from "@material-ui/core";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
-import { Delete as DeleteIcon, Done as DoneIcon } from "@material-ui/icons";
-import { FaListUl, FaTh } from "react-icons/fa";
-import DatedCollection from "./DatedCollection";
-import SearchBar from "../../shared/components/UIElements/SearchBar";
+import {
+  FaListUl,
+  FaTh,
+  FaSlidersH,
+  FaSearch,
+  FaChevronDown,
+} from "react-icons/fa";
 import Checkbox from "../../shared/components/UIElements/ThemedCheckbox";
-import { Skeleton } from "@material-ui/lab";
+import "./Filters.css";
 
 const CollectionFilter = ({
   selectedSort,
-  collection,
-  originalCollection,
   displayMode,
   selectedGroupment,
   editeurs,
@@ -30,10 +29,40 @@ const CollectionFilter = ({
   checkedValues,
   handleCheckedChange,
   setLoadedCollection,
-  loading,
 }) => {
   const [searchText, setSearchText] = React.useState("");
-  const listOfBooks = originalCollection ?? [];
+  const [filtersOpen, setFiltersOpen] = React.useState(false);
+  const [typesOpen, setTypesOpen] = React.useState(false);
+  const [publishersOpen, setPublishersOpen] = React.useState(false);
+  const [publisherSearch, setPublisherSearch] = React.useState("");
+
+  const types = [
+    { key: "BD", label: "Bande dessinée" },
+    { key: "Comics", label: "Comics" },
+    { key: "Manga", label: "Manga" },
+    { key: "Roman", label: "Roman" },
+  ];
+
+  const publishers = Object.keys(editeurs || {}).sort((a, b) =>
+    a.localeCompare(b, "fr"),
+  );
+
+  const filteredPublishers = publishers.filter((publisher) =>
+    publisher.toLowerCase().includes(publisherSearch.toLowerCase()),
+  );
+
+  const selectedTypesCount =
+    Object.values(checkedValues).filter(Boolean).length;
+
+  const selectedPublishersCount = Object.values(editeurs || {}).filter(
+    Boolean,
+  ).length;
+
+  const activeFiltersCount =
+    (selectedTypesCount !== types.length ? 1 : 0) +
+    (selectedPublishersCount !== publishers.length ? 1 : 0) +
+    (displayMode === "byBooks" && Number(selectedSort) !== 0 ? 1 : 0) +
+    (displayMode === "byBooks" && Number(selectedGroupment) !== 0 ? 1 : 0);
 
   const handleDisplayMode = (event, newDisplayMode) => {
     if (newDisplayMode !== null) {
@@ -43,281 +72,232 @@ const CollectionFilter = ({
   };
 
   const handleSearch = (event) => {
-    setSearchText(event.target.value);
-    handleSearchBooks(event.target.value);
+    const value = event.target.value;
+    setSearchText(value);
+    handleSearchBooks(value);
+  };
+
+  const handleTypeSelection = (type) => {
+    handleCheckedChange({
+      target: {
+        name: type,
+        checked: !checkedValues[type],
+      },
+    });
   };
 
   return (
-    <div
-      style={{
-        padding: "20px",
-        borderBottom: "1px solid #ccc",
-        background: "#fff",
-        marginBottom: "20px",
-      }}
-    >
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <ToggleButtonGroup
-          value={displayMode}
-          exclusive
-          onChange={handleDisplayMode}
-          aria-label='device'
-          style={{ marginBottom: "10px", flexGrow: 1 }} // Utilisez flexGrow pour occuper tout l'espace disponible
+    <div className='collection-filter'>
+      <div className='collection-filter__main'>
+        <div className='collection-filter__search'>
+          <FaSearch className='collection-filter__search-icon' />
+          <input
+            type='search'
+            value={searchText}
+            onChange={handleSearch}
+            placeholder={
+              displayMode === "bySeries"
+                ? "Rechercher une série..."
+                : "Rechercher un album..."
+            }
+            aria-label='Rechercher dans ma collection'
+          />
+        </div>
+
+        <button
+          type='button'
+          className={`collection-filter__advanced-button ${
+            filtersOpen ? "collection-filter__advanced-button--active" : ""
+          }`}
+          onClick={() => setFiltersOpen((previous) => !previous)}
+          aria-expanded={filtersOpen}
         >
-          <ToggleButton value='bySeries' aria-label='bySeries'>
-            <FaListUl />
-          </ToggleButton>
-          <ToggleButton value='byBooks' aria-label='byBooks'>
-            <FaTh />
-          </ToggleButton>
-        </ToggleButtonGroup>
-        <DatedCollection loadedBooks={listOfBooks} displayMode={displayMode} />
-      </div>
-      <div
-        style={{
-          padding: "20px",
-          border: "1px solid #ccc",
-          borderRadius: "5px",
-        }}
-      >
-        {displayMode === "bySeries" && (
-          <SeriesFilter
-            collection={collection}
-            checkedValues={checkedValues}
-            handleCheckedChange={handleCheckedChange}
-            handleSearch={handleSearch}
-            editeurs={editeurs}
-            searchText={searchText}
-            handleDelete={handleEditeursSelection}
-            loading={loading}
+          <FaSlidersH />
+          <span>Filtres</span>
+
+          {activeFiltersCount > 0 && (
+            <span className='collection-filter__badge'>
+              {activeFiltersCount}
+            </span>
+          )}
+
+          <FaChevronDown
+            className={`collection-filter__chevron ${
+              filtersOpen ? "collection-filter__chevron--open" : ""
+            }`}
           />
-        )}
-
-        {displayMode === "byBooks" && (
-          <BooksFilter
-            collection={collection}
-            checkedValues={checkedValues}
-            handleCheckedChange={handleCheckedChange}
-            handleSearch={handleSearch}
-            selectedSort={selectedSort}
-            searchText={searchText}
-            handleSortChange={handleSortChange}
-            selectedGroupment={selectedGroupment}
-            handleGroupmentChange={handleGroupmentChange}
-            editeurs={editeurs}
-            handleDelete={handleEditeursSelection}
-            loading={loading}
-          />
-        )}
+        </button>
       </div>
-    </div>
-  );
-};
 
-const DeletableChips = ({ editeurs: editeursAvailability, handleDelete }) => {
-  const editeursName = Object.keys(editeursAvailability);
-  return editeursName.map((name) => (
-    <Chip
-      key={name}
-      label={name}
-      deleteIcon={editeursAvailability[name] ? <DeleteIcon /> : <DoneIcon />}
-      onDelete={() => handleDelete(name)}
-      variant={editeursAvailability[name] ? "default" : "outlined"}
-    />
-  ));
-};
+      {filtersOpen && (
+        <div className='collection-filter__advanced'>
+          <div className='collection-filter__dropdowns-row'>
+            <div className='collection-filter__section'>
+              <h3>Types de livres</h3>
 
-const SeriesFilter = ({
-  collection,
-  checkedValues,
-  handleCheckedChange,
-  handleSearch,
-  searchText,
-  editeurs,
-  handleDelete,
-  loading,
-}) => {
-  return (
-    <div>
-      <div>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={checkedValues.BD}
-              onChange={handleCheckedChange}
-              name='BD'
-            />
-          }
-          label='Bande dessinée'
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={checkedValues.Comics}
-              onChange={handleCheckedChange}
-              name='Comics'
-            />
-          }
-          label='Comics'
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={checkedValues.Manga}
-              onChange={handleCheckedChange}
-              name='Manga'
-            />
-          }
-          label='Manga'
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={checkedValues.Roman}
-              onChange={handleCheckedChange}
-              name='Roman'
-            />
-          }
-          label='Roman'
-        />
-      </div>
-      <div style={{ marginTop: "20px" }}>
-        <SearchBar
-          searchText={searchText}
-          handleSearch={handleSearch}
-          placeHolder='Rechercher une série...'
-        />
-      </div>
-      <div style={{ marginTop: "20px" }}>
-        {loading && (
-          <Skeleton
-            animation='wave'
-            height={50}
-            width='100%'
-            style={{ marginBottom: 6 }}
-          />
-        )}
+              <div className='collection-filter__dropdown'>
+                <button
+                  type='button'
+                  className='collection-filter__dropdown-trigger'
+                  onClick={() => {
+                    setTypesOpen((previous) => !previous);
+                    setPublishersOpen(false);
+                  }}
+                  aria-expanded={typesOpen}
+                >
+                  <span>
+                    {selectedTypesCount === types.length
+                      ? "Tous les types"
+                      : `${selectedTypesCount} type(s) sélectionné(s)`}
+                  </span>
+                  <FaChevronDown />
+                </button>
 
-        <DeletableChips editeurs={editeurs} handleDelete={handleDelete} />
-      </div>
-    </div>
-  );
-};
+                {typesOpen && (
+                  <div className='collection-filter__dropdown-menu'>
+                    {types.map((type) => (
+                      <FormControlLabel
+                        key={type.key}
+                        control={
+                          <Checkbox
+                            checked={checkedValues[type.key]}
+                            onChange={() => handleTypeSelection(type.key)}
+                            name={type.key}
+                          />
+                        }
+                        label={type.label}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
 
-const BooksFilter = ({
-  selectedSort,
-  handleSortChange,
-  selectedGroupment,
-  handleGroupmentChange,
-  checkedValues,
-  handleCheckedChange,
-  handleSearch,
-  searchText,
-  editeurs,
-  handleDelete,
-  loading,
-}) => {
-  return (
-    <div>
-      <div>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={checkedValues.BD}
-              onChange={handleCheckedChange}
-              name='BD'
-            />
-          }
-          label='Bande dessinée'
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={checkedValues.Comics}
-              onChange={handleCheckedChange}
-              name='Comics'
-            />
-          }
-          label='Comics'
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={checkedValues.Manga}
-              onChange={handleCheckedChange}
-              name='Manga'
-            />
-          }
-          label='Manga'
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={checkedValues.Roman}
-              onChange={handleCheckedChange}
-              name='Roman'
-            />
-          }
-          label='Roman'
-        />
-      </div>
-      <div
-        style={{
-          marginTop: "10px",
-          display: "flex",
-        }}
-      >
-        <div>
-          <InputLabel id='label-tri' style={{ paddingBottom: "5px" }}>
-            Tri
-          </InputLabel>
+            <div className='collection-filter__section'>
+              <h3>Éditeurs</h3>
 
-          <Select
-            label='Tri'
-            id='tri-select'
-            value={selectedSort}
-            onChange={handleSortChange}
-          >
-            <MenuItem value={0}>Par titre/série</MenuItem>
-            <MenuItem value={1}>Par prix</MenuItem>
-            <MenuItem value={2}>Par note</MenuItem>
-          </Select>
+              <div className='collection-filter__dropdown'>
+                <button
+                  type='button'
+                  className='collection-filter__dropdown-trigger'
+                  onClick={() => {
+                    setPublishersOpen((previous) => !previous);
+                    setTypesOpen(false);
+                  }}
+                  aria-expanded={publishersOpen}
+                >
+                  <span>
+                    {selectedPublishersCount === publishers.length
+                      ? "Tous les éditeurs"
+                      : `${selectedPublishersCount} éditeur(s) sélectionné(s)`}
+                  </span>
+                  <FaChevronDown />
+                </button>
+
+                {publishersOpen && (
+                  <div className='collection-filter__dropdown-menu collection-filter__publisher-menu'>
+                    <div className='collection-filter__publisher-search'>
+                      <FaSearch />
+                      <input
+                        type='search'
+                        placeholder='Rechercher un éditeur...'
+                        value={publisherSearch}
+                        onChange={(event) =>
+                          setPublisherSearch(event.target.value)
+                        }
+                      />
+                    </div>
+
+                    <div className='collection-filter__publisher-list'>
+                      {filteredPublishers.map((publisher) => (
+                        <FormControlLabel
+                          key={publisher}
+                          control={
+                            <Checkbox
+                              checked={editeurs[publisher]}
+                              onChange={() =>
+                                handleEditeursSelection(publisher)
+                              }
+                            />
+                          }
+                          label={publisher}
+                        />
+                      ))}
+
+                      {filteredPublishers.length === 0 && (
+                        <p className='collection-filter__empty'>
+                          Aucun éditeur trouvé.
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className='collection-filter__section collection-filter__display-section'>
+            <h3>Mode d'affichage</h3>
+
+            <ToggleButtonGroup
+              value={displayMode}
+              exclusive
+              onChange={handleDisplayMode}
+              className='collection-filter__view-toggle'
+              aria-label="Mode d'affichage"
+            >
+              <ToggleButton value='bySeries'>
+                <FaListUl />
+                <span>Par séries</span>
+              </ToggleButton>
+
+              <ToggleButton value='byBooks'>
+                <FaTh />
+                <span>Par albums</span>
+              </ToggleButton>
+            </ToggleButtonGroup>
+          </div>
+
+          {displayMode === "byBooks" && (
+            <div className='collection-filter__section'>
+              <h3>Organisation</h3>
+
+              <div className='collection-filter__selects'>
+                <div className='collection-filter__select'>
+                  <InputLabel id='collection-sort-label'>Trier par</InputLabel>
+                  <Select
+                    labelId='collection-sort-label'
+                    value={selectedSort}
+                    onChange={handleSortChange}
+                    fullWidth
+                  >
+                    <MenuItem value={0}>Titre / série</MenuItem>
+                    <MenuItem value={1}>Prix</MenuItem>
+                    <MenuItem value={2}>Note</MenuItem>
+                  </Select>
+                </div>
+
+                <div className='collection-filter__select'>
+                  <InputLabel id='collection-group-label'>
+                    Regrouper par
+                  </InputLabel>
+                  <Select
+                    labelId='collection-group-label'
+                    value={selectedGroupment}
+                    onChange={handleGroupmentChange}
+                    fullWidth
+                  >
+                    <MenuItem value={0}>Aucun</MenuItem>
+                    <MenuItem value={1}>Éditeur</MenuItem>
+                    <MenuItem value={2}>Type</MenuItem>
+                    <MenuItem value={3}>État</MenuItem>
+                  </Select>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
-        <div style={{ paddingLeft: "20px" }}>
-          <InputLabel id='label-groupement' style={{ paddingBottom: "5px" }}>
-            Groupement
-          </InputLabel>
-          <Select
-            label='Groupement'
-            id='demo-simple-select'
-            value={selectedGroupment}
-            onChange={handleGroupmentChange}
-          >
-            <MenuItem value={0}>Sans groupement</MenuItem>
-            <MenuItem value={1}>Par éditeur</MenuItem>
-            <MenuItem value={2}>Par type</MenuItem>
-            <MenuItem value={3}>Par état</MenuItem>
-          </Select>
-        </div>
-      </div>
-      <div style={{ marginTop: "20px" }}>
-        <SearchBar
-          searchText={searchText}
-          handleSearch={handleSearch}
-          placeHolder='Rechercher un titre...'
-        />
-      </div>
-      <div style={{ marginTop: "20px" }}>
-        {loading && (
-          <Skeleton
-            animation='wave'
-            height={50}
-            width='100%'
-            style={{ marginBottom: 6 }}
-          />
-        )}
-        <DeletableChips editeurs={editeurs} handleDelete={handleDelete} />
-      </div>
+      )}
     </div>
   );
 };

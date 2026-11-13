@@ -1,0 +1,326 @@
+
+.collection-history-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 42px;
+  padding: 0 15px;
+  border: 1px solid #e9e5de;
+  border-radius: 10px;
+  background: #fff;
+  color: #555;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.collection-history-trigger:hover {
+  border-color: #e5c94e;
+  background: #faf7eb;
+  color: #292929;
+}
+
+.collection-history-dialog,
+.collection-purchases-dialog {
+  border-radius: 16px !important;
+}
+
+/* Boutons des modales */
+
+.collection-history-dialog .MuiDialogActions-root,
+.collection-purchases-dialog .MuiDialogActions-root {
+  gap: 8px;
+  padding: 12px 24px 20px;
+}
+
+.collection-dialog-button.MuiButton-root {
+  min-height: 40px;
+  padding: 0 17px;
+  border: 1px solid #e9e5de;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: none;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.collection-dialog-button--secondary.MuiButton-root {
+  background: #fff;
+  color: #555;
+}
+
+.collection-dialog-button--secondary.MuiButton-root:hover {
+  border-color: #d8d2c8;
+  background: #f7f5f1;
+  color: #292929;
+}
+
+.collection-dialog-button--primary.MuiButton-root {
+  border-color: #ffde59;
+  background: #ffde59;
+  color: #292929;
+}
+
+.collection-dialog-button--primary.MuiButton-root:hover {
+  border-color: #f2d044;
+  background: #f2d044;
+}
+
+.collection-dialog-button--primary.MuiButton-root.Mui-disabled {
+  border-color: #eee9e2;
+  background: #eee9e2;
+  color: #aaa;
+}
+
+/* Champs de dates */
+
+.collection-history-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  margin-bottom: 18px;
+}
+
+.collection-history-field label {
+  color: #555;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.collection-history-field .MuiInputBase-root,
+.collection-history-field input {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 42px;
+  padding: 0 12px;
+  border: 1px solid #e9e5de;
+  border-radius: 8px;
+  background: #fff;
+  color: #333;
+  font-size: 13px;
+}
+
+.collection-history-field .MuiInput-underline::before,
+.collection-history-field .MuiInput-underline::after {
+  display: none;
+}
+
+.collection-history-dates {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.collection-history-summary {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 0;
+  border-top: 1px solid #eee9e2;
+  color: #555;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.collection-history-summary span:last-child {
+  color: #999;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.collection-history-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 10px;
+  background: #fcfbf9;
+}
+
+.collection-history-preview-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: #555;
+  font-size: 12px;
+}
+
+.collection-history-preview-item span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.collection-history-preview-item span:last-child {
+  flex-shrink: 0;
+  color: #888;
+}
+
+.collection-history-preview p,
+.collection-history-empty {
+  margin: 8px 0 0;
+  color: #888;
+  font-size: 13px;
+}
+
+.collection-history-error {
+  margin: -8px 0 14px;
+  color: #b44343;
+  font-size: 12px;
+}
+
+/* Liste des achats */
+
+.collection-purchases-dialog__title {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.collection-purchases-dialog__subtitle {
+  color: #888;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.collection-purchases-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.collection-purchase-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 12px 4px;
+  border: 0;
+  border-bottom: 1px solid #eeeae4;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.collection-purchase-item:hover:not(:disabled) {
+  background: #faf8f3;
+}
+
+.collection-purchase-item:disabled {
+  cursor: default;
+}
+
+.collection-purchase-item__cover {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 54px;
+  height: 76px;
+  overflow: hidden;
+  border-radius: 5px;
+  background: #f2f0eb;
+}
+
+.collection-purchase-item__cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.collection-purchase-item__cover-placeholder {
+  padding: 4px;
+  color: #999;
+  font-size: 9px;
+  text-align: center;
+}
+
+.collection-purchase-item__info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.collection-purchase-item__title {
+  overflow: hidden;
+  color: #292929;
+  font-size: 14px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+}
+
+.collection-purchase-item__type {
+  color: #999;
+  font-size: 12px;
+}
+
+.collection-purchase-item__date {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-shrink: 0;
+  gap: 5px;
+  min-width: 110px;
+}
+
+.collection-purchase-item__date-label {
+  color: #999;
+  font-size: 11px;
+}
+
+.collection-purchase-item__date-value {
+  color: #555;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+@media (max-width: 480px) {
+  .collection-history-dates {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .collection-history-trigger {
+    width: 100%;
+  }
+
+  .collection-purchase-item {
+    gap: 10px;
+  }
+
+  .collection-purchase-item__cover {
+    width: 44px;
+    height: 64px;
+  }
+
+  .collection-purchase-item__date {
+    min-width: 0;
+  }
+
+  .collection-purchase-item__date-value {
+    font-size: 11px;
+  }
+
+  .collection-purchase-item__date-label {
+    font-size: 10px;
+  }
+
+  .collection-purchase-item__title {
+    font-size: 13px;
+  }
+
+  .collection-purchases-dialog__subtitle {
+    display: none;
+  }
+
+  .collection-history-dialog .MuiDialogActions-root,
+  .collection-purchases-dialog .MuiDialogActions-root {
+    padding: 10px 16px 16px;
+  }
+}

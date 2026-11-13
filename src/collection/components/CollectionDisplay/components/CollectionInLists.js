@@ -10,6 +10,7 @@ import makeTitle from "../../../../shared/util/makeTitle";
 import "./CollectionInLists.css";
 
 const MAX_ITEMS_PER_CATEGORY = 20;
+
 const UNDEFINED_CATEGORIES = {
   1: "Editeur non défini",
   2: "Format non défini",
@@ -29,25 +30,23 @@ const CollectionInLists = ({
 }) => {
   const history = useHistory();
 
-  let categories = Object.keys(groupedCollection);
-
   const [openCategoryDialog, setOpenCategoryDialog] = useState(false);
   const [categoryBooks, setCategoryBooks] = useState([]);
   const [categoryName, setCategoryName] = useState("");
 
+  let categories = Object.keys(groupedCollection);
+
   if (groupment === 1) {
-    // Groupement par éditeur
     categories = categories.filter((editeur) => selectedEditeurs[editeur]);
   } else {
-    // // retirer les livres où l'éditeur n'est pas sélectionné
     categories.forEach((category) => {
       groupedCollection[category] = groupedCollection[category].filter(
-        (book) => selectedEditeurs[book.editeur]
+        (book) => selectedEditeurs[book.editeur],
       );
     });
-    // retirer les catégories vides
+
     categories = categories.filter(
-      (category) => groupedCollection[category].length > 0
+      (category) => groupedCollection[category].length > 0,
     );
   }
 
@@ -58,59 +57,62 @@ const CollectionInLists = ({
   };
 
   return (
-    <div className='collection-display'>
+    <div className='collection-display collection-display--lists'>
       <CollectionInDialog
         open={openCategoryDialog}
         books={categoryBooks}
         title={categoryName}
         onClose={() => setOpenCategoryDialog(false)}
       />
-      {categories.map((key) => (
-        <div className='book-category' key={key}>
-          <div className='book-category-header'>
-            {key !== "undefined" ? key : UNDEFINED_CATEGORIES[groupment]}
-          </div>
-          <div className='book-list'>
-            {sortCollection(
-              groupedCollection[key].filter((el) => !el.revendu),
-              sort
-            )
-              .slice(0, MAX_ITEMS_PER_CATEGORY + 1)
-              .map((book, index) =>
-                index < MAX_ITEMS_PER_CATEGORY ? (
-                  <Tooltip title={makeTitle(book)}>
-                    <div
-                      className='book-item'
-                      onClick={() => history.push(`/book/${book.id_book}`)}
-                    >
-                      <img
-                        src={book.image}
-                        alt={book.titre}
-                        className='book-cover'
-                      />
-                    </div>
-                  </Tooltip>
-                ) : (
+
+      {categories.map((key) => {
+        const books = sortCollection(
+          groupedCollection[key].filter((book) => !book.revendu),
+          sort,
+        );
+
+        if (books.length === 0) return null;
+
+        return (
+          <section className='book-category' key={key}>
+            <div className='book-category-header'>
+              {key !== "undefined" ? key : UNDEFINED_CATEGORIES[groupment]}
+              <span className='book-category-count'>
+                {books.length} {books.length > 1 ? "albums" : "album"}
+              </span>
+            </div>
+
+            <div className='book-list'>
+              {books.slice(0, MAX_ITEMS_PER_CATEGORY).map((book) => (
+                <Tooltip title={makeTitle(book)} key={book.id}>
                   <div
-                    style={{
-                      marginLeft: "100px",
-                      display: "flex",
-                      alignItems: "center",
-                    }}
+                    className='book-item'
+                    onClick={() => history.push(`/book/${book.id_book}`)}
                   >
-                    <CiCircleMore
-                      size='50px'
-                      color='#ccc'
-                      onClick={() =>
-                        handleSeeCategory(groupedCollection[key], key)
-                      }
+                    <img
+                      src={book.image}
+                      alt={book.titre}
+                      className='book-cover'
                     />
                   </div>
-                )
+                </Tooltip>
+              ))}
+
+              {books.length > MAX_ITEMS_PER_CATEGORY && (
+                <button
+                  type='button'
+                  className='book-list-more'
+                  onClick={() => handleSeeCategory(groupedCollection[key], key)}
+                  aria-label={`Voir tous les albums de ${key}`}
+                >
+                  <CiCircleMore />
+                  <span>Voir tout</span>
+                </button>
               )}
-          </div>
-        </div>
-      ))}
+            </div>
+          </section>
+        );
+      })}
     </div>
   );
 };

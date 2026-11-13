@@ -1,9 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { AppBar, Tabs, Tab } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import { useTheme } from "@material-ui/core/styles";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
+import React, { useContext } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 
 import { AuthContext } from "../../shared/context/auth-context";
 import DisplayCollection from "./DisplayCollection";
@@ -12,121 +8,62 @@ import DisplayWishlist from "./DisplayWishlist";
 import DisplayReleases from "./DisplayFutureWishlist";
 import Stats from "./Stats";
 
-const useStyles = makeStyles((theme) => ({
-  appBar: {
-    backgroundColor: theme.palette.grey[900],
-    margin: "auto",
-  },
-  selectedTab: {
-    border: `2px solid ${theme.palette.common.white}`,
-    color: theme.palette.grey[900],
-    fontWeight: 600,
-    backgroundColor: theme.palette.common.white,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-  },
-  content: {
-    backgroundColor: theme.palette.common.white,
-    width: "100%",
-  },
-}));
+import "./UserLibrary.css";
 
 const UserLibrary = () => {
   const auth = useContext(AuthContext);
-  const classes = useStyles();
   const location = useLocation();
-  const [selectedTab, setSelectedTab] = useState(0);
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const basePath = `/${auth.userId}`;
 
-  const handleTabChange = (event, newValue) => {
-    setSelectedTab(newValue);
+  const pages = [
+    { label: "Mes livres", path: `${basePath}/collection` },
+    { label: "Mes lectures", path: `${basePath}/readlist` },
+    { label: "Mes souhaits", path: `${basePath}/wishlist` },
+    { label: "Mes sorties", path: `${basePath}/releases` },
+    { label: "Mes statistiques", path: `${basePath}/stats` },
+  ];
+
+  const currentPath = location.pathname;
+
+  const activePage = pages.find((page) => page.path === currentPath);
+
+  const renderPage = () => {
+    switch (activePage?.path) {
+      case `${basePath}/collection`:
+        return <DisplayCollection />;
+      case `${basePath}/readlist`:
+        return <DisplayReadlist />;
+      case `${basePath}/wishlist`:
+        return <DisplayWishlist />;
+      case `${basePath}/releases`:
+        return <DisplayReleases />;
+      case `${basePath}/stats`:
+        return <Stats />;
+      default:
+        return <DisplayCollection />;
+    }
   };
 
-  useEffect(() => {
-    const path = location.pathname;
-    switch (path) {
-      case `/${auth.userId}/collection`:
-        setSelectedTab(0);
-        break;
-      case `/${auth.userId}/readlist`:
-        setSelectedTab(1);
-        break;
-      case `/${auth.userId}/wishlist`:
-        setSelectedTab(2);
-        break;
-      case `/${auth.userId}/releases`:
-        setSelectedTab(3);
-        break;
-      case `/${auth.userId}/stats`:
-        setSelectedTab(4);
-        break;
-      case "/readlist":
-        setSelectedTab(1);
-        break;
-      case "/wishlist":
-        setSelectedTab(2);
-        break;
-      case "/releases":
-        setSelectedTab(3);
-        break;
-      default:
-        setSelectedTab(0);
-        break;
-    }
-  }, [location, auth.userId]);
-
   return (
-    <div style={{ marginTop: "40px" }}>
-      <AppBar position='static' className={classes.appBar}>
-        <Tabs
-          value={selectedTab}
-          onChange={handleTabChange}
-          className={classes.tabs}
-          indicatorColor='#fff'
-          centered={!isMobile}
-          variant={isMobile ? "scrollable" : "standard"}
-        >
-          <Tab
-            component={Link}
-            to={`/${auth.userId}/collection`}
-            label='Mes livres'
-            className={selectedTab === 0 ? classes.selectedTab : ""}
-          />
-          <Tab
-            component={Link}
-            to={`/${auth.userId}/readlist`}
-            label='Mes lectures'
-            className={selectedTab === 1 ? classes.selectedTab : ""}
-          />
-          <Tab
-            component={Link}
-            to={`/${auth.userId}/wishlist`}
-            label='Mes souhaits'
-            className={selectedTab === 2 ? classes.selectedTab : ""}
-          />
-          <Tab
-            component={Link}
-            to={`/${auth.userId}/releases`}
-            label='Mes sorties'
-            className={selectedTab === 3 ? classes.selectedTab : ""}
-          />
-          <Tab
-            component={Link}
-            to={`/${auth.userId}/stats`}
-            label='Mes statistiques'
-            className={selectedTab === 4 ? classes.selectedTab : ""}
-          />
-        </Tabs>
-      </AppBar>
-      <div className={classes.content}>
-        {selectedTab === 0 && <DisplayCollection />}
-        {selectedTab === 1 && <DisplayReadlist />}
-        {selectedTab === 2 && <DisplayWishlist />}
-        {selectedTab === 3 && <DisplayReleases />}
-        {selectedTab === 4 && <Stats />}
-      </div>
+    <div className='user-library'>
+      <nav className='user-library__navigation'>
+        <div className='user-library__navigation-inner'>
+          {pages.map((page) => (
+            <NavLink
+              key={page.path}
+              to={page.path}
+              className='user-library__link'
+              activeClassName='user-library__link--active'
+              exact
+            >
+              {page.label}
+            </NavLink>
+          ))}
+        </div>
+      </nav>
+
+      <main className='user-library__content'>{renderPage()}</main>
     </div>
   );
 };
