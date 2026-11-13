@@ -1,0 +1,12 @@
+
+.app-layout-content {
+  box-sizing: border-box;
+  width: 100%;
+  padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px));
+}
+
+@media (max-width: 640px) {
+  .app-layout-content {
+    padding-bottom: calc(104px + env(safe-area-inset-bottom, 0px));
+  }
+}

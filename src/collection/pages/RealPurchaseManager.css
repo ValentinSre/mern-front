@@ -1,0 +1,652 @@
+
+/* =========================================
+   PAGE
+========================================= */
+
+.purchase-page {
+  width: 90%;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 20px 0 50px;
+  color: #292929;
+}
+
+.purchase-page__header {
+  margin-bottom: 24px;
+}
+
+.purchase-page__heading {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.purchase-page__eyebrow {
+  display: block;
+  margin-bottom: 8px;
+  color: #a18a31;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.purchase-page__heading h1 {
+  margin: 0 0 8px;
+  color: #292929;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.8px;
+}
+
+.purchase-page__heading p {
+  margin: 0;
+  color: #777;
+  font-size: 14px;
+}
+
+/* =========================================
+   STATISTIQUES
+========================================= */
+
+.purchase-page__stats {
+  margin-bottom: 24px;
+}
+
+.purchase-page__stat {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 76px;
+  padding: 14px 16px;
+  border: 1px solid #eeeae2;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.purchase-page__stat-icon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #faf5dc;
+  color: #a18a31;
+  font-size: 15px;
+}
+
+.purchase-page__stat-icon svg {
+  font-size: 19px;
+}
+
+.purchase-page__stat > div:last-child {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 3px;
+}
+
+.purchase-page__stat strong {
+  color: #292929;
+  font-size: 23px;
+  font-weight: 700;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.purchase-page__stat > div span {
+  margin-top: 3px;
+  color: #777;
+  font-size: 12px;
+}
+
+.purchase-page__stat--savings .purchase-page__stat-icon {
+  font-size: 19px;
+  font-weight: 800;
+}
+
+/* =========================================
+   NAVIGATION DES MOIS
+========================================= */
+
+.purchase-period {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 24px;
+  padding: 15px 18px;
+  border: 1px solid #eeeae2;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.purchase-period__navigation {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.purchase-period__navigation h2 {
+  min-width: 150px;
+  margin: 0;
+  color: #333;
+  font-size: 16px;
+  font-weight: 750;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.purchase-period__arrow.MuiButton-root {
+  width: 36px;
+  min-width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 9px;
+  color: #777;
+}
+
+.purchase-period__arrow.MuiButton-root:hover {
+  background: #faf5dc;
+  color: #8b7423;
+}
+
+.purchase-period__arrow.MuiButton-root:disabled {
+  color: #ccc;
+}
+
+.purchase-period__arrow svg {
+  font-size: 19px;
+}
+
+.purchase-period__select {
+  min-width: 200px;
+}
+
+.purchase-period__select .MuiOutlinedInput-root {
+  border-radius: 8px;
+  background: #fff;
+  font-size: 12px;
+}
+
+.purchase-period__select .MuiInputLabel-root {
+  font-size: 12px;
+}
+
+/* =========================================
+   SECTIONS
+========================================= */
+
+.purchase-section {
+  margin-bottom: 20px;
+  padding: 20px;
+  border: 1px solid #eeeae2;
+  border-radius: 13px;
+  background: #fff;
+}
+
+.purchase-section__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 16px;
+}
+
+.purchase-section__header h2 {
+  margin: 0;
+  color: #303030;
+  font-size: 17px;
+  font-weight: 750;
+}
+
+.purchase-section__header p {
+  margin: 5px 0 0;
+  color: #888;
+  font-size: 12px;
+}
+
+.purchase-section__total {
+  color: #292929;
+  font-size: 16px;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.purchase-section__info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 16px;
+}
+
+.purchase-section__info span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 4px 9px;
+  border-radius: 6px;
+  background: #f7f5ef;
+  color: #68645b;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.purchase-section__empty {
+  margin: 0;
+  padding: 12px 0;
+  color: #888;
+  font-size: 12px;
+}
+
+/* =========================================
+   TABLEAUX
+========================================= */
+
+.purchase-table-container {
+  overflow-x: auto;
+  border: 1px solid #eeeae2;
+  border-radius: 9px;
+}
+
+.purchase-table {
+  min-width: 480px;
+}
+
+.purchase-table .MuiTableCell-head {
+  padding: 11px 14px;
+  border-bottom: 1px solid #eeeae2;
+  background: #faf9f6;
+  color: #777;
+  font-size: 11px;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.purchase-table .MuiTableCell-body {
+  padding: 11px 14px;
+  border-bottom: 1px solid #f1eee8;
+  color: #444;
+  font-size: 12px;
+}
+
+.purchase-table .MuiTableRow-root:last-child .MuiTableCell-body {
+  border-bottom: 0;
+}
+
+.purchase-table .MuiTableRow-root:hover {
+  background: #fdfcf8;
+}
+
+.purchase-checkbox {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: #b49b32;
+  cursor: pointer;
+}
+
+.purchase-section__actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+/* =========================================
+   BOUTONS
+========================================= */
+
+.purchase-button.MuiButton-root {
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: 7px;
+  background: #ffde59;
+  color: #292929;
+  font-size: 12px;
+  font-weight: 750;
+  text-transform: none;
+  box-shadow: none;
+}
+
+.purchase-button.MuiButton-root:hover {
+  background: #f8edb9;
+  box-shadow: none;
+}
+
+.purchase-button.MuiButton-root:disabled {
+  background: #f2f0e9;
+  color: #aaa;
+}
+
+.purchase-button.MuiButton-root .MuiButton-startIcon {
+  margin-right: 7px;
+}
+
+.purchase-button--outlined.MuiButton-root {
+  border: 1px solid #e5e0d6;
+  background: #fff;
+  color: #777;
+}
+
+.purchase-button--outlined.MuiButton-root:hover {
+  border-color: #d8c75e;
+  background: #faf9f6;
+}
+
+/* =========================================
+   BADGES
+========================================= */
+
+.purchase-badge {
+  display: inline-block;
+  padding: 4px 9px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 750;
+}
+
+.purchase-badge--occasion {
+  background: #fff5d8;
+  color: #8a6d13;
+}
+
+.purchase-badge--new {
+  background: #edf6ee;
+  color: #46764b;
+}
+
+/* =========================================
+   ÉTAT VIDE
+========================================= */
+
+.purchase-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 310px;
+  padding: 35px 20px;
+  border: 1px dashed #e6e0d4;
+  border-radius: 13px;
+  background: #fff;
+  text-align: center;
+}
+
+.purchase-empty__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 55px;
+  height: 55px;
+  margin-bottom: 15px;
+  border-radius: 50%;
+  background: #faf5dc;
+  color: #a18a31;
+}
+
+.purchase-empty__icon svg {
+  font-size: 22px;
+}
+
+.purchase-empty h2 {
+  margin: 0;
+  color: #333;
+  font-size: 18px;
+  font-weight: 750;
+}
+
+.purchase-empty p {
+  max-width: 440px;
+  margin: 9px 0 0;
+  color: #888;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* =========================================
+   CHARGEMENT
+========================================= */
+
+.purchase-loading {
+  display: flex;
+  justify-content: center;
+  padding: 55px 20px;
+}
+
+.purchase-loading .MuiCircularProgress-root {
+  color: #b49b32;
+}
+
+/* =========================================
+   MODALE
+========================================= */
+
+.purchase-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+  min-width: 320px;
+  padding-top: 8px;
+}
+
+.purchase-modal__summary {
+  padding: 13px;
+  border-radius: 9px;
+  background: #faf9f6;
+  color: #777;
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.purchase-modal__summary strong {
+  color: #333;
+}
+
+.purchase-modal__field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  color: #555;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.purchase-modal__field input {
+  width: 100%;
+  min-height: 40px;
+  padding: 0 11px;
+  border: 1px solid #e9e5de;
+  border-radius: 8px;
+  outline: none;
+  background: #fff;
+  color: #333;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 400;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.purchase-modal__field input:focus {
+  border-color: #d7bd4b;
+  box-shadow: 0 0 0 3px rgba(229, 201, 78, 0.13);
+}
+
+.purchase-modal__switch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #555;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.purchase-modal__switch .MuiSwitch-colorPrimary.Mui-checked {
+  color: #a18a31;
+}
+
+.purchase-modal__switch .MuiSwitch-colorPrimary.Mui-checked + .MuiSwitch-track {
+  background-color: #d7bd4b;
+}
+
+.purchase-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 3px;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1100px) {
+  .purchase-page__stat strong {
+    font-size: 19px;
+  }
+}
+
+@media (max-width: 650px) {
+  .purchase-page {
+    width: 94%;
+    padding-top: 12px;
+  }
+
+  .purchase-page__header {
+    display: none;
+  }
+
+  .purchase-page__stats {
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .purchase-page__stat {
+    min-height: 65px;
+    gap: 9px;
+    padding: 10px;
+  }
+
+  .purchase-page__stat-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 9px;
+  }
+
+  .purchase-page__stat-icon svg {
+    font-size: 16px;
+  }
+
+  .purchase-page__stat strong {
+    font-size: 16px;
+  }
+
+  .purchase-page__stat > div span {
+    font-size: 10px;
+  }
+
+  .purchase-period {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 13px;
+    margin-bottom: 18px;
+    padding: 13px;
+  }
+
+  .purchase-period__navigation {
+    justify-content: center;
+  }
+
+  .purchase-period__navigation h2 {
+    min-width: 140px;
+    font-size: 15px;
+  }
+
+  .purchase-period__select {
+    width: 100%;
+  }
+
+  .purchase-section {
+    padding: 14px;
+    margin-bottom: 14px;
+  }
+
+  .purchase-section__header {
+    gap: 10px;
+  }
+
+  .purchase-section__header h2 {
+    font-size: 15px;
+  }
+
+  .purchase-section__header p {
+    font-size: 11px;
+    line-height: 1.5;
+  }
+
+  .purchase-section__total {
+    font-size: 14px;
+  }
+
+  .purchase-section__info {
+    gap: 6px;
+  }
+
+  .purchase-section__info span {
+    font-size: 10px;
+  }
+
+  .purchase-table {
+    min-width: 440px;
+  }
+
+  .purchase-table .MuiTableCell-head,
+  .purchase-table .MuiTableCell-body {
+    padding: 9px 10px;
+    font-size: 11px;
+  }
+
+  .purchase-button.MuiButton-root {
+    font-size: 11px;
+  }
+
+  .purchase-empty {
+    min-height: 260px;
+    padding: 30px 18px;
+  }
+
+  .purchase-empty h2 {
+    font-size: 16px;
+  }
+
+  .purchase-empty p {
+    font-size: 12px;
+  }
+
+  .purchase-modal {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 360px) {
+  .purchase-page__stat {
+    gap: 7px;
+    padding: 8px;
+  }
+
+  .purchase-page__stat strong {
+    font-size: 14px;
+  }
+
+  .purchase-page__stat > div span {
+    font-size: 9px;
+  }
+
+  .purchase-section {
+    padding: 11px;
+  }
+
+  .purchase-section__total {
+    font-size: 12px;
+  }
+}
