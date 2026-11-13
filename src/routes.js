@@ -48,7 +48,7 @@ const routeConfigs = [
   },
   {
     path: "/:userId/real-purchase",
-    component: RealPurchaseManager,
+    component: UserLibrary,
     exact: true,
     loggedInOnly: true,
   },

@@ -231,9 +231,7 @@ const WeeklyReleases = () => {
       <div className='calendar_header'>
         <Link to='/releases' className='section-kicker my-releases-link'>
           <span className='releases-label-default'>Sorties à venir</span>
-          <span className='releases-label-hover'>
-            Mes sorties (wishlist à venir)
-          </span>
+          <span className='releases-label-hover'>Ma wishlist</span>
         </Link>
 
         <button className='expand-calendar-btn' onClick={toggleExpanded}>

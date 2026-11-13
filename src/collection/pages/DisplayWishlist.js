@@ -1,40 +1,245 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useMemo, useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
-import { Grid, Badge, Button, Divider } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
-import DateModal from "../../shared/components/UIElements/DateModal";
+import {
+  FaCheck,
+  FaCalendarAlt,
+  FaSearch,
+  FaShoppingBag,
+  FaTrashAlt,
+  FaUndo,
+} from "react-icons/fa";
 import { BsCartCheckFill } from "react-icons/bs";
-import { MdDeleteSweep } from "react-icons/md";
 
+import DateModal from "../../shared/components/UIElements/DateModal";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import { AuthContext } from "../../shared/context/auth-context";
 import WishlistFilters from "../components/WishlistFilters";
-import makeTitle from "../../shared/util/makeTitle";
 
 import "./DisplayWishlist.css";
+
+const formatPrice = (price) =>
+  `${Number(price || 0)
+    .toFixed(2)
+    .replace(".", ",")} €`;
+
+const isBookReleased = (date) => {
+  if (!date) return false;
+
+  const releaseDate = new Date(date);
+  if (Number.isNaN(releaseDate.getTime())) return false;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  releaseDate.setHours(0, 0, 0, 0);
+
+  return releaseDate <= today;
+};
+
+const formatReleaseDate = (date) => {
+  if (!date) return "Date inconnue";
+
+  const parsedDate = new Date(date);
+  if (Number.isNaN(parsedDate.getTime())) return "Date inconnue";
+
+  return parsedDate.toLocaleDateString("fr-FR", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+};
+
+const getDateValue = (date) => {
+  if (!date) return "";
+
+  // Préserve directement la date si elle est déjà au format ISO.
+  if (typeof date === "string" && /^\d{4}-\d{2}-\d{2}/.test(date)) {
+    return date.substring(0, 10);
+  }
+
+  const parsedDate = new Date(date);
+
+  if (Number.isNaN(parsedDate.getTime())) return "";
+
+  const year = parsedDate.getFullYear();
+  const month = String(parsedDate.getMonth() + 1).padStart(2, "0");
+  const day = String(parsedDate.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+};
 
 const DisplayWishlist = () => {
   const auth = useContext(AuthContext);
   const history = useHistory();
+
   const {
     isLoading: isDataLoading,
     error,
     sendRequest,
     clearError,
   } = useHttpClient();
+
   const [wishlist, setWishlist] = useState([]);
+  const [hasLoaded, setHasLoaded] = useState(false);
+
+  const [search, setSearch] = useState("");
+  const [priceRange, setPriceRange] = useState(null);
+  const [availability, setAvailability] = useState("all");
+  const [sortBy, setSortBy] = useState("alpha");
 
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
   const [dateObtention, setDateObtention] = useState(null);
   const [bookId, setBookId] = useState(null);
+  const [processingBookId, setProcessingBookId] = useState(null);
 
-  const handleAdditionToCollection = () => {
-    handleAddToList([bookId], "collection");
+  const [dateRange, setDateRange] = useState({
+    start: "",
+    end: "",
+  });
+
+  const fetchWishlists = async () => {
+    try {
+      const responseData = await sendRequest(
+        `${process.env.REACT_APP_API_URL}/collection/wishlist/${auth.userId}`,
+        "GET",
+        null,
+        { Authorization: "Bearer " + auth.token },
+      );
+
+      setWishlist(responseData.wishlist || []);
+    } catch (err) {
+      setWishlist([]);
+    } finally {
+      setHasLoaded(true);
+    }
+  };
+
+  useEffect(() => {
+    fetchWishlists();
+  }, [sendRequest, auth.userId]);
+
+  const priceBounds = useMemo(() => {
+    const prices = wishlist
+      .map((book) => Number(book.prix))
+      .filter((price) => Number.isFinite(price) && price >= 0);
+
+    if (prices.length === 0) {
+      return { min: 0, max: 100 };
+    }
+
+    const min = Math.floor(Math.min(...prices));
+    const max = Math.ceil(Math.max(...prices));
+
+    return {
+      min,
+      max: max > min ? max : min + 1,
+    };
+  }, [wishlist]);
+
+  const effectivePriceRange = priceRange || [priceBounds.min, priceBounds.max];
+
+  const filteredBooks = useMemo(() => {
+    const normalizedSearch = search.trim().toLocaleLowerCase("fr");
+
+    const result = wishlist.filter((book) => {
+      const title = (book.titre || "").toLocaleLowerCase("fr");
+      const series = (book.serie || "").toLocaleLowerCase("fr");
+      const price = Number(book.prix);
+
+      if (
+        normalizedSearch &&
+        !title.includes(normalizedSearch) &&
+        !series.includes(normalizedSearch)
+      ) {
+        return false;
+      }
+
+      if (
+        Number.isFinite(price) &&
+        (price < effectivePriceRange[0] || price > effectivePriceRange[1])
+      ) {
+        return false;
+      }
+
+      if (availability === "released" && !isBookReleased(book.date_parution)) {
+        return false;
+      }
+
+      if (availability === "upcoming" && isBookReleased(book.date_parution)) {
+        return false;
+      }
+
+      if (availability === "period") {
+        const bookDate = getDateValue(book.date_parution);
+
+        if (!bookDate) return false;
+
+        if (dateRange.start && bookDate < dateRange.start) {
+          return false;
+        }
+
+        if (dateRange.end && bookDate > dateRange.end) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+
+    return result.sort((a, b) => {
+      if (sortBy === "price-asc") {
+        return Number(a.prix || 0) - Number(b.prix || 0);
+      }
+
+      if (sortBy === "price-desc") {
+        return Number(b.prix || 0) - Number(a.prix || 0);
+      }
+
+      if (sortBy === "date-asc" || sortBy === "date-desc") {
+        const dateA = new Date(a.date_parution || 0).getTime();
+        const dateB = new Date(b.date_parution || 0).getTime();
+
+        return sortBy === "date-asc" ? dateA - dateB : dateB - dateA;
+      }
+
+      return (a.titre || "").localeCompare(b.titre || "", "fr", {
+        sensitivity: "base",
+      });
+    });
+  }, [wishlist, search, effectivePriceRange, availability, dateRange, sortBy]);
+
+  const totalBudget = wishlist.reduce(
+    (total, book) => total + (Number(book.prix) || 0),
+    0,
+  );
+
+  const releasedCount = wishlist.filter((book) =>
+    isBookReleased(book.date_parution),
+  ).length;
+
+  const upcomingCount = wishlist.length - releasedCount;
+
+  const hasActiveFilters =
+    search.trim() !== "" ||
+    priceRange !== null ||
+    availability !== "all" ||
+    sortBy !== "alpha";
+
+  const handleResetFilters = () => {
+    setSearch("");
+    setPriceRange(null);
+    setAvailability("all");
+    setDateRange({ start: "", end: "" });
+    setSortBy("alpha");
   };
 
   const handleAddToList = async (bookIds, listName) => {
+    const currentBookId = bookIds[0];
+
     try {
+      setProcessingBookId(currentBookId);
+
       const requestData = await sendRequest(
         process.env.REACT_APP_API_URL + "/collection/add",
         "POST",
@@ -47,268 +252,326 @@ const DisplayWishlist = () => {
         {
           "Content-Type": "application/json",
           Authorization: "Bearer " + auth.token,
-        }
+        },
       );
 
-      const { success } = requestData;
-      const bookId = bookIds[0];
-      if (success) {
-        setWishlist(wishlist.filter((book) => book.id_book !== bookId));
+      if (requestData.success) {
+        setWishlist((previousWishlist) =>
+          previousWishlist.filter((book) => book.id_book !== currentBookId),
+        );
+
         setOpenCollectionModal(false);
+        setDateObtention(null);
+        setBookId(null);
       }
     } catch (err) {
-      console.log(err);
+      // L'erreur est gérée par useHttpClient et ErrorModal.
+    } finally {
+      setProcessingBookId(null);
     }
   };
 
-  const fetchWishlists = async () => {
-    try {
-      const responseData = await sendRequest(
-        `${process.env.REACT_APP_API_URL}/collection/wishlist/${auth.userId}`,
-        "GET",
-        null,
-        { Authorization: "Bearer " + auth.token }
-      );
-
-      setWishlist(responseData.wishlist);
-    } catch (err) {}
-  };
-
-  useEffect(() => {
-    fetchWishlists();
-  }, [sendRequest, auth.userId]);
-
-  const [priceFilter, setPriceFilter] = useState([]);
-  const [onlyReleased, setOnlyReleased] = useState(false);
-  const [sortBy, setSortBy] = useState("alpha");
-
-  const handleCheckboxChange = (event) => {
-    const { value, checked } = event.target;
-    if (checked) {
-      setPriceFilter([...priceFilter, value]);
-    } else {
-      setPriceFilter(priceFilter.filter((filter) => filter !== value));
+  const handleAdditionToCollection = () => {
+    if (bookId) {
+      handleAddToList([bookId], "collection");
     }
   };
 
-  // Build filteredBooks applying price filters, release filter and sorting
-  let filteredBooks = wishlist.slice();
-  if (priceFilter.length) {
-    filteredBooks = filteredBooks.filter((book) => {
-      if (priceFilter.includes("20")) {
-        if (book.prix < 20) return true;
-      }
-      if (priceFilter.includes("50")) {
-        if (book.prix >= 20 && book.prix < 50) return true;
-      }
-      if (priceFilter.includes("100")) {
-        if (book.prix >= 50) return true;
-      }
-      return false;
-    });
-  }
-  const currentDate = new Date();
-  if (onlyReleased) {
-    filteredBooks = filteredBooks.filter(
-      (book) => new Date(book.date_parution) < currentDate
-    );
-  }
-  if (sortBy === "price") {
-    filteredBooks.sort((a, b) => (a.prix || 0) - (b.prix || 0));
-  } else {
-    filteredBooks.sort((a, b) =>
-      (makeTitle(a) || "").localeCompare(makeTitle(b) || "", "fr", {
-        sensitivity: "base",
-      })
-    );
-  }
-
-  const handleBuyButton = (bookId) => {
-    setOpenCollectionModal(true);
+  const handleBuyButton = (id) => {
+    setBookId(id);
     setDateObtention(null);
-    setBookId(bookId);
+    setOpenCollectionModal(true);
   };
 
-  const handleDeleteButton = async (bookId) => {
+  const handleDeleteButton = async (id) => {
+    const book = wishlist.find((item) => item.id_book === id);
+
+    if (
+      !window.confirm(
+        `Retirer « ${book?.titre || "cet album"} » de votre wishlist ?`,
+      )
+    ) {
+      return;
+    }
+
     try {
+      setProcessingBookId(id);
+
       const responseData = await sendRequest(
-        `${process.env.REACT_APP_API_URL}/collection/wishlist/${auth.userId}/${bookId}`,
+        `${process.env.REACT_APP_API_URL}/collection/wishlist/${auth.userId}/${id}`,
         "DELETE",
         null,
-        { Authorization: "Bearer " + auth.token }
+        { Authorization: "Bearer " + auth.token },
       );
 
-      if (responseData.success)
-        setWishlist(wishlist.filter((book) => book.id_book !== bookId));
-    } catch (err) {}
+      if (responseData.success) {
+        setWishlist((previousWishlist) =>
+          previousWishlist.filter((item) => item.id_book !== id),
+        );
+      }
+    } catch (err) {
+      // L'erreur est gérée par useHttpClient et ErrorModal.
+    } finally {
+      setProcessingBookId(null);
+    }
   };
 
-  return (
-    <React.Fragment>
-      <ErrorModal error={error} onClear={clearError} />
-      <div className='wishlist'>
-        <div className='wishlist__filters'>
-          <WishlistFilters handleCheckboxChange={handleCheckboxChange} />
-          <div
-            style={{
-              marginTop: 10,
-              display: "flex",
-              gap: "12px",
-              alignItems: "center",
-            }}
-          >
-            <label
-              style={{ display: "flex", alignItems: "center", gap: "6px" }}
-            >
-              <input
-                type='checkbox'
-                checked={onlyReleased}
-                onChange={(e) => setOnlyReleased(e.target.checked)}
-              />
-              Livres déjà sortis
-            </label>
-            <label
-              style={{ display: "flex", alignItems: "center", gap: "6px" }}
-            >
-              Trier par:
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                style={{ marginLeft: 6 }}
-              >
-                <option value='alpha'>Alphabetique</option>
-                <option value='price'>Prix</option>
-              </select>
-            </label>
-          </div>
-        </div>
-        {isDataLoading && (
-          <React.Fragment>
-            <div style={{ paddingLeft: "5px", paddingTop: "15px" }}>
-              <Skeleton variant='rect' width={"20%"} height={20} />
-            </div>
-            <div style={{ paddingTop: "70px" }}>
-              <div
-                style={{
-                  display: "grid",
-                  gridGap: "2rem",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-                }}
-              >
-                <Skeleton variant='rect' height={200} />
-                <Skeleton variant='rect' height={200} />
-                <Skeleton variant='rect' height={200} />
-                <Skeleton variant='rect' height={200} />
-                <Skeleton variant='rect' height={200} />
-              </div>
-            </div>
-          </React.Fragment>
-        )}
-        {!isDataLoading && wishlist && (
-          <React.Fragment>
-            <Grid container spacing={2}>
-              {filteredBooks.length !== 0 && (
-                <div style={{ marginLeft: "10px", marginTop: "20px" }}>
-                  <strong>{filteredBooks.length} albums</strong> / total :{" "}
-                  {filteredBooks
-                    .reduce((acc, book) => acc + book.prix, 0)
-                    .toFixed(2)}
-                  €
-                </div>
-              )}
-              <div className='wishlist-display'>
-                {filteredBooks.length === 0 && (
-                  <h2 style={{ paddingLeft: "20px" }}>
-                    Aucun livre dans cette wishlist
-                  </h2>
-                )}
-                <div className='wishlist-display__books_array'>
-                  {filteredBooks.map((book) => (
-                    <div key={book.id} className='wishlist-display__book'>
-                      <div
-                        style={{ position: "relative" }}
-                        onClick={() => history.push(`/book/${book.id_book}`)}
-                      >
-                        <img src={book.image} alt={book.titre} />
-                        {new Date(book.date_parution) < currentDate && (
-                          <Badge color='primary' badgeContent='✓' />
-                        )}
-                      </div>
+  const showInitialLoading =
+    (!hasLoaded || isDataLoading) && wishlist.length === 0;
 
-                      <div
-                        className='wishlist-display__info-title'
-                        onClick={() => history.push(`/book/${book.id_book}`)}
-                      >
-                        <h3>{book.titre}</h3>
-                        {book.tome && <span>Tome {book.tome}</span>}
-                      </div>
-                      <div className='wishlist-display__info-price'>
-                        <h3>{book.prix.toFixed(2)}€</h3>
-                      </div>
-                      <div className='wishlist-display__actions_buy'>
-                        <Button
-                          variant='outlined'
-                          style={{
-                            height: "30px",
-                            marginTop: "10px",
-                            margin: "auto",
-                            backgroundColor: "#06b87f",
-                            color: "white",
-                          }}
-                          fullWidth
-                          startIcon={<BsCartCheckFill />}
-                          onClick={() => handleBuyButton(book.id_book)}
-                        >
-                          Acheté
-                        </Button>
-                      </div>
-                      <div className='wishlist-display__actions_delete'>
-                        <Button
-                          variant='contained'
-                          style={{
-                            height: "30px",
-                            marginTop: "10px",
-                            margin: "auto",
-                            backgroundColor: "#cb1515",
-                            color: "white",
-                          }}
-                          fullWidth
-                          startIcon={<MdDeleteSweep />}
-                          onClick={() => handleDeleteButton(book.id_book)}
-                        >
-                          Retirer
-                        </Button>
-                      </div>
-                      <Divider />
-                      <div
-                        className='wishlist-display__info-serie'
-                        onClick={() => history.push(`/book/${book.id_book}`)}
-                      >
-                        {book.serie ? (
-                          <h4>{book.serie}</h4>
-                        ) : (
-                          <h4>{book.titre}</h4>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
+  return (
+    <>
+      <ErrorModal error={error} onClear={clearError} />
+
+      <main className='wishlist-page'>
+        <header className='wishlist-page__header'>
+          <div className='wishlist-page__heading'>
+            <div>
+              <h1>Ma wishlist</h1>
+              <p>
+                Garde un œil sur les albums que tu souhaites ajouter à ta
+                collection.
+              </p>
+            </div>
+          </div>
+
+          <div className='wishlist-page__stats'>
+            <div className='wishlist-page__stat'>
+              <span className='wishlist-page__stat-icon'>
+                <FaShoppingBag />
+              </span>
+              <div>
+                <strong>{wishlist.length}</strong>
+                <span>Albums souhaités</span>
               </div>
-            </Grid>
-            <DateModal
-              open={openCollectionModal}
-              handleClose={() => setOpenCollectionModal(false)}
-              date={dateObtention}
-              authorizeNoDate
-              label="Date d'achat"
-              title='Quand avez-vous acheté ce livre ?'
-              handleChange={(e) => setDateObtention(e.target.value)}
-              handleSubmit={handleAdditionToCollection}
+            </div>
+
+            <div className='wishlist-page__stat'>
+              <span className='wishlist-page__stat-icon'>
+                <FaCheck />
+              </span>
+              <div>
+                <strong>{releasedCount}</strong>
+                <span>Déjà disponibles</span>
+              </div>
+            </div>
+
+            <div className='wishlist-page__stat'>
+              <span className='wishlist-page__stat-icon'>
+                <FaCalendarAlt />
+              </span>
+              <div>
+                <strong>{upcomingCount}</strong>
+                <span>À paraître</span>
+              </div>
+            </div>
+
+            <div className='wishlist-page__stat wishlist-page__stat--budget'>
+              <span className='wishlist-page__stat-icon'>€</span>
+              <div>
+                <strong>{formatPrice(totalBudget)}</strong>
+                <span>Budget estimé</span>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        {showInitialLoading ? (
+          <div className='wishlist-loading'>
+            <Skeleton variant='rect' height={150} />
+            <div className='wishlist-loading__grid'>
+              {[1, 2, 3, 4, 5, 6].map((item) => (
+                <Skeleton key={item} variant='rect' height={330} />
+              ))}
+            </div>
+          </div>
+        ) : (
+          <>
+            <WishlistFilters
+              search={search}
+              onSearchChange={setSearch}
+              priceBounds={priceBounds}
+              priceRange={effectivePriceRange}
+              onPriceRangeChange={setPriceRange}
+              availability={availability}
+              dateRange={dateRange}
+              onDateRangeChange={setDateRange}
+              onAvailabilityChange={setAvailability}
+              sortBy={sortBy}
+              onSortChange={setSortBy}
+              resultCount={filteredBooks.length}
+              totalCount={wishlist.length}
+              hasActiveFilters={hasActiveFilters}
+              onReset={handleResetFilters}
             />
-          </React.Fragment>
+
+            {wishlist.length === 0 ? (
+              <section className='wishlist-empty'>
+                <div className='wishlist-empty__icon'>
+                  <FaShoppingBag />
+                </div>
+                <h2>Ta wishlist est encore vide</h2>
+                <p>
+                  Ajoute des albums depuis leur fiche pour les retrouver ici et
+                  garder une trace de tes prochaines envies.
+                </p>
+                <button
+                  type='button'
+                  onClick={() => history.push("/books")}
+                  className='wishlist-empty__button'
+                >
+                  Explorer les albums
+                </button>
+              </section>
+            ) : filteredBooks.length === 0 ? (
+              <section className='wishlist-empty wishlist-empty--filtered'>
+                <div className='wishlist-empty__icon'>
+                  <FaSearch />
+                </div>
+                <h2>Aucun album ne correspond</h2>
+                <p>
+                  Essaie de modifier tes critères ou réinitialise les filtres
+                  pour retrouver tous tes albums.
+                </p>
+                <button
+                  type='button'
+                  onClick={handleResetFilters}
+                  className='wishlist-empty__button'
+                >
+                  <FaUndo />
+                  Réinitialiser les filtres
+                </button>
+              </section>
+            ) : (
+              <section className='wishlist-results'>
+                <div className='wishlist-results__heading'>
+                  <div>
+                    <h2>Mes albums souhaités</h2>
+                    <span>
+                      {filteredBooks.length} album
+                      {filteredBooks.length > 1 ? "s" : ""}
+                      {filteredBooks.length !== wishlist.length &&
+                        ` sur ${wishlist.length}`}
+                    </span>
+                  </div>
+                  <span className='wishlist-results__total'>
+                    Valeur affichée :{" "}
+                    {formatPrice(
+                      filteredBooks.reduce(
+                        (total, book) => total + (Number(book.prix) || 0),
+                        0,
+                      ),
+                    )}
+                  </span>
+                </div>
+
+                <div className='wishlist-books'>
+                  {filteredBooks.map((book) => {
+                    const released = isBookReleased(book.date_parution);
+                    const isProcessing = processingBookId === book.id_book;
+
+                    return (
+                      <article key={book.id_book} className='wishlist-book'>
+                        <button
+                          type='button'
+                          className='wishlist-book__cover'
+                          onClick={() => history.push(`/book/${book.id_book}`)}
+                          aria-label={`Voir ${book.titre}`}
+                        >
+                          <img
+                            src={book.image}
+                            alt={book.titre}
+                            loading='lazy'
+                          />
+                          <span
+                            className={`wishlist-book__status ${
+                              released
+                                ? "wishlist-book__status--released"
+                                : "wishlist-book__status--upcoming"
+                            }`}
+                          >
+                            {released ? "Disponible" : "À paraître"}
+                          </span>
+                        </button>
+
+                        <div className='wishlist-book__content'>
+                          <button
+                            type='button'
+                            className='wishlist-book__title'
+                            onClick={() =>
+                              history.push(`/book/${book.id_book}`)
+                            }
+                          >
+                            {book.titre}
+                          </button>
+
+                          {book.tome && (
+                            <span className='wishlist-book__volume'>
+                              Tome {book.tome}
+                            </span>
+                          )}
+
+                          <span className='wishlist-book__series'>
+                            {book.serie || book.titre}
+                          </span>
+
+                          <div className='wishlist-book__release'>
+                            <FaCalendarAlt />
+                            <span>{formatReleaseDate(book.date_parution)}</span>
+                          </div>
+
+                          <div className='wishlist-book__price'>
+                            {formatPrice(book.prix)}
+                          </div>
+
+                          <div className='wishlist-book__actions'>
+                            <button
+                              type='button'
+                              className='wishlist-book__buy'
+                              onClick={() => handleBuyButton(book.id_book)}
+                              disabled={isProcessing}
+                            >
+                              <BsCartCheckFill />
+                              Acheté
+                            </button>
+
+                            <button
+                              type='button'
+                              className='wishlist-book__remove'
+                              onClick={() => handleDeleteButton(book.id_book)}
+                              disabled={isProcessing}
+                              aria-label={`Retirer ${book.titre} de la wishlist`}
+                              title='Retirer de la wishlist'
+                            >
+                              <FaTrashAlt />
+                            </button>
+                          </div>
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+              </section>
+            )}
+          </>
         )}
-      </div>
-    </React.Fragment>
+
+        <DateModal
+          open={openCollectionModal}
+          handleClose={() => {
+            setOpenCollectionModal(false);
+            setDateObtention(null);
+            setBookId(null);
+          }}
+          date={dateObtention}
+          authorizeNoDate
+          label="Date d'achat"
+          title='Quand avez-vous acheté ce livre ?'
+          handleChange={(e) => setDateObtention(e.target.value)}
+          handleSubmit={handleAdditionToCollection}
+        />
+      </main>
+    </>
   );
 };
 

@@ -5,7 +5,7 @@ import { AuthContext } from "../../shared/context/auth-context";
 import DisplayCollection from "./DisplayCollection";
 import DisplayReadlist from "./DisplayReadlist";
 import DisplayWishlist from "./DisplayWishlist";
-import DisplayReleases from "./DisplayFutureWishlist";
+import RealPurchaseManager from "./RealPurchaseManager";
 import Stats from "./Stats";
 
 import "./UserLibrary.css";
@@ -20,26 +20,30 @@ const UserLibrary = () => {
     { label: "Mes livres", path: `${basePath}/collection` },
     { label: "Mes lectures", path: `${basePath}/readlist` },
     { label: "Mes souhaits", path: `${basePath}/wishlist` },
-    { label: "Mes sorties", path: `${basePath}/releases` },
+    { label: "Mes achats", path: `${basePath}/real-purchase` },
     { label: "Mes statistiques", path: `${basePath}/stats` },
   ];
 
   const currentPath = location.pathname;
-
   const activePage = pages.find((page) => page.path === currentPath);
 
   const renderPage = () => {
     switch (activePage?.path) {
       case `${basePath}/collection`:
         return <DisplayCollection />;
+
       case `${basePath}/readlist`:
         return <DisplayReadlist />;
+
       case `${basePath}/wishlist`:
         return <DisplayWishlist />;
-      case `${basePath}/releases`:
-        return <DisplayReleases />;
+
+      case `${basePath}/real-purchase`:
+        return <RealPurchaseManager />;
+
       case `${basePath}/stats`:
         return <Stats />;
+
       default:
         return <DisplayCollection />;
     }

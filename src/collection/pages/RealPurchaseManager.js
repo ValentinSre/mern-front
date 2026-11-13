@@ -25,9 +25,9 @@ import variables from "../../shared/util/variables";
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    padding: theme.spacing(3),
-    background: "#f7f7fa",
-    minHeight: "100vh",
+    padding: theme.spacing(2, 0),
+    background: "transparent",
+    minHeight: "auto",
   },
   header: {
     display: "flex",
@@ -143,7 +143,7 @@ const RealPurchaseManager = () => {
         `${process.env.REACT_APP_API_URL}/collection/${auth.userId}?displayMode=bySeries`,
         "GET",
         null,
-        { Authorization: "Bearer " + auth.token }
+        { Authorization: "Bearer " + auth.token },
       );
       sortCollection(responseData.collection);
     } catch (err) {}
@@ -233,7 +233,7 @@ const RealPurchaseManager = () => {
         {
           "Content-Type": "application/json",
           Authorization: "Bearer " + auth.token,
-        }
+        },
       );
       fetchBooks();
       handleCloseModal();
@@ -244,19 +244,19 @@ const RealPurchaseManager = () => {
     setSelectedBookIds((prevSelected) =>
       prevSelected.includes(bookId)
         ? prevSelected.filter((id) => id !== bookId)
-        : [...prevSelected, bookId]
+        : [...prevSelected, bookId],
     );
   };
 
   const renderFirstTable = (books) => {
     const totalTheoretical = books.reduce(
       (sum, book) => sum + (book.prix || 0),
-      0
+      0,
     );
     const allBooks = loadedCollection[selectedMonth] || [];
     const totalTheoreticalAll = allBooks.reduce(
       (sum, book) => sum + (book.prix || 0),
-      0
+      0,
     );
 
     return (
@@ -285,8 +285,8 @@ const RealPurchaseManager = () => {
                     onClick={() =>
                       handleOpenModal(
                         books.filter((book) =>
-                          selectedBookIds.includes(book.id)
-                        )
+                          selectedBookIds.includes(book.id),
+                        ),
                       )
                     }
                     disabled={selectedBookIds.length === 0}
@@ -336,15 +336,15 @@ const RealPurchaseManager = () => {
 
     const totalTheoricalValue = books.reduce(
       (sum, book) => sum + (book.prix || 0),
-      0
+      0,
     );
     const totalEffectiveValue = books.reduce(
       (sum, book) => sum + (book.real_price || 0) + (book.shipping_cost || 0),
-      0
+      0,
     );
     const totalShippingCost = books.reduce(
       (sum, book) => sum + (book.shipping_cost || 0),
-      0
+      0,
     );
 
     return (
@@ -391,7 +391,7 @@ const RealPurchaseManager = () => {
                           sum +
                           (book.real_price || 0) +
                           (book.shipping_cost || 0),
-                        0
+                        0,
                       )
                       .toFixed(2)}
                   </TableCell>
@@ -444,14 +444,15 @@ const RealPurchaseManager = () => {
           <Divider className={classes.divider} />
           {renderFirstTable(
             loadedCollection[selectedMonth]?.filter(
-              (book) => book.real_price === undefined || book.real_price === null
-            ) || []
+              (book) =>
+                book.real_price === undefined || book.real_price === null,
+            ) || [],
           )}
           <Divider className={classes.divider} />
           {renderSecondTable(
             loadedCollection[selectedMonth]?.filter(
-              (book) => book.real_price || book.real_price === 0
-            ) || []
+              (book) => book.real_price || book.real_price === 0,
+            ) || [],
           )}
         </>
       )}
