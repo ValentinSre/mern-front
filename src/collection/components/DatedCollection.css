@@ -13,13 +13,18 @@
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
 }
 
-.collection-history-trigger:hover {
+.collection-history-trigger:hover:not(:disabled) {
   border-color: #e5c94e;
   background: #faf7eb;
   color: #292929;
+}
+
+.collection-history-trigger:disabled {
+  opacity: 0.5;
+  cursor: default;
 }
 
 .collection-history-dialog,
@@ -279,6 +284,8 @@
   font-size: 13px;
   font-weight: 600;
 }
+
+/* Responsive */
 
 @media (max-width: 480px) {
   .collection-history-dates {

@@ -1,8 +1,168 @@
-.readlist {
-  border-radius: 10px;
-  background-color: #fff;
-  overflow: auto;
+
+.readlist-page {
+  width: 100%;
   margin: 0 auto;
-  padding-bottom: 15px;
-  padding: 20px;
+}
+
+/* En-tête */
+
+.readlist-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin: 0 20px 28px;
+}
+
+.readlist-header__heading {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.readlist-header h1 {
+  margin: 0 0 8px;
+  color: #292929;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.8px;
+}
+
+.readlist-header p {
+  margin: 0;
+  color: #777;
+  font-size: 14px;
+}
+
+.readlist-header__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  flex-shrink: 0;
+  margin-right: 40px;
+}
+
+/* Statistiques */
+
+.readlist-stats {
+  display: flex;
+  gap: 12px;
+}
+
+.readlist-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 105px;
+  padding: 14px 20px;
+  border-radius: 14px;
+  background: #fff;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.readlist-stat__value {
+  color: #292929;
+  font-size: 23px;
+  font-weight: 700;
+}
+
+.readlist-stat__label {
+  margin-top: 3px;
+  color: #777;
+  font-size: 12px;
+}
+
+/* Bouton livres non lus */
+
+.readlist-header__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 42px;
+  padding: 0 15px;
+  border: 1px solid #e9e5de;
+  border-radius: 10px;
+  background: #fff;
+  color: #555;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.readlist-header__button svg {
+  font-size: 15px;
+}
+
+.readlist-header__button:hover:not(:disabled) {
+  border-color: #e5c94e;
+  background: #faf7eb;
+  color: #292929;
+}
+
+.readlist-header__button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* Contenu */
+
+.readlist {
+  margin: 0 45px;
+  padding: 28px 32px 32px;
+  overflow: hidden;
+  border-radius: 16px;
+  background-color: #fff;
+  box-sizing: border-box;
+}
+
+/* Responsive */
+
+@media (max-width: 600px) {
+  .readlist-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 18px;
+    margin: 0 12px 20px;
+  }
+
+  .readlist-header h1 {
+    font-size: 24px;
+  }
+
+  .readlist-header__heading {
+    display: none;
+  }
+
+  .readlist-header__actions {
+    align-items: stretch;
+    gap: 14px;
+    margin-right: 30px;
+  }
+
+  .readlist-stats {
+    width: 100%;
+  }
+
+  .readlist-stat {
+    flex: 1;
+    min-width: 0;
+    padding: 12px;
+  }
+
+  .readlist-header__button {
+    width: 100%;
+  }
+
+  .readlist {
+    margin: 0 20px;
+    padding: 24px 20px 28px;
+    border-radius: 12px;
+  }
 }

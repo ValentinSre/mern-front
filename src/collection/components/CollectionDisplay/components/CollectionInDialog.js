@@ -48,7 +48,15 @@ const getPublicationYear = (date) => {
 
 const CollectionInDialog = (props) => {
   const history = useHistory();
-  const { title, open, books = [], onClose, filters } = props;
+
+  const {
+    title,
+    open,
+    books = [],
+    onClose,
+    filters,
+    showReadingStatus = true,
+  } = props;
 
   const [sortOrder, setSortOrder] = useState("default");
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
@@ -133,7 +141,9 @@ const CollectionInDialog = (props) => {
       <Tooltip title={makeTitle(book)} key={book.id || book.id_book}>
         <button
           type='button'
-          className='collection-dialog__book'
+          className={`collection-dialog__book ${
+            !showReadingStatus ? "collection-dialog__book--no-status" : ""
+          }`}
           onClick={() => history.push(`/book/${book.id_book}`)}
         >
           <div className='collection-dialog__cover'>
@@ -162,21 +172,25 @@ const CollectionInDialog = (props) => {
               {[book.format, year].filter(Boolean).join(" · ") || "\u00A0"}
             </div>
 
-            <div className='collection-dialog__footer'>
-              <div className='collection-dialog__rating'>
-                {typeof book.note === "number" ? (
-                  <>
-                    <FaStar />
-                    <span>{book.note}</span>
-                    <span className='collection-dialog__rating-scale'>/5</span>
-                  </>
-                ) : (
-                  <span>Non noté</span>
-                )}
-              </div>
+            {showReadingStatus && (
+              <div className='collection-dialog__footer'>
+                <div className='collection-dialog__rating'>
+                  {typeof book.note === "number" ? (
+                    <>
+                      <FaStar />
+                      <span>{book.note}</span>
+                      <span className='collection-dialog__rating-scale'>
+                        /5
+                      </span>
+                    </>
+                  ) : (
+                    <span>Non noté</span>
+                  )}
+                </div>
 
-              {renderBookStatus(book)}
-            </div>
+                {renderBookStatus(book)}
+              </div>
+            )}
           </div>
         </button>
       </Tooltip>

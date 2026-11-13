@@ -49,10 +49,11 @@ const CollectionContent = ({
           </div>
         </div>
 
-        {!isDataLoading && originalCollection && (
+        {originalCollection && (
           <DatedCollection
             loadedBooks={originalCollection}
             displayMode={displayMode}
+            isLoading={isDataLoading}
           />
         )}
       </div>

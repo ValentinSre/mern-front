@@ -95,7 +95,7 @@ const formatPeriod = (dateFrom, dateTo) => {
   return "Toutes les dates";
 };
 
-const DatedCollection = ({ loadedBooks, displayMode }) => {
+const DatedCollection = ({ loadedBooks, displayMode, isLoading }) => {
   const history = useHistory();
 
   const books = useMemo(
@@ -162,6 +162,7 @@ const DatedCollection = ({ loadedBooks, displayMode }) => {
         type='button'
         className='collection-history-trigger'
         onClick={handleOpenHistory}
+        disabled={isLoading}
       >
         <FaCalendarAlt />
         <span>Historique des achats</span>
