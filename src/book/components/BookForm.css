@@ -1,64 +1,312 @@
-/* .form-control {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-} */
 
-.form-select {
-  width: 100%;
-  margin-top: 10px;
-  margin-bottom: 20px;
+.book-form-page {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 42px 0 30px;
+  box-sizing: border-box;
+  color: #222222;
 }
 
-.book-image {
-  width: 200px;
-  height: auto;
+.book-form-header {
+  margin-bottom: 30px;
 }
+
+.book-form-eyebrow {
+  margin-bottom: 8px;
+  color: #888888;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+}
+
+.book-form-header h1 {
+  margin: 0;
+  color: #171717;
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  font-weight: 800;
+  letter-spacing: -0.045em;
+}
+
+.book-form-header p {
+  margin: 9px 0 0;
+  color: #777777;
+  font-size: 0.95rem;
+}
+
+/* FORM */
 
 .book-form-container {
-  max-width: 500px;
   width: 100%;
   margin: 0 auto;
-  padding: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  background-color: white;
 }
 
-.book-form-container h2 {
-  margin-bottom: 20px;
-  font-size: '15px';
+.book-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  align-items: start;
 }
 
-.book-form-container > div:not(:last-child) {
-  margin-bottom: 20px;
+.book-form-section {
+  min-width: 0;
+  padding: 25px;
+  border: 1px solid rgba(17, 17, 17, 0.06);
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 8px 25px rgba(17, 17, 17, 0.035);
 }
 
-.book-form-container .MuiTextField-root {
-  width: 100%;
-}
-
-.book-form-container .MuiFormControl-root {
-  width: 100%;
-}
-
-.add-artist-container {
+.book-form-section-header {
   display: flex;
-  flex-direction: row;
   align-items: center;
-  justify-content: space-between;
-  margin-top: 10px;
+  gap: 13px;
+  margin-bottom: 18px;
 }
 
-.add-artist-container .MuiFormControl-root {
-  width: 45%;
-  margin-right: 5%;
+.book-form-section-icon {
+  display: flex;
+  flex: 0 0 42px;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  background: #fff5c9;
+  color: #222222;
 }
 
-.add-artist-container button {
-  width: 45%;
+.book-form-section-icon svg {
+  font-size: 1.35rem;
 }
 
-.add-artist-container button svg {
-  margin-right: 5px;
+.book-form-section-header h2 {
+  margin: 0;
+  color: #222222;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.book-form-section-header p {
+  margin: 4px 0 0;
+  color: #888888;
+  font-size: 0.78rem;
+}
+
+/* FIELDS */
+
+.book-form-section .MuiFormControl-root,
+.book-form-section .MuiTextField-root {
+  width: 100%;
+}
+
+.book-form-section .MuiOutlinedInput-root {
+  border-radius: 11px;
+  background: #ffffff;
+}
+
+.book-form-section .MuiOutlinedInput-notchedOutline {
+  border-color: #e5e5e5;
+}
+
+.book-form-section .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: #bbbbbb;
+}
+
+.book-form-section .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #d8b928;
+}
+
+.book-form-section .MuiInputLabel-outlined.Mui-focused {
+  color: #806b12;
+}
+
+.book-form-section .MuiInputAdornment-root {
+  color: #888888;
+}
+
+.book-form-inline-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+/* COVER PREVIEW */
+
+.book-form-cover-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 13px;
+  background: #f8f7f4;
+}
+
+.book-form-cover-preview span {
+  color: #777777;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.book-form-cover-preview img {
+  display: block;
+  width: auto;
+  max-width: 150px;
+  max-height: 210px;
+  object-fit: contain;
+  border-radius: 5px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
+}
+
+/* ARTISTS */
+
+.book-form-artist-group {
+  margin-bottom: 20px;
+}
+
+.book-form-artist-group > label {
+  display: block;
+  margin-bottom: 9px;
+  color: #555555;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.book-form-artists-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.book-form-artists-list:empty {
+  display: none;
+}
+
+.book-form-artists-list .MuiChip-root {
+  max-width: 100%;
+  height: 30px;
+  border-radius: 9px;
+  background: #fff3bd;
+  color: #343026;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.book-form-artists-list .MuiChip-deleteIcon {
+  color: #77704f;
+}
+
+.book-form-artists-list .MuiChip-deleteIcon:hover {
+  color: #222222;
+}
+
+.book-form-artist-group .MuiIconButton-root {
+  color: #333333;
+}
+
+.book-form-artist-group .MuiIconButton-root.Mui-disabled {
+  color: #cccccc;
+}
+
+/* ACTIONS */
+
+.book-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+  padding: 20px 0 10px;
+}
+
+.book-form-submit.MuiButton-root {
+  min-height: 48px;
+  padding: 0 25px;
+  border-radius: 13px;
+  background: #171717;
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-transform: none;
+  box-shadow: 0 7px 16px rgba(17, 17, 17, 0.13);
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.book-form-submit.MuiButton-root:hover {
+  transform: translateY(-2px);
+  background: #333333;
+  box-shadow: 0 10px 20px rgba(17, 17, 17, 0.17);
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 800px) {
+  .book-form-page {
+    width: 92%;
+    padding-top: 30px;
+  }
+
+  .book-form-grid {
+    gap: 14px;
+  }
+
+  .book-form-section {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .book-form-page {
+    width: 92%;
+    padding-top: 25px;
+  }
+
+  .book-form-header {
+    margin-bottom: 22px;
+  }
+
+  .book-form-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .book-form-header p {
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+
+  .book-form-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .book-form-section {
+    padding: 19px 16px;
+    border-radius: 16px;
+  }
+
+  .book-form-section-header {
+    gap: 11px;
+  }
+
+  .book-form-section-icon {
+    flex-basis: 38px;
+    width: 38px;
+    height: 38px;
+  }
+
+  .book-form-inline-fields {
+    gap: 8px;
+  }
+
+  .book-form-actions {
+    justify-content: stretch;
+    padding-bottom: 15px;
+  }
+
+  .book-form-submit.MuiButton-root {
+    width: 100%;
+  }
 }

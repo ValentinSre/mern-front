@@ -7,455 +7,508 @@ import {
   InputAdornment,
   Chip,
   IconButton,
+  FormControl,
+  InputLabel,
 } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import { Add as MenuIcon } from "@material-ui/icons";
+import {
+  Add,
+  MenuBook,
+  Euro,
+  Store,
+  People,
+  BarChart,
+  ImageOutlined,
+  Save,
+  Close,
+} from "@material-ui/icons";
 
 import "./BookForm.css";
+
+const normalizeIsbn = (value) => value.replace(/[\s-]/g, "");
+
+const isValidIsbn = (value) => {
+  if (!/^\d{13}$/.test(value)) return false;
+
+  const sum = value
+    .split("")
+    .reduce(
+      (total, digit, index) =>
+        total + Number(digit) * (index % 2 === 0 ? 1 : 3),
+      0,
+    );
+
+  return sum % 10 === 0;
+};
 
 const BookForm = ({
   book,
   handleSubmit,
-  existingSeries: initialExistingSeries,
-  existingEditeurs: initialExistingEditeurs,
-  existingArtistes,
-  existingFormats: initialExistingFormats,
-  existingGenres: initialExistingGenres,
+  existingSeries: initialExistingSeries = [],
+  existingEditeurs: initialExistingEditeurs = [],
+  existingArtistes = [],
+  existingFormats: initialExistingFormats = [],
+  existingGenres: initialExistingGenres = [],
 }) => {
   const [type, setType] = useState(book.type || "Comics");
   const [titre, setTitre] = useState(book.titre || "");
+  const [isbn, setIsbn] = useState(normalizeIsbn(book.isbn || ""));
   const [serie, setSerie] = useState(book.serie || "");
-  const [tome, setTome] = useState(book.tome || null);
-  const [version, setVersion] = useState(book.version || null);
+  const [tome, setTome] = useState(book.tome || "");
+  const [version, setVersion] = useState(book.version || "");
   const [image, setImage] = useState(book.image || "");
-  const [prix, setPrix] = useState(book.prix || null);
-  const [auteur, setAuteur] = useState(book.auteurs ? book.auteurs[0] : "");
+  const [prix, setPrix] = useState(book.prix ?? "");
+  const [auteur, setAuteur] = useState("");
   const [auteurs, setAuteurs] = useState(book.auteurs || []);
   const [editeur, setEditeur] = useState(book.editeur || "");
   const [date_parution, setDate_parution] = useState(book.date_parution || "");
   const [format, setFormat] = useState(book.format || "");
   const [genre, setGenre] = useState(book.genre || "");
-  const [dessinateur, setDessinateur] = useState(
-    book.dessinateurs ? book.dessinateurs[0] : ""
-  );
+  const [dessinateur, setDessinateur] = useState("");
   const [dessinateurs, setDessinateurs] = useState(book.dessinateurs || []);
-  const [poids, setPoids] = useState(book.poids || null);
-  const [planches, setPlanches] = useState(book.planches || null);
+  const [poids, setPoids] = useState(book.poids ?? "");
+  const [planches, setPlanches] = useState(book.planches ?? "");
 
-  const handleAjoutAuteur = () => {
-    if (auteur !== "" && !auteurs.includes(auteur)) {
-      const oldAuteurs = auteurs;
-      oldAuteurs.push(auteur);
-      setAuteurs(oldAuteurs);
+  const isEditing = Boolean(book._id || book.id);
+
+  const addArtist = (artist, typeOfArtist) => {
+    const value = artist.trim();
+
+    if (!value) return;
+
+    if (typeOfArtist === "auteur") {
+      if (!auteurs.includes(value)) {
+        setAuteurs((current) => [...current, value]);
+      }
       setAuteur("");
-    }
-  };
-
-  const handleAjoutDessinateur = () => {
-    if (dessinateur !== "" && !dessinateurs.includes(dessinateur)) {
-      const oldDessinateurs = dessinateurs;
-      oldDessinateurs.push(dessinateur);
-      setDessinateurs(oldDessinateurs);
+    } else {
+      if (!dessinateurs.includes(value)) {
+        setDessinateurs((current) => [...current, value]);
+      }
       setDessinateur("");
     }
   };
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-
-    handleAjoutAuteur();
-    handleAjoutDessinateur();
-
-    handleSubmit({
-      type: type,
-      serie: serie,
-      titre: titre,
-      version: version,
-      tome: tome,
-      image: image,
-      prix: prix,
-      auteurs: auteurs,
-      editeur: editeur,
-      date_parution: date_parution,
-      format: format,
-      genre: genre,
-      poids: poids,
-      planches: planches,
-      dessinateurs: dessinateurs,
-    });
-  };
-
-  const deleteArtistChip = (artiste, typeOfArtist) => {
+  const deleteArtist = (artist, typeOfArtist) => {
     if (typeOfArtist === "auteur") {
-      setAuteurs(auteurs.filter((a) => a !== artiste));
+      setAuteurs((current) => current.filter((a) => a !== artist));
     } else {
-      setDessinateurs(dessinateurs.filter((d) => d !== artiste));
+      setDessinateurs((current) => current.filter((d) => d !== artist));
     }
   };
 
-  // For autocompletes
-  const [existingAuteurs, setExistingAuteurs] = useState(existingArtistes);
-  const [selectedAuteur, setSelectedAuteur] = useState(auteur);
-  const [existingDessinateurs, setExistingDessinateurs] =
-    useState(existingArtistes);
-  const [selectedDessinateur, setSelectedDessinateur] = useState(dessinateur);
-  const [existingEditeurs, setExistingEditeurs] = useState(
-    initialExistingEditeurs
+  const editArtist = (artist, typeOfArtist) => {
+    if (typeOfArtist === "auteur") {
+      setAuteur(artist);
+      deleteArtist(artist, "auteur");
+    } else {
+      setDessinateur(artist);
+      deleteArtist(artist, "dessinateur");
+    }
+  };
+
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
+
+    const normalizedIsbn = normalizeIsbn(isbn);
+
+    if (normalizedIsbn && !isValidIsbn(normalizedIsbn)) {
+      return;
+    }
+
+    const finalAuteurs = [
+      ...new Set([...auteurs, auteur.trim()].filter(Boolean)),
+    ];
+
+    const finalDessinateurs = [
+      ...new Set([...dessinateurs, dessinateur.trim()].filter(Boolean)),
+    ];
+
+    handleSubmit({
+      type,
+      serie,
+      titre,
+      isbn: normalizedIsbn,
+      version,
+      tome,
+      image,
+      prix,
+      auteurs: finalAuteurs,
+      editeur,
+      date_parution,
+      format,
+      genre,
+      poids,
+      planches,
+      dessinateurs: finalDessinateurs,
+    });
+  };
+
+  const renderAutocomplete = ({
+    label,
+    value,
+    options,
+    onChange,
+    required = false,
+  }) => (
+    <Autocomplete
+      freeSolo
+      options={options.filter(Boolean)}
+      inputValue={value}
+      onChange={(event, newValue) => onChange(newValue || "")}
+      onInputChange={(event, newValue, reason) => {
+        if (reason === "input" || reason === "clear") {
+          onChange(newValue);
+        }
+      }}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={label}
+          variant='outlined'
+          margin='normal'
+          fullWidth
+          required={required}
+        />
+      )}
+    />
   );
-  const [selectedEditeur, setSelectedEditeur] = useState(editeur);
-  const [existingFormats, setExistingFormats] = useState(
-    initialExistingFormats
+
+  const renderArtistChips = (artists, typeOfArtist) => (
+    <div className='book-form-artists-list'>
+      {artists.map((artist) => (
+        <Chip
+          key={artist}
+          label={artist}
+          onDelete={() => deleteArtist(artist, typeOfArtist)}
+          onClick={() => editArtist(artist, typeOfArtist)}
+          deleteIcon={<Close />}
+        />
+      ))}
+    </div>
   );
-  const [selectedFormat, setSelectedFormat] = useState(format);
-  const [existingGenres, setExistingGenres] = useState(initialExistingGenres);
-  const [selectedGenre, setSelectedGenre] = useState(genre);
-  const [existingSeries, setExistingSeries] = useState(initialExistingSeries);
-  const [selectedSerie, setSelectedSerie] = useState(serie);
 
-  const handleInputAuteurChange = (event, value) => {
-    const filteredAuteurs = existingArtistes.filter((auteur) =>
-      auteur && auteur.toLowerCase().includes(value.toLowerCase())
-    );
-
-    setExistingAuteurs(filteredAuteurs);
-    setAuteur(value);
-  };
-
-  const handleInputDessinateurChange = (event, value) => {
-    const filteredDessinateurs = existingArtistes.filter((dessinateur) =>
-      dessinateur && dessinateur.toLowerCase().includes(value.toLowerCase())
-    );
-
-    setExistingDessinateurs(filteredDessinateurs);
-    setDessinateur(value);
-  };
-
-  const handleInputEditeurChange = (event, value) => {
-    const filteredEditeurs = initialExistingEditeurs.filter((editeur) =>
-      editeur.toLowerCase().includes(value.toLowerCase())
-    );
-
-    setExistingEditeurs(filteredEditeurs);
-    setEditeur(value);
-  };
-
-  const handleInputFormatChange = (event, value) => {
-    const filteredFormats = initialExistingFormats.filter((format) =>
-      format.toLowerCase().includes(value.toLowerCase())
-    );
-
-    setExistingFormats(filteredFormats);
-    setFormat(value);
-  };
-
-  const handleInputGenreChange = (event, value) => {
-    const filteredGenres = initialExistingGenres.filter((genre) =>
-      genre.toLowerCase().includes(value.toLowerCase())
-    );
-
-    setExistingGenres(filteredGenres);
-    setGenre(value);
-  };
-
-  const handleInputSerieChange = (event, value) => {
-    const filteredSeries = initialExistingSeries.filter((serie) =>
-      serie.toLowerCase().includes(value.toLowerCase())
-    );
-
-    setExistingSeries(filteredSeries);
-    setSerie(value);
-  };
-
-  const DeletableChips = ({ artistes, handleDelete, typeOfArtist }) => {
-    return artistes.map((artiste) => (
-      <Chip
-        key={artiste}
-        label={artiste}
-        onDelete={() => handleDelete(artiste, typeOfArtist)}
-        onClick={() => {
-          if (typeOfArtist === "auteur") {
-            setAuteur(artiste);
-            setAuteurs(auteurs.filter((a) => a !== artiste));
-          } else {
-            setDessinateur(artiste);
-            setDessinateurs(dessinateurs.filter((d) => d !== artiste));
-          }
-        }}
-      />
-    ));
-  };
+  const renderArtistInput = ({
+    label,
+    value,
+    options,
+    onChange,
+    onAdd,
+    required,
+  }) => (
+    <Autocomplete
+      freeSolo
+      options={options.filter(Boolean)}
+      inputValue={value}
+      onChange={(event, newValue) => onChange(newValue || "")}
+      onInputChange={(event, newValue, reason) => {
+        if (reason === "input" || reason === "clear") {
+          onChange(newValue);
+        }
+      }}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={label}
+          variant='outlined'
+          margin='normal'
+          fullWidth
+          required={required}
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                <InputAdornment position='end'>
+                  <IconButton
+                    type='button'
+                    onClick={onAdd}
+                    aria-label={`Ajouter ${label.toLowerCase()}`}
+                    title={`Ajouter ${label.toLowerCase()}`}
+                    disabled={!value.trim()}
+                  >
+                    <Add />
+                  </IconButton>
+                </InputAdornment>
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
+    />
+  );
 
   return (
-    <form onSubmit={handleFormSubmit} className='book-form-container'>
-      <div className='form-control'>
-        <div>
-          <h2>Informations basiques sur le livre</h2>
-          <label htmlFor={"type"}>Type</label>
-          <Select
-            label='Type'
-            id='tri-select'
-            value={type}
-            onChange={(e) => setType(e.target.value)}
-            className='form-select'
+    <div className='book-form-page'>
+      <header className='book-form-header'>
+        <div className='book-form-eyebrow'>CATALOGUE</div>
+        <h1>{isEditing ? "Modifier un livre" : "Ajouter un livre"}</h1>
+        <p>Renseigne les informations pour compléter la fiche du livre.</p>
+      </header>
+
+      <form onSubmit={handleFormSubmit} className='book-form-container'>
+        <div className='book-form-grid'>
+          <section className='book-form-section'>
+            <div className='book-form-section-header'>
+              <div className='book-form-section-icon'>
+                <MenuBook />
+              </div>
+              <div>
+                <h2>Informations générales</h2>
+                <p>Identité et couverture du livre</p>
+              </div>
+            </div>
+
+            <FormControl variant='outlined' fullWidth margin='normal'>
+              <InputLabel id='book-type-label'>Type</InputLabel>
+              <Select
+                labelId='book-type-label'
+                value={type}
+                onChange={(event) => setType(event.target.value)}
+                label='Type'
+              >
+                <MenuItem value='Comics'>Comics</MenuItem>
+                <MenuItem value='Manga'>Manga</MenuItem>
+                <MenuItem value='BD'>BD</MenuItem>
+                <MenuItem value='Roman'>Roman</MenuItem>
+              </Select>
+            </FormControl>
+
+            <TextField
+              label='Titre'
+              variant='outlined'
+              value={titre}
+              onChange={(event) => setTitre(event.target.value)}
+              margin='normal'
+              fullWidth
+              required
+            />
+
+            {renderAutocomplete({
+              label: "Série",
+              value: serie,
+              options: initialExistingSeries,
+              onChange: setSerie,
+            })}
+
+            {serie.trim() !== "" && (
+              <div className='book-form-inline-fields'>
+                <TextField
+                  label='Tome'
+                  variant='outlined'
+                  value={tome}
+                  onChange={(event) => setTome(event.target.value)}
+                  margin='normal'
+                  type='number'
+                  fullWidth
+                />
+                <TextField
+                  label='Version'
+                  variant='outlined'
+                  value={version}
+                  onChange={(event) => setVersion(event.target.value)}
+                  margin='normal'
+                  type='number'
+                  fullWidth
+                />
+              </div>
+            )}
+
+            <TextField
+              label='URL de la couverture'
+              variant='outlined'
+              value={image}
+              onChange={(event) => setImage(event.target.value)}
+              margin='normal'
+              fullWidth
+              required
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <ImageOutlined />
+                  </InputAdornment>
+                ),
+              }}
+            />
+
+            {image && (
+              <div className='book-form-cover-preview'>
+                <span>Aperçu de la couverture</span>
+                <img src={image} alt={titre || "Couverture du livre"} />
+              </div>
+            )}
+          </section>
+
+          <section className='book-form-section'>
+            <div className='book-form-section-header'>
+              <div className='book-form-section-icon'>
+                <Store />
+              </div>
+              <div>
+                <h2>Informations commerciales</h2>
+                <p>Prix, éditeur et publication</p>
+              </div>
+            </div>
+
+            <TextField
+              label='Prix'
+              variant='outlined'
+              margin='normal'
+              value={prix}
+              onChange={(event) => setPrix(event.target.value)}
+              fullWidth
+              type='number'
+              inputProps={{ step: "0.01" }}
+              required
+              InputProps={{
+                endAdornment: <InputAdornment position='end'>€</InputAdornment>,
+              }}
+            />
+
+            {renderAutocomplete({
+              label: "Éditeur",
+              value: editeur,
+              options: initialExistingEditeurs,
+              onChange: setEditeur,
+            })}
+
+            {renderAutocomplete({
+              label: "Format",
+              value: format,
+              options: initialExistingFormats,
+              onChange: setFormat,
+            })}
+
+            <TextField
+              label='ISBN-13'
+              variant='outlined'
+              value={isbn}
+              onChange={(event) => setIsbn(normalizeIsbn(event.target.value))}
+              margin='normal'
+              fullWidth
+              error={isbn !== "" && !isValidIsbn(isbn)}
+              helperText={
+                isbn === ""
+                  ? "Facultatif — 13 chiffres."
+                  : isValidIsbn(isbn)
+                    ? "ISBN valide"
+                    : "ISBN invalide : vérifie les 13 chiffres."
+              }
+              inputProps={{
+                inputMode: "numeric",
+              }}
+            />
+
+            <TextField
+              label='Date de parution'
+              variant='outlined'
+              value={date_parution}
+              onChange={(event) => setDate_parution(event.target.value)}
+              margin='normal'
+              fullWidth
+              type='date'
+              InputLabelProps={{ shrink: true }}
+            />
+          </section>
+
+          <section className='book-form-section'>
+            <div className='book-form-section-header'>
+              <div className='book-form-section-icon'>
+                <People />
+              </div>
+              <div>
+                <h2>Artistes</h2>
+                <p>Auteurs et dessinateurs du livre</p>
+              </div>
+            </div>
+
+            <div className='book-form-artist-group'>
+              <label>Auteurs</label>
+              {renderArtistChips(auteurs, "auteur")}
+              {renderArtistInput({
+                label: "Ajouter un auteur",
+                value: auteur,
+                options: existingArtistes,
+                onChange: setAuteur,
+                onAdd: () => addArtist(auteur, "auteur"),
+                required: auteurs.length === 0,
+              })}
+            </div>
+
+            <div className='book-form-artist-group'>
+              <label>Dessinateurs</label>
+              {renderArtistChips(dessinateurs, "dessinateur")}
+              {renderArtistInput({
+                label: "Ajouter un dessinateur",
+                value: dessinateur,
+                options: existingArtistes,
+                onChange: setDessinateur,
+                onAdd: () => addArtist(dessinateur, "dessinateur"),
+                required: dessinateurs.length === 0,
+              })}
+            </div>
+
+            {renderAutocomplete({
+              label: "Genre",
+              value: genre,
+              options: initialExistingGenres,
+              onChange: setGenre,
+            })}
+          </section>
+
+          <section className='book-form-section'>
+            <div className='book-form-section-header'>
+              <div className='book-form-section-icon'>
+                <BarChart />
+              </div>
+              <div>
+                <h2>Informations statistiques</h2>
+                <p>Caractéristiques physiques</p>
+              </div>
+            </div>
+
+            <TextField
+              label='Nombre de planches'
+              variant='outlined'
+              value={planches}
+              onChange={(event) => setPlanches(event.target.value)}
+              margin='normal'
+              type='number'
+              fullWidth
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position='end'>planches</InputAdornment>
+                ),
+              }}
+            />
+
+            <TextField
+              label='Poids'
+              variant='outlined'
+              margin='normal'
+              value={poids}
+              onChange={(event) => setPoids(event.target.value)}
+              fullWidth
+              type='number'
+              InputProps={{
+                endAdornment: <InputAdornment position='end'>g</InputAdornment>,
+              }}
+            />
+          </section>
+        </div>
+
+        <div className='book-form-actions'>
+          <Button
+            type='submit'
+            variant='contained'
+            className='book-form-submit'
+            startIcon={<Save />}
           >
-            <MenuItem value={"Comics"}>Comics</MenuItem>
-            <MenuItem value={"Manga"}>Manga</MenuItem>
-            <MenuItem value={"BD"}>BD</MenuItem>
-            <MenuItem value={"Roman"}>Roman</MenuItem>
-          </Select>
-          <TextField
-            label='Titre'
-            variant='outlined'
-            value={titre}
-            onChange={(e) => setTitre(e.target.value)}
-            margin='normal'
-            fullWidth
-            required
-            InputLabelProps={{ position: "top" }}
-          />
-          <Autocomplete
-            freeSolo
-            options={existingSeries || []}
-            value={selectedSerie}
-            onChange={(e, value) => setSelectedSerie(value)}
-            inputValue={serie}
-            onInputChange={handleInputSerieChange}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label='Série'
-                variant='outlined'
-                margin='normal'
-                fullWidth
-              />
-            )}
-          />
-          {serie !== "" && (
-            <React.Fragment>
-              <TextField
-                label='Tome'
-                variant='outlined'
-                value={tome}
-                onChange={(e) => setTome(e.target.value)}
-                margin='normal'
-                type='number'
-                fullWidth
-              />
-              <TextField
-                label='Version'
-                variant='outlined'
-                value={version}
-                onChange={(e) => setVersion(e.target.value)}
-                margin='normal'
-                type='number'
-                fullWidth
-              />
-            </React.Fragment>
-          )}
-          <TextField
-            label='Image'
-            variant='outlined'
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
-            margin='normal'
-            fullWidth
-            required
-          />
-          {image && <img src={image} alt={titre} className='book-image' />}
+            {isEditing ? "Enregistrer les modifications" : "Ajouter le livre"}
+          </Button>
         </div>
-        <div>
-          <h2>Informations commerciales</h2>
-
-          <TextField
-            label='Prix'
-            InputProps={{
-              endAdornment: <InputAdornment position='end'>€</InputAdornment>,
-            }}
-            variant='outlined'
-            margin='normal'
-            value={prix}
-            onChange={(e) => setPrix(e.target.value)}
-            fullWidth
-            type='number'
-            step='0.01'
-            required
-          />
-
-          <Autocomplete
-            freeSolo
-            options={existingEditeurs || []}
-            value={selectedEditeur}
-            onChange={(e, value) => setSelectedEditeur(value)}
-            inputValue={editeur}
-            required
-            onInputChange={handleInputEditeurChange}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label='Editeur'
-                variant='outlined'
-                margin='normal'
-                fullWidth
-              />
-            )}
-          />
-          <Autocomplete
-            freeSolo
-            options={existingFormats || []}
-            value={selectedFormat}
-            onChange={(e, value) => setSelectedFormat(value)}
-            inputValue={format}
-            onInputChange={handleInputFormatChange}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label='Format'
-                variant='outlined'
-                margin='normal'
-                fullWidth
-              />
-            )}
-          />
-
-          <TextField
-            label='Date de parution'
-            variant='outlined'
-            value={date_parution}
-            onChange={(e) => setDate_parution(e.target.value)}
-            margin='normal'
-            fullWidth
-            type='date'
-          />
-        </div>
-        <div>
-          <h2>Informations sur les artistes</h2>
-
-          <div className='artists-list'>
-            <DeletableChips
-              artistes={auteurs}
-              handleDelete={deleteArtistChip}
-              typeOfArtist={"auteur"}
-            />
-          </div>
-
-          <Autocomplete
-            freeSolo
-            required
-            options={existingAuteurs || []}
-            value={selectedAuteur}
-            onChange={(e, value) => setSelectedAuteur(value)}
-            inputValue={auteur}
-            onInputChange={handleInputAuteurChange}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label='Auteur'
-                variant='outlined'
-                margin='normal'
-                fullWidth
-                InputProps={{
-                  ...params.InputProps,
-                  endAdornment: (
-                    <InputAdornment position='end'>
-                      <IconButton onClick={handleAjoutAuteur}>
-                        <MenuIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            )}
-          />
-
-          <div className='artists-list'>
-            <DeletableChips
-              artistes={dessinateurs}
-              handleDelete={deleteArtistChip}
-              typeOfArtist={"dessinateur"}
-            />
-          </div>
-
-          <Autocomplete
-            freeSolo
-            required
-            options={existingDessinateurs || []}
-            value={selectedDessinateur}
-            onChange={(e, value) => setSelectedDessinateur(value)}
-            inputValue={dessinateur}
-            onInputChange={handleInputDessinateurChange}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label='Dessinateur'
-                variant='outlined'
-                margin='normal'
-                fullWidth
-                InputProps={{
-                  ...params.InputProps,
-                  endAdornment: (
-                    <InputAdornment position='end'>
-                      <IconButton onClick={handleAjoutDessinateur}>
-                        <MenuIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            )}
-          />
-
-          <Autocomplete
-            freeSolo
-            options={existingGenres || []}
-            value={selectedGenre}
-            onChange={(e, value) => setSelectedGenre(value)}
-            inputValue={genre}
-            onInputChange={handleInputGenreChange}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label='Genre'
-                variant='outlined'
-                margin='normal'
-                fullWidth
-              />
-            )}
-          />
-        </div>
-        <div>
-          <h2>Informations statistiques</h2>
-          <TextField
-            label='Nombre de planches'
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position='end'>planches</InputAdornment>
-              ),
-            }}
-            variant='outlined'
-            value={planches}
-            onChange={(e) => setPlanches(e.target.value)}
-            margin='normal'
-            type='number'
-            fullWidth
-          />
-          <TextField
-            label='Poids'
-            InputProps={{
-              endAdornment: <InputAdornment position='end'>g</InputAdornment>,
-            }}
-            variant='outlined'
-            margin='normal'
-            value={poids}
-            onChange={(e) => setPoids(e.target.value)}
-            fullWidth
-            type='number'
-          />
-        </div>
-        <Button variant='contained' color='primary' type='submit'>
-          Soumettre
-        </Button>
-      </div>
-    </form>
+      </form>
+    </div>
   );
 };
 
