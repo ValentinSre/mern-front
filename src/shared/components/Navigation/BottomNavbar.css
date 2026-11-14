@@ -1,7 +1,7 @@
 .bottom-navbar {
   position: fixed;
   left: 50%;
-  bottom: 18px;
+  bottom: calc(18px + env(safe-area-inset-bottom, 0px));
   z-index: 1000;
 
   display: flex;
@@ -189,7 +189,7 @@
 
 @media (max-width: 640px) {
   .bottom-navbar {
-    bottom: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
 
     width: min(94vw, 680px);
     min-height: 66px;
