@@ -23,15 +23,22 @@ const Book = () => {
   useEffect(() => {
     const fetchBook = async () => {
       try {
+        const requestHeaders = auth.token
+          ? { Authorization: `Bearer ${auth.token}` }
+          : undefined;
+
         const responseData = await sendRequest(
-          `${process.env.REACT_APP_API_URL}/book/${bookId}?user=${auth.userId}`
+          `${process.env.REACT_APP_API_URL}/book/${bookId}`,
+          "GET",
+          null,
+          requestHeaders,
         );
 
         setLoadedBook(responseData.book);
       } catch (err) {}
     };
     fetchBook();
-  }, [sendRequest, bookId, auth.userId]);
+  }, [sendRequest, bookId, auth.token]);
 
   const redirectPage = (id) => {
     history.push(`/book/${id}`);
