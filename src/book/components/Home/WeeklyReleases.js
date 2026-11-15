@@ -229,7 +229,7 @@ const WeeklyReleases = () => {
   return (
     <div className='weekly-releases-container'>
       <div className='calendar_header'>
-        <Link to='/releases' className='section-kicker my-releases-link'>
+        <Link to='/wishlist' className='section-kicker my-releases-link'>
           <span className='releases-label-default'>Sorties à venir</span>
           <span className='releases-label-hover'>Ma wishlist</span>
         </Link>

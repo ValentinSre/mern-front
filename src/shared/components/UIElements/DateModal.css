@@ -1,0 +1,102 @@
+
+.date-modal.MuiDialog-paper {
+  border-radius: 12px;
+  padding: 8px;
+  color: #252525;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+}
+
+.date-modal__title.MuiDialogTitle-root {
+  padding: 24px 24px 12px;
+}
+
+.date-modal__eyebrow {
+  display: block;
+  margin-bottom: 8px;
+  color: #999;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.date-modal__title h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.date-modal__content.MuiDialogContent-root {
+  padding: 12px 24px 20px;
+}
+
+.date-modal__content .MuiOutlinedInput-root {
+  border-radius: 7px;
+  background: #fff;
+}
+
+.date-modal__content .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #d4b52e;
+  border-width: 2px;
+}
+
+.date-modal__content .MuiInputLabel-outlined.Mui-focused {
+  color: #8d7720;
+}
+
+.date-modal__hint {
+  margin: 12px 0 0;
+  color: #888;
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.date-modal__actions.MuiDialogActions-root {
+  padding: 12px 24px 20px;
+  gap: 8px;
+}
+
+.date-modal__cancel.MuiButton-root {
+  color: #777;
+  text-transform: none;
+  font-weight: 600;
+}
+
+.date-modal__submit.MuiButton-root {
+  padding: 8px 22px;
+  border-radius: 6px;
+  background: #ffde59;
+  color: #252525;
+  text-transform: none;
+  font-weight: 700;
+  box-shadow: none;
+}
+
+.date-modal__submit.MuiButton-root:hover {
+  background: #f0ce43;
+  box-shadow: none;
+}
+
+.date-modal__submit.MuiButton-root.Mui-disabled {
+  background: #eee;
+  color: #aaa;
+}
+
+@media (max-width: 480px) {
+  .date-modal.MuiDialog-paper {
+    margin: 16px;
+    width: calc(100% - 32px);
+  }
+
+  .date-modal__title.MuiDialogTitle-root {
+    padding: 20px 20px 10px;
+  }
+
+  .date-modal__content.MuiDialogContent-root {
+    padding: 12px 20px 16px;
+  }
+
+  .date-modal__actions.MuiDialogActions-root {
+    padding: 10px 20px 18px;
+  }
+}

@@ -47,13 +47,19 @@ const routeConfigs = [
     exact: true,
   },
   {
-    path: "/:userId/real-purchase",
+    path: "/real-purchase",
     component: UserLibrary,
     exact: true,
     loggedInOnly: true,
   },
   {
     path: "/:userId/collection",
+    component: UserLibrary,
+    exact: true,
+    loggedInOnly: true,
+  },
+  {
+    path: "/collection",
     component: UserLibrary,
     exact: true,
     loggedInOnly: true,
@@ -77,7 +83,7 @@ const routeConfigs = [
     loggedInOnly: true,
   },
   {
-    path: "/:userId/stats",
+    path: "/stats",
     component: UserLibrary,
     exact: true,
     loggedInOnly: true,

@@ -517,8 +517,15 @@
   }
 
   .purchase-page__stats {
-    gap: 8px;
+    display: flex;
+    flex-flow: row wrap;
     margin-bottom: 16px;
+  }
+
+  .purchase-page__stats > .MuiGrid-item {
+    flex: 0 0 50%;
+    max-width: 50%;
+    box-sizing: border-box;
   }
 
   .purchase-page__stat {

@@ -99,10 +99,7 @@ const HomePurchases = () => {
             <span className='section-kicker'>Mes derniers achats</span>
           </div>
 
-          <Link
-            to={`/${auth.userId}/real-purchase`}
-            className='purchase-manage-link'
-          >
+          <Link to={`/real-purchase`} className='purchase-manage-link'>
             Renseigner
             <span>→</span>
           </Link>
@@ -133,10 +130,7 @@ const HomePurchases = () => {
           <h3 className='purchase-month'>{purchaseMonth}</h3>
         </div>
 
-        <Link
-          to={`/${auth.userId}/real-purchase`}
-          className='purchase-manage-link'
-        >
+        <Link to={`/real-purchase`} className='purchase-manage-link'>
           Renseigner
           <span>→</span>
         </Link>

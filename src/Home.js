@@ -45,9 +45,7 @@ const Home = () => {
           <nav className='home-nav' aria-label='Navigation principale'>
             <Link to='/'>Accueil</Link>
 
-            {isLoggedIn && (
-              <Link to={`/${auth.userId}/collection`}>Collection</Link>
-            )}
+            {isLoggedIn && <Link to={`/collection`}>Collection</Link>}
 
             <Link to='/books'>Catalogue</Link>
             <Link to='/contact'>Contact</Link>
@@ -56,10 +54,7 @@ const Home = () => {
           <div className='header-actions'>
             {isLoggedIn ? (
               <>
-                <Link
-                  to={`/${auth.userId}/collection`}
-                  className='secondary-btn small'
-                >
+                <Link to={`/collection`} className='secondary-btn small'>
                   Ma bibliothèque
                 </Link>
 
@@ -101,7 +96,7 @@ const Home = () => {
               </div>
 
               <div className='hero-actions'>
-                <Link to={`/${auth.userId}/collection`} className='primary-btn'>
+                <Link to={`/collection`} className='primary-btn'>
                   Voir ma collection
                 </Link>
 

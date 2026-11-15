@@ -1,145 +1,130 @@
 import React from "react";
 import { Button } from "@material-ui/core";
 import { styled } from "@material-ui/core/styles";
+
 import ArchiveIcon from "@material-ui/icons/Archive";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import AddShoppingCart from "@material-ui/icons/AddShoppingCart";
 import Read from "@material-ui/icons/MenuBook";
 
+const BaseButton = styled(Button)({
+  minHeight: 38,
+  padding: "7px 15px",
+  borderRadius: 8,
+  fontSize: "0.85rem",
+  fontWeight: 600,
+  textTransform: "none",
+  boxShadow: "none",
+  transition:
+    "background 0.15s ease, border-color 0.15s ease, color 0.15s ease",
+
+  "& .MuiButton-startIcon": {
+    marginRight: 8,
+  },
+
+  "&:hover": {
+    boxShadow: "none",
+  },
+
+  "&.Mui-disabled": {
+    opacity: 0.55,
+  },
+});
+
+const PossessionButtonStyle = styled(BaseButton)({
+  color: "#252525",
+  backgroundColor: "#ffde59",
+  "&:hover": {
+    backgroundColor: "#f0ce43",
+  },
+});
+
+const WishlistButtonStyle = styled(BaseButton)({
+  color: "#fff",
+  backgroundColor: "#555",
+  "&:hover": {
+    backgroundColor: "#383838",
+  },
+});
+
+const ReadButtonStyle = styled(BaseButton)({
+  color: "#252525",
+  backgroundColor: "#fff3c2",
+  border: "1px solid #f0d66d",
+  "&:hover": {
+    backgroundColor: "#ffe99a",
+  },
+});
+
+const EditButtonStyle = styled(BaseButton)({
+  color: "#444",
+  backgroundColor: "#f3f3f3",
+  border: "1px solid #e8e8e8",
+  "&:hover": {
+    color: "#222",
+    backgroundColor: "#e9e9e9",
+    borderColor: "#d8d8d8",
+  },
+});
+
+const DeleteButtonStyle = styled(BaseButton)({
+  color: "#b43b3b",
+  backgroundColor: "#fff",
+  border: "1px solid #efdada",
+  "&:hover": {
+    color: "#982626",
+    backgroundColor: "#fff0f0",
+    borderColor: "#e7bcbc",
+  },
+});
+
 const CustomButtons = ({ buttonType, onClick, title, disabled }) => {
+  const commonProps = {
+    onClick,
+    disabled,
+    variant: "contained",
+  };
+
   switch (buttonType) {
     case "collection":
       return (
-        <PossessionButton onClick={onClick} title={title} disabled={disabled} />
+        <PossessionButtonStyle {...commonProps} startIcon={<ArchiveIcon />}>
+          {title}
+        </PossessionButtonStyle>
       );
+
     case "wishlist":
       return (
-        <WishlistButton onClick={onClick} title={title} disabled={disabled} />
+        <WishlistButtonStyle {...commonProps} startIcon={<AddShoppingCart />}>
+          {title}
+        </WishlistButtonStyle>
       );
+
     case "read":
-      return <ReadButton onClick={onClick} title={title} />;
+      return (
+        <ReadButtonStyle {...commonProps} startIcon={<Read />}>
+          {title}
+        </ReadButtonStyle>
+      );
+
     case "edit":
-      return <EditButton onClick={onClick} title={title} />;
+      return (
+        <EditButtonStyle {...commonProps} startIcon={<EditIcon />}>
+          {title}
+        </EditButtonStyle>
+      );
+
     case "delete":
-      return <DeleteButton onClick={onClick} />;
+      return (
+        <DeleteButtonStyle {...commonProps} startIcon={<DeleteIcon />}>
+          Supprimer
+        </DeleteButtonStyle>
+      );
+
     default:
       return null;
   }
-};
-
-const PossessionButtonStyle = styled(Button)(({ theme }) => ({
-  color: theme.palette.getContrastText("#ffde59"),
-  backgroundColor: "#ffde59",
-  "&:hover": {
-    backgroundColor: "##ad9326",
-  },
-}));
-
-const WishlistButtonStyle = styled(Button)(({ theme }) => ({
-  color: theme.palette.getContrastText("#ad9326"),
-  backgroundColor: "#ad9326",
-  "&:hover": {
-    backgroundColor: "##ffde59",
-  },
-}));
-
-const ReadButtonStyle = styled(Button)(({ theme }) => ({
-  color: theme.palette.getContrastText("#ffde59"),
-  backgroundColor: "#ffde59",
-  "&:hover": {
-    backgroundColor: "##ad9326",
-  },
-}));
-
-const EditButtonStyle = styled(Button)(({ theme }) => ({
-  color: theme.palette.getContrastText("#06b87f"),
-  backgroundColor: "#06b87f",
-  "&:hover": {
-    backgroundColor: "##06b90f",
-  },
-}));
-
-const DeleteButtonStyle = styled(Button)(({ theme }) => ({
-  color: theme.palette.getContrastText("#cb1515"),
-  backgroundColor: "#cb1515",
-  "&:hover": {
-    backgroundColor: "##7a0909",
-  },
-}));
-
-const PossessionButton = (props) => {
-  const { onClick, disabled, title } = props;
-
-  return (
-    <PossessionButtonStyle
-      style={{ marginRight: "10px" }}
-      onClick={onClick}
-      disabled={disabled}
-      startIcon={<ArchiveIcon />}
-      variant='contained'
-    >
-      {title}
-    </PossessionButtonStyle>
-  );
-};
-
-const WishlistButton = (props) => {
-  const { onClick, disabled, title } = props;
-
-  return (
-    <WishlistButtonStyle
-      onClick={onClick}
-      style={{ marginRight: "10px" }}
-      disabled={disabled}
-      startIcon={<AddShoppingCart />}
-    >
-      {title}
-    </WishlistButtonStyle>
-  );
-};
-
-const ReadButton = (props) => {
-  const { onClick, title } = props;
-
-  return (
-    <ReadButtonStyle
-      onClick={onClick}
-      style={{ marginRight: "10px" }}
-      startIcon={<Read />}
-    >
-      {title}
-    </ReadButtonStyle>
-  );
-};
-
-const EditButton = (props) => {
-  const { onClick, title } = props;
-
-  return (
-    <EditButtonStyle
-      onClick={onClick}
-      style={{ marginRight: "10px" }}
-      startIcon={<EditIcon />}
-    >
-      {title}
-    </EditButtonStyle>
-  );
-};
-
-const DeleteButton = (props) => {
-  const { onClick, disabled } = props;
-
-  return (
-    <DeleteButtonStyle
-      onClick={onClick}
-      style={{ marginRight: "10px" }}
-      disabled={disabled}
-      startIcon={<DeleteIcon />}
-    >
-      Supprimer
-    </DeleteButtonStyle>
-  );
 };
 
 export default CustomButtons;

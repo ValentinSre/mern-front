@@ -14,14 +14,12 @@ const UserLibrary = () => {
   const auth = useContext(AuthContext);
   const location = useLocation();
 
-  const basePath = `/${auth.userId}`;
-
   const pages = [
-    { label: "Mes livres", path: `${basePath}/collection` },
-    { label: "Mes lectures", path: `${basePath}/readlist` },
-    { label: "Mes souhaits", path: `${basePath}/wishlist` },
-    { label: "Mes achats", path: `${basePath}/real-purchase` },
-    { label: "Mes statistiques", path: `${basePath}/stats` },
+    { label: "Mes livres", path: `/collection` },
+    { label: "Mes lectures", path: `/readlist` },
+    { label: "Mes souhaits", path: `/wishlist` },
+    { label: "Mes achats", path: `/real-purchase` },
+    { label: "Mes statistiques", path: `/stats` },
   ];
 
   const currentPath = location.pathname;
@@ -29,19 +27,19 @@ const UserLibrary = () => {
 
   const renderPage = () => {
     switch (activePage?.path) {
-      case `${basePath}/collection`:
+      case `/collection`:
         return <DisplayCollection />;
 
-      case `${basePath}/readlist`:
+      case `/readlist`:
         return <DisplayReadlist />;
 
-      case `${basePath}/wishlist`:
+      case `/wishlist`:
         return <DisplayWishlist />;
 
-      case `${basePath}/real-purchase`:
+      case `/real-purchase`:
         return <RealPurchaseManager />;
 
-      case `${basePath}/stats`:
+      case `/stats`:
         return <Stats />;
 
       default:

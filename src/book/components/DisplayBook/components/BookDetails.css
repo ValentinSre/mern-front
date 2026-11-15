@@ -1,148 +1,590 @@
+
+/* =========================================
+   CONTENEUR PRINCIPAL
+========================================= */
+
+.book-details-page {
+  max-width: 1250px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px;
+  box-sizing: border-box;
+  color: #252525;
+}
+
 .book-details {
-  background-color: #f3f3f3;
-  padding: 20px;
-  margin-bottom: 20px;
-  color: #000;
+  width: 100%;
 }
 
-.book-details__container {
-  margin-top: 20px;
+/* =========================================
+   PRÉSENTATION PRINCIPALE
+========================================= */
+
+.book-details__hero {
+  display: grid;
+  grid-template-columns: 290px minmax(0, 1fr);
+  gap: 42px;
+  padding: 30px;
+  margin-bottom: 24px;
+  background: #fff;
+  border: 1px solid #ededed;
+  border-radius: 10px;
+}
+
+.book-details__cover {
   display: flex;
-  flex-direction: row;
-  position: relative;
+  justify-content: center;
+  align-items: flex-start;
 }
 
-.book-details__image {
-  width: 300px;
-  margin-right: 10px;
-}
-
-.book-details__image img {
-  width: 300px;
-  height: auto;
-  object-fit: cover;
-}
-
-.book-details__actions .MuiButtonBase-root.MuiIconButton-root {
+.book-details__cover img {
   display: block;
-  color: #222;
-  margin-left: 0;
-  padding-left: 0;
+  width: 100%;
+  max-width: 290px;
+  max-height: 440px;
+  object-fit: contain;
+  border-radius: 5px;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.13);
 }
 
-.book-details__info {
-  padding-top: 0;
-  margin-top: 0;
-  margin-left: 60px;
-}
-
-.book-details__title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 10px;
-  margin-top: 20px;
-  margin-left: 5px;
-}
-
-.book-details__artists {
-  margin-bottom: 10px;
-  margin-top: 20px;
-  margin-left: 15px;
-  font-size: 14px;
-}
-
-.book-details__artists-details {
+.book-details__cover-empty {
+  width: 100%;
+  max-width: 290px;
+  min-height: 350px;
   display: flex;
   align-items: center;
-  margin-top: 10px;
+  justify-content: center;
+  background: #f3f3f3;
+  color: #888;
+  text-align: center;
+  border-radius: 5px;
 }
 
-.book-details__artists-category {
-  margin-left: 8px;
-  margin-right: 4px;
-  font-weight: bold;
+.book-details__identity {
+  min-width: 0;
+  padding-top: 5px;
 }
 
-.book-details__description {
-  margin-top: 10px;
-  margin-left: 5px;
-}
-
-.book-details__description h2 {
-  font-size: 13px;
+.book-details__eyebrow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  color: #777;
+  font-size: 0.9rem;
   font-weight: 600;
-  margin-bottom: 1px;
-  margin-top: 20px;
-  margin-left: 5px;
+  margin-bottom: 12px;
 }
 
-.book-details__description-grid {
+.book-details__eyebrow span + span::before {
+  content: "·";
+  margin-right: 10px;
+  color: #bbb;
+}
+
+.book-details__identity h1 {
+  font-size: clamp(1.8rem, 3.5vw, 2.7rem);
+  line-height: 1.13;
+  letter-spacing: -0.035em;
+  font-weight: 750;
+  margin: 0 0 24px;
+  overflow-wrap: anywhere;
+}
+
+.book-details__credits {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.book-details__credits > div {
   display: grid;
-  margin-left: 15px;
-  grid-template-columns: 200px 200px;
-  grid-gap: 10px;
-  line-height: 8px;
-  font-size: 10px;
+  grid-template-columns: 20px 95px minmax(0, 1fr);
+  gap: 9px;
+  align-items: start;
+  font-size: 0.92rem;
+  line-height: 1.5;
 }
 
-.book-details__description-grid__category {
-  font-weight: bold;
+.book-details__credits svg {
+  margin-top: 3px;
+  color: #777;
 }
 
-/* for mobile */
-@media (max-width: 600px) {
-  .book-details__container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.book-details__credit-label {
+  color: #888;
+}
+
+.book-details__classification {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 20px 0;
+}
+
+.book-details__classification span {
+  background: #f3f3f3;
+  padding: 6px 11px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  color: #555;
+}
+
+/* =========================================
+   ACTIONS ET STATUTS
+========================================= */
+
+.book-details__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 25px;
+}
+
+.book-details__actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 9px 13px;
+  border: 1px solid #dedede;
+  border-radius: 5px;
+  background: #fff;
+  color: #333;
+  font-family: inherit;
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.book-details__actions button svg {
+  font-size: 1.15rem;
+}
+
+.book-details__actions button:hover:not(:disabled) {
+  background: #fff8d8;
+  border-color: #e7c942;
+}
+
+.book-details__actions button.active {
+  background: #fff5c5;
+  border-color: #e7c942;
+}
+
+.book-details__actions button:disabled {
+  opacity: 0.65;
+  cursor: default;
+}
+
+.book-details__personal-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 17px;
+}
+
+.book-details__personal-status span {
+  font-size: 0.77rem;
+  padding: 5px 9px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.status-owned,
+.status-read {
+  background: #e8f4e9;
+  color: #347344;
+}
+
+.status-wishlist {
+  background: #fff4d5;
+  color: #886600;
+}
+
+.status-sold {
+  background: #eee;
+  color: #666;
+}
+
+/* =========================================
+   SECTIONS ÉDITORIALES
+========================================= */
+
+.book-details__section {
+  padding: 26px 30px;
+  margin-bottom: 16px;
+  background: #fff;
+  border: 1px solid #ededed;
+  border-radius: 9px;
+}
+
+.book-details__section h2 {
+  margin: 0 0 19px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.book-details__synopsis {
+  max-width: 950px;
+  margin: 0;
+  color: #555;
+  font-size: 0.96rem;
+  line-height: 1.8;
+  white-space: pre-line;
+}
+
+/* =========================================
+   MÉTADONNÉES
+========================================= */
+
+.book-details__metadata {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px 30px;
+  margin: 0;
+}
+
+.book-details__metadata > div {
+  min-width: 0;
+  padding: 12px 14px;
+  background: #fafafa;
+  border-radius: 5px;
+}
+
+.book-details__metadata dt {
+  color: #888;
+  font-size: 0.78rem;
+  margin-bottom: 6px;
+}
+
+.book-details__metadata dd {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+/* =========================================
+   ESPACE PERSONNEL
+========================================= */
+
+.book-details__personal {
+  background: #fffdf5;
+  border-color: #f0e7c7;
+}
+
+.book-details__section-kicker {
+  display: block;
+  margin-bottom: 6px;
+  color: #a18b3c;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.book-details__section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.book-details__section-heading h2 {
+  margin-bottom: 0;
+}
+
+.book-details__section-status {
+  padding: 6px 10px;
+  background: #fff1bd;
+  color: #725900;
+  font-size: 0.77rem;
+  font-weight: 600;
+  border-radius: 4px;
+}
+
+.book-details__personal-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.book-details__personal-info > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.book-details__personal-info span {
+  color: #888;
+  font-size: 0.8rem;
+}
+
+.book-details__personal-info strong {
+  font-size: 0.95rem;
+}
+
+.book-details__empty {
+  color: #888;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* Actions textuelles */
+
+.book-details__text-action {
+  border: 0;
+  background: none;
+  color: #806600;
+  font-family: inherit;
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 7px 0;
+  white-space: nowrap;
+}
+
+.book-details__text-action:hover {
+  text-decoration: underline;
+}
+
+/* =========================================
+   HISTORIQUE DE LECTURE
+========================================= */
+
+.book-details__reading-history {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.book-details__reading-history li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  margin-bottom: 7px;
+  background: #fafafa;
+  border: 1px solid #f0f0f0;
+  border-radius: 5px;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.book-details__history-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #e2c13f;
+  flex-shrink: 0;
+}
+
+.book-details__history-date {
+  flex: 1;
+  color: #555;
+  line-height: 1.5;
+}
+
+.book-details__history-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.book-details__history-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: 5px;
+  background: transparent;
+  color: #888;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.book-details__history-actions button:hover {
+  background: #eee;
+  color: #252525;
+}
+
+.book-details__history-actions button:last-child:hover {
+  background: #fff0ee;
+  color: #c0392b;
+}
+
+/* =========================================
+   LISTES
+========================================= */
+
+.book-details__lists {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.book-details__lists span {
+  padding: 8px 12px;
+  background: #f3f3f3;
+  border: 1px solid #eaeaea;
+  border-radius: 5px;
+  font-size: 0.84rem;
+}
+
+/* =========================================
+   CRITIQUE
+========================================= */
+
+.book-details__section > .book-collection__review {
+  padding: 0;
+  margin: 0;
+  background: transparent;
+}
+
+/* =========================================
+   ADMINISTRATION
+========================================= */
+
+.book-details__admin {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 750px) {
+  .book-details-page {
+    padding: 20px;
   }
-  
-  .book-details__image {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 5px;
+
+  .book-details__hero {
+    grid-template-columns: 210px minmax(0, 1fr);
+    gap: 24px;
+    padding: 24px;
   }
-  
-  .book-details__image img {
-    width: 300px;
-    height: auto;
+
+  .book-details__cover img {
+    max-height: 340px;
   }
-  
+
+  .book-details__section {
+    padding: 23px 24px;
+  }
+
   .book-details__actions {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
+    gap: 7px;
   }
 
-  .book-details__actions .MuiButtonBase-root.MuiIconButton-root {
-    font-size: 40px;
-    margin-right: 10px;
-    margin-left: 10px;
-  }
-  
-  .book-details__info {
-    margin-left: 10px;
-    margin-top: 10px
-  }
-  
-  .book-details__description {
-    margin-bottom: 20px;
-    margin-left: 30px;
-  }
-  
-  .book-details__description-grid {
-    display: grid;
-    grid-template-columns: 150px 150px;
-    gap: 10px;
-    font-size: 11px
-  }
-  
-  .book-details__description-grid__category {
-    font-weight: bold;
+  .book-details__actions button {
+    padding: 8px 10px;
+    font-size: 0.78rem;
   }
 
-  .book-details__artists {
-    display: none;
+  .book-details__metadata {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
+@media (max-width: 560px) {
+  .book-details-page {
+    padding: 20px 18px;
+  }
+
+  .book-details__hero {
+    grid-template-columns: 1fr;
+    gap: 22px;
+    padding: 20px;
+  }
+
+  .book-details__cover img {
+    width: auto;
+    max-width: 230px;
+    max-height: 340px;
+  }
+
+  .book-details__cover-empty {
+    max-width: 230px;
+    min-height: 280px;
+  }
+
+  .book-details__identity h1 {
+    font-size: 1.8rem;
+    margin-bottom: 19px;
+  }
+
+  .book-details__credits > div {
+    grid-template-columns: 20px 78px minmax(0, 1fr);
+    font-size: 0.85rem;
+  }
+
+  .book-details__actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .book-details__actions button {
+    justify-content: flex-start;
+    min-width: 0;
+  }
+
+  .book-details__section {
+    padding: 21px 18px;
+    margin-bottom: 13px;
+  }
+
+  .book-details__section-heading {
+    align-items: flex-start;
+  }
+
+  .book-details__metadata {
+    gap: 12px;
+  }
+
+  .book-details__metadata > div {
+    padding: 10px;
+  }
+
+  .book-details__reading-history li {
+    gap: 8px;
+    padding: 9px;
+  }
+
+  .book-details__history-actions {
+    gap: 0;
+  }
+
+  .book-details__history-actions button {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+@media (max-width: 380px) {
+  .book-details-page {
+    padding: 16px 14px;
+  }
+
+  .book-details__metadata {
+    grid-template-columns: 1fr;
+  }
+
+  .book-details__section-heading {
+    flex-direction: column;
+  }
+
+  .book-details__text-action {
+    white-space: normal;
+  }
+}

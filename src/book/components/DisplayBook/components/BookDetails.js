@@ -1,219 +1,356 @@
 import React from "react";
-
-import "./BookDetails.css";
-import { IconButton, Tooltip, Chip } from "@material-ui/core";
 import {
-  MdOutlineAddShoppingCart,
   MdAddTask,
+  MdOutlineAddShoppingCart,
   MdOutlineBookmarkAdded,
-  MdCollectionsBookmark,
   MdAttachMoney,
   MdPlaylistAdd,
+  MdEdit,
+  MdDeleteOutline,
 } from "react-icons/md";
-import { BsPatchCheckFill, BsPatchPlus } from "react-icons/bs";
 import { RxChatBubble } from "react-icons/rx";
 import { TbPencil } from "react-icons/tb";
 
 import Breadcrumb from "../../../../shared/components/UIElements/Breadcrumb";
 import makeTitle from "../../../../shared/util/makeTitle";
-import variables from "../../../../shared/util/variables";
 import BookReview from "./BookReview";
+
+import "./BookDetails.css";
+
+const formatDate = (value) => {
+  if (!value) return null;
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+
+  return new Intl.DateTimeFormat("fr-FR", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(date);
+};
 
 const BookDetails = ({
   book,
+  isAuthenticated,
   handleCollection,
   handleWishlist,
   handleRead,
   handleSell,
   handleAddToList,
+  handleEditReadDate,
+  handleDeleteReadDate,
 }) => {
-  const { possede, souhaite, lu, revendu } = book;
+  const title = makeTitle(book);
+  const authors = book.auteurs || [];
+  const artists = book.dessinateurs || [];
 
-  return (
-    <div className='book-details'>
-      <Breadcrumb page={makeTitle(book)} />
-      <div className='book-details__container'>
-        <div className='book-details__image'>
-          <img src={book.image} alt={book.titre} />
-        </div>
-        <div className='book-details__actions'>
-          <Tooltip title="Je l'ai !" placement='top'>
-            <span>
-              <IconButton
-                onClick={handleCollection}
-                disabled={possede && !revendu}
-              >
-                <MdAddTask
-                  style={{
-                    color: book.possede && !book.revendu ? "#4caf50" : "#000",
-                  }}
-                />
-              </IconButton>
-            </span>
-          </Tooltip>
-          <Tooltip title='Je le veux !' placement='top'>
-            <span>
-              <IconButton
-                onClick={handleWishlist}
-                disabled={possede || souhaite}
-              >
-                <MdOutlineAddShoppingCart
-                  style={{ color: book.souhaite ? "#4caf50" : "#000" }}
-                />
-              </IconButton>
-            </span>
-          </Tooltip>
-          <Tooltip title="J'ai lu !" placement='top'>
-            <IconButton onClick={handleRead}>
-              <MdOutlineBookmarkAdded
-                style={{ color: book.lu ? "#4caf50" : "#000" }}
-              />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="J'ai revendu !" placement='top'>
-            <IconButton onClick={handleSell}>
-              <MdAttachMoney
-                style={{ color: book.revendu ? "#4caf50" : "#000" }}
-              />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title='Ajouter à une liste' placement='top'>
-            <IconButton onClick={handleAddToList}>
-              <MdPlaylistAdd style={{ color: "#000" }} />
-            </IconButton>
-          </Tooltip>
-        </div>
-        <BookDetailsInfo book={book} />
-      </div>
-      <BookReview book={book} />
-    </div>
+  const readDates = (book.read_dates || [])
+    .map((date, index) => ({ date, index }))
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  const metadata = [
+    ["Éditeur", book.editeur],
+    ["Date de parution", formatDate(book.date_parution)],
+    ["ISBN", book.isbn],
+    ["Format", book.format],
+    ["Genre", book.genre],
+    ["Type", book.type],
+    ["Nombre de pages", book.planches ? `${book.planches} pages` : null],
+    ["Poids", book.poids ? `${book.poids} g` : null],
+    [
+      "Prix public",
+      book.prix !== undefined && book.prix !== null ? `${book.prix} €` : null,
+    ],
+  ].filter(
+    ([, value]) => value !== undefined && value !== null && value !== "",
   );
-};
-
-const BookDetailsInfo = ({ book }) => {
-  const { genre, format, planches, editeur, type, poids, tome, date_parution } =
-    book;
-  const { shortMonths } = variables;
-
-  const date = new Date(date_parution);
-  const day = date.getDate();
-  const month = shortMonths[date.getMonth() + 1];
-  const year = date.getFullYear();
-  const dateParution = `${day} ${month} ${year}`;
 
   return (
-    <div className='book-details__info'>
-      <div className='books-details__badges'>
-        <Chip
-          icon={
-            book.lu ? (
-              <BsPatchCheckFill color='white' />
+    <div className='book-details-page'>
+      <Breadcrumb page={title} />
+
+      <main className='book-details'>
+        <section className='book-details__hero'>
+          <div className='book-details__cover'>
+            {book.image ? (
+              <img src={book.image} alt={`Couverture de ${title}`} />
             ) : (
-              <BsPatchPlus color='white' />
-            )
-          }
-          label={book.lu ? "Livre lu" : "Livre à lire"}
-          style={{
-            backgroundColor: book.lu ? "#4caf50" : "#f44336",
-            color: "white",
-            fontWeight: "bold",
-          }}
-          variant='outlined'
-        />
-        <Chip
-          icon={<MdCollectionsBookmark color='white' />}
-          label={book.serie ? "Série" : "Histoire complète"}
-          style={{
-            backgroundColor: book.serie ? "#2196f3" : "#ffde59",
-            color: "white",
-            fontWeight: "bold",
-            marginLeft: "5px",
-          }}
-          variant='outlined'
-        />
-      </div>
-      <div className='book-details__title'>{makeTitle(book)}</div>
-      <BookArtists book={book} />
-      <div className='book-details__description'>
-        <h2>À propos de cet ouvrage :</h2>
-        <div className='book-details__description-grid'>
-          <div className='book-details__description-grid__category'>
-            <p>Catégorie :</p>
-            <p>Genre :</p>
+              <div className='book-details__cover-empty'>
+                Couverture indisponible
+              </div>
+            )}
           </div>
-          <div>
-            <p>{type ? type : "Non définie"}</p>
-            <p>{genre ? genre : "Non défini"}</p>
-          </div>
-        </div>
-      </div>
-      <div className='book-details__description'>
-        <h2>Caractéristiques :</h2>
-        <div className='book-details__description-grid'>
-          <div className='book-details__description-grid__category'>
-            <p>Éditeur :</p>
-            <p>Format :</p>
-            {tome && <p>Tome :</p>}
-            <p>Date de parution :</p>
-            <p>Nb. de pages :</p>
-            <p>Poids :</p>
-            <p>Prix :</p>
-          </div>
-          <div>
-            <p>{editeur ? editeur : "Non défini"}</p>
-            <p>{format ? format : "Non défini"}</p>
-            {tome && <p>{tome}</p>}
-            <p>{date_parution ? dateParution : "Non définie"}</p>
-            <p>{planches ? planches : "Non défini"}</p>
-            <p>{poids ? poids + " gr" : "Non défini"}</p>
-            <p>{book.prix ? book.prix + " €" : "Non défini"}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
 
-const BookArtists = ({ book }) => {
-  const { auteurs, dessinateurs } = book;
+          <div className='book-details__identity'>
+            <div className='book-details__eyebrow'>
+              {book.serie && <span>{book.serie}</span>}
+              {book.tome !== undefined &&
+                book.tome !== null &&
+                book.tome !== "" && <span>Tome {book.tome}</span>}
+            </div>
 
-  return (
-    <div className='book-details__artists'>
-      {auteurs && (
-        <div className='book-details__artists-details'>
-          <RxChatBubble size={18} />
-          <span className='book-details__artists-category'>Scénario :</span>
-          {auteurs.length < 2 ? (
-            <span>{auteurs[0].nom}</span>
-          ) : (
-            auteurs.slice(0, 4).map((auteur, index) => (
-              <span key={auteur.id}>
-                {index === 0 ? "" : ", "}
-                {auteur.nom}
-              </span>
-            ))
-          )}
-          {auteurs.length > 4 && <span> ...</span>}
-        </div>
-      )}
+            <h1>{title}</h1>
 
-      {dessinateurs && !!dessinateurs.length && (
-        <div className='book-details__artists-details'>
-          <TbPencil size={18} />
-          <span className='book-details__artists-category'>Dessin :</span>
-          {dessinateurs.length < 2 ? (
-            <span>{dessinateurs[0].nom}</span>
-          ) : (
-            dessinateurs.slice(0, 4).map((dessinateur, index) => (
-              <span key={dessinateur.id}>
-                {index === 0 ? "" : ", "}
-                {dessinateur.nom}
-              </span>
-            ))
-          )}
-          {dessinateurs.length > 4 && <span> ...</span>}
-        </div>
-      )}
+            <div className='book-details__credits'>
+              {authors.length > 0 && (
+                <div>
+                  <RxChatBubble />
+                  <span className='book-details__credit-label'>Scénario</span>
+                  <span>{authors.map((artist) => artist.nom).join(", ")}</span>
+                </div>
+              )}
+
+              {artists.length > 0 && (
+                <div>
+                  <TbPencil />
+                  <span className='book-details__credit-label'>Dessin</span>
+                  <span>{artists.map((artist) => artist.nom).join(", ")}</span>
+                </div>
+              )}
+            </div>
+
+            <div className='book-details__classification'>
+              {book.type && <span>{book.type}</span>}
+              {book.genre && <span>{book.genre}</span>}
+            </div>
+
+            {isAuthenticated && (
+              <div className='book-details__actions'>
+                <button
+                  type='button'
+                  onClick={handleCollection}
+                  disabled={book.possede && !book.revendu}
+                  className={book.possede && !book.revendu ? "active" : ""}
+                >
+                  <MdAddTask />
+                  <span>
+                    {book.possede && !book.revendu
+                      ? "Dans ma collection"
+                      : "Je le possède"}
+                  </span>
+                </button>
+
+                <button
+                  type='button'
+                  onClick={handleWishlist}
+                  disabled={book.possede || book.souhaite}
+                  className={book.souhaite ? "active" : ""}
+                >
+                  <MdOutlineAddShoppingCart />
+                  <span>{book.souhaite ? "Dans ma wishlist" : "Wishlist"}</span>
+                </button>
+
+                <button type='button' onClick={handleRead}>
+                  <MdOutlineBookmarkAdded />
+                  <span>Marquer comme lu</span>
+                </button>
+
+                {book.possede && !book.revendu && (
+                  <button type='button' onClick={handleSell}>
+                    <MdAttachMoney />
+                    <span>Revendre</span>
+                  </button>
+                )}
+
+                <button type='button' onClick={handleAddToList}>
+                  <MdPlaylistAdd />
+                  <span>Ajouter à une liste</span>
+                </button>
+              </div>
+            )}
+
+            {isAuthenticated && (
+              <div className='book-details__personal-status'>
+                {book.possede && !book.revendu && (
+                  <span className='status-owned'>Dans ma collection</span>
+                )}
+                {book.souhaite && (
+                  <span className='status-wishlist'>Dans ma wishlist</span>
+                )}
+                {book.lu && <span className='status-read'>Déjà lu</span>}
+                {book.revendu && <span className='status-sold'>Revendu</span>}
+              </div>
+            )}
+          </div>
+        </section>
+
+        {book.description && (
+          <section className='book-details__section'>
+            <h2>À propos de cet ouvrage</h2>
+            <p className='book-details__synopsis'>{book.description}</p>
+          </section>
+        )}
+
+        {metadata.length > 0 && (
+          <section className='book-details__section'>
+            <h2>Informations sur l'ouvrage</h2>
+
+            <dl className='book-details__metadata'>
+              {metadata.map(([label, value]) => (
+                <div key={label}>
+                  <dt>{label}</dt>
+                  <dd>{value}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        )}
+
+        {isAuthenticated && (
+          <>
+            <section className='book-details__section book-details__personal'>
+              <div className='book-details__section-heading'>
+                <div>
+                  <span className='book-details__section-kicker'>
+                    PERSONNEL
+                  </span>
+                  <h2>Ma collection</h2>
+                </div>
+
+                {book.possede && !book.revendu && (
+                  <span className='book-details__section-status'>Possédé</span>
+                )}
+                {book.souhaite && (
+                  <span className='book-details__section-status'>Souhaité</span>
+                )}
+                {book.revendu && (
+                  <span className='book-details__section-status'>Revendu</span>
+                )}
+              </div>
+
+              {book.possede && !book.revendu && (
+                <div className='book-details__personal-info'>
+                  {book.date_achat && (
+                    <div>
+                      <span>Date d'achat</span>
+                      <strong>{formatDate(book.date_achat)}</strong>
+                    </div>
+                  )}
+
+                  {book.real_price !== undefined &&
+                    book.real_price !== null && (
+                      <div>
+                        <span>Prix d'achat</span>
+                        <strong>
+                          {Number(book.real_price).toFixed(2)} €
+                        </strong>{" "}
+                      </div>
+                    )}
+                </div>
+              )}
+
+              {!book.possede && !book.souhaite && !book.revendu && (
+                <p className='book-details__empty'>
+                  Ce livre ne fait pas encore partie de votre collection.
+                </p>
+              )}
+            </section>
+
+            <section className='book-details__section'>
+              <div className='book-details__section-heading'>
+                <div>
+                  <span className='book-details__section-kicker'>
+                    PERSONNEL
+                  </span>
+                  <h2>Mon historique de lecture</h2>
+                </div>
+
+                <button
+                  type='button'
+                  className='book-details__text-action'
+                  onClick={handleRead}
+                >
+                  + Ajouter une lecture
+                </button>
+              </div>
+
+              {readDates.length > 0 ? (
+                <ul className='book-details__reading-history'>
+                  {readDates.map(({ date, index }) => (
+                    <li key={`${date}-${index}`}>
+                      <span className='book-details__history-dot' />
+
+                      <span className='book-details__history-date'>
+                        {date
+                          ? `Lecture terminée le ${formatDate(date)}`
+                          : "Lecture initiale non datée"}
+                      </span>
+
+                      {date && (
+                        <div className='book-details__history-actions'>
+                          <button
+                            type='button'
+                            onClick={() => handleEditReadDate(index, date)}
+                            title='Modifier cette date'
+                            aria-label='Modifier cette date de lecture'
+                          >
+                            <MdEdit />
+                          </button>
+
+                          <button
+                            type='button'
+                            onClick={() => handleDeleteReadDate(index)}
+                            title='Supprimer cette date'
+                            aria-label='Supprimer cette date de lecture'
+                          >
+                            <MdDeleteOutline />
+                          </button>
+                        </div>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className='book-details__empty'>
+                  Aucune lecture enregistrée pour le moment.
+                </p>
+              )}
+            </section>
+
+            {Array.isArray(book.lists) && book.lists.length > 0 && (
+              <section className='book-details__section'>
+                <div className='book-details__section-heading'>
+                  <div>
+                    <span className='book-details__section-kicker'>
+                      PERSONNEL
+                    </span>
+                    <h2>Mes listes</h2>
+                  </div>
+
+                  <button
+                    type='button'
+                    className='book-details__text-action'
+                    onClick={handleAddToList}
+                  >
+                    Gérer mes listes
+                  </button>
+                </div>
+
+                <div className='book-details__lists'>
+                  {book.lists
+                    .filter((list) => list.containsBook)
+                    .map((list) => (
+                      <span key={list._id}>{list.name}</span>
+                    ))}
+                </div>
+
+                {!book.lists.some((list) => list.containsBook) && (
+                  <p className='book-details__empty'>
+                    Ce livre n'est dans aucune de vos listes.
+                  </p>
+                )}
+              </section>
+            )}
+
+            {book.lu && (
+              <section className='book-details__section'>
+                <BookReview book={book} />
+              </section>
+            )}
+          </>
+        )}
+      </main>
     </div>
   );
 };

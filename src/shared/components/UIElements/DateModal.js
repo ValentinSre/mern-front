@@ -1,19 +1,14 @@
 import React from "react";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Button,
+  TextField,
+} from "@material-ui/core";
 
-import { Modal, Button, Box, Typography, TextField } from "@material-ui/core";
-
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  borderRadius: "10px",
-  p: 4,
-};
+import "./DateModal.css";
 
 const DateModal = ({
   open,
@@ -25,42 +20,59 @@ const DateModal = ({
   authorizeNoDate,
   handleSubmit,
 }) => {
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
+    handleSubmit();
+    handleClose();
+  };
+
   return (
-    <Modal open={open} onClose={handleClose}>
-      <Box sx={style}>
-        <Typography id='modal' variant='h6' component='h2'>
-          {title}
-        </Typography>
-        <div style={{ paddingTop: "10px" }}>
-          <Typography id='modal' sx={{ mt: 2 }}>
-            <TextField
-              id='date'
-              label={label}
-              fullWidth
-              type='date'
-              defaultValue={date}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              onChange={handleChange}
-            />
-            <div style={{ paddingTop: "10px", margin: "auto" }}>
-              <Button
-                variant='contained'
-                color='primary'
-                disabled={!date && !authorizeNoDate}
-                onClick={() => {
-                  handleSubmit();
-                  handleClose();
-                }}
-              >
-                Valider {!date && authorizeNoDate && "(sans date)"}
-              </Button>
-            </div>
-          </Typography>
-        </div>
-      </Box>
-    </Modal>
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      fullWidth
+      maxWidth='xs'
+      classes={{ paper: "date-modal" }}
+    >
+      <form onSubmit={handleFormSubmit}>
+        <DialogTitle className='date-modal__title'>
+          <h2>{title}</h2>
+        </DialogTitle>
+
+        <DialogContent className='date-modal__content'>
+          <TextField
+            id='date'
+            label={label}
+            type='date'
+            fullWidth
+            variant='outlined'
+            value={date || ""}
+            onChange={handleChange}
+            InputLabelProps={{ shrink: true }}
+          />
+          {!date && authorizeNoDate && (
+            <p className='date-modal__hint'>
+              Vous pouvez également continuer sans renseigner de date.
+            </p>
+          )}
+        </DialogContent>
+
+        <DialogActions className='date-modal__actions'>
+          <Button onClick={handleClose} className='date-modal__cancel'>
+            Annuler
+          </Button>
+
+          <Button
+            type='submit'
+            variant='contained'
+            disabled={!date && !authorizeNoDate}
+            className='date-modal__submit'
+          >
+            Valider
+          </Button>
+        </DialogActions>
+      </form>
+    </Dialog>
   );
 };
 

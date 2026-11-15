@@ -1,145 +1,249 @@
-import React, { useState, useContext } from "react";
-import { useHistory } from "react-router-dom";
-import {
-  TextField,
-  Tooltip,
-  IconButton,
-  Button,
-  InputAdornment,
-} from "@material-ui/core";
+import React, { useContext, useEffect, useState } from "react";
+import { Button, TextField, IconButton, Tooltip } from "@material-ui/core";
 import { Rating } from "@material-ui/lab";
 import { AiFillTwitterCircle } from "react-icons/ai";
-
-import { makeStyles } from "@material-ui/core/styles";
-import Accordion from "@material-ui/core/Accordion";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import Typography from "@material-ui/core/Typography";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import { MdEdit, MdDelete, MdOpenInNew } from "react-icons/md";
 
 import { useHttpClient } from "../../../../shared/hooks/http-hook";
 import { AuthContext } from "../../../../shared/context/auth-context";
 
 import "./BookReview.css";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: "100%",
-  },
-  heading: {
-    fontSize: theme.typography.pxToRem(15),
-    fontWeight: theme.typography.fontWeightRegular,
-  },
-}));
-
 const BookReview = ({ book }) => {
-  const { note, review, lien, lu } = book;
-  const history = useHistory();
   const auth = useContext(AuthContext);
   const { sendRequest } = useHttpClient();
-  const classes = useStyles();
 
-  const [rating, setRating] = useState(note);
-  const [reviewText, setReviewText] = useState(review);
-  const [twitterLink, setTwitterLink] = useState(lien);
+  const [rating, setRating] = useState(book.note ?? null);
+  const [reviewText, setReviewText] = useState(book.review || "");
+  const [twitterLink, setTwitterLink] = useState(book.lien || "");
 
-  const handleSubmitReview = async (event) => {
+  const [isEditing, setIsEditing] = useState(
+    !book.note && !book.review && !book.lien,
+  );
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    setRating(book.note ?? null);
+    setReviewText(book.review || "");
+    setTwitterLink(book.lien || "");
+    setIsEditing(!book.note && !book.review && !book.lien);
+  }, [book]);
+
+  const hasContent =
+    rating !== null || reviewText.trim() !== "" || twitterLink.trim() !== "";
+
+  const getHeaders = () => ({
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${auth.token}`,
+  });
+
+  const getBookId = () => book.id || book._id;
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const bookId = book.id;
+
+    setIsSaving(true);
+
     try {
-      await sendRequest(
-        process.env.REACT_APP_API_URL + "/collection/edit",
+      const responseData = await sendRequest(
+        `${process.env.REACT_APP_API_URL}/collection/edit`,
         "POST",
         JSON.stringify({
-          id_book: bookId,
+          id_book: getBookId(),
           id_user: auth.userId,
           note: rating,
-          //   review: reviewText,
+          review: reviewText,
           lien: twitterLink,
         }),
-        {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + auth.token,
-        }
+        getHeaders(),
       );
 
-      history.push(`/${auth.userId}/collection`);
+      if (responseData.success) {
+        setRating(rating);
+        setReviewText(reviewText.trim());
+        setTwitterLink(twitterLink.trim());
+        setIsEditing(false);
+      }
     } catch (err) {
-      console.log(err);
+      console.error("Erreur lors de l'enregistrement de la critique :", err);
+    } finally {
+      setIsSaving(false);
     }
   };
 
+  const handleCancel = () => {
+    setRating(book.note ?? null);
+    setReviewText(book.review || "");
+    setTwitterLink(book.lien || "");
+    setIsEditing(false);
+  };
+
+  const handleDelete = async () => {
+    if (!window.confirm("Supprimer définitivement votre critique ?")) return;
+
+    setIsSaving(true);
+
+    try {
+      const responseData = await sendRequest(
+        `${process.env.REACT_APP_API_URL}/collection/edit`,
+        "POST",
+        JSON.stringify({
+          id_book: getBookId(),
+          id_user: auth.userId,
+          delete_review: true,
+        }),
+        getHeaders(),
+      );
+
+      if (responseData.success) {
+        setRating(null);
+        setReviewText("");
+        setTwitterLink("");
+        setIsEditing(true);
+      }
+    } catch (err) {
+      console.error("Erreur lors de la suppression de la critique :", err);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const openTwitterLink = () => {
+    if (!twitterLink) return;
+
+    window.open(twitterLink, "_blank", "noopener,noreferrer");
+  };
+
   return (
-    <div className={classes.root}>
-      <Accordion disabled={!lu}>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography className={classes.heading}>Votre critique</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>
-            <div className="book-collection__review">
-              <form onSubmit={(event) => handleSubmitReview(event)}>
-                <div className="book-collection__review-twitter">
-                  <div className="book-collection__review__rating">
-                    <p>Ma note</p>
-                    <Rating
-                      value={rating}
-                      onChange={(e) => setRating(parseFloat(e.target.value))}
-                      precision={0.5}
-                      size="large"
-                      style={{ color: "#ffde59" }}
-                    />
-                  </div>
-                  <TextField
-                    label="Lien Twitter"
-                    variant="outlined"
-                    value={twitterLink}
-                    onChange={(e) => setTwitterLink(e.target.value)}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Tooltip title="Voir sur Twitter">
-                            <IconButton
-                              onClick={() => {
-                                window.location.href = twitterLink;
-                              }}
-                            >
-                              <AiFillTwitterCircle />
-                            </IconButton>
-                          </Tooltip>
-                        </InputAdornment>
-                      ),
-                    }}
-                    style={{ width: "100%", marginTop: "10px" }}
-                  />
-                </div>
-                {/* <TextField
-          id='review-text'
-          label='Votre critique'
-          variant='outlined'
-          value={reviewText}
-          onChange={(e) => setReviewText(e.target.value)}
-          multiline
-          rows={4}
-          fullWidth
-          margin='normal'
-        /> */}
-                <Button
-                  type="submit"
-                  variant="contained"
-                  style={{
-                    marginTop: "10px",
-                    marginLeft: "15px",
-                    backgroundColor: "#ffde59",
-                  }}
+    <div className='book-review'>
+      <div className='book-review__heading'>
+        <div>
+          <span className='book-review__kicker'>VOTRE AVIS</span>
+          <h3>Ma critique</h3>
+        </div>
+
+        {!isEditing && hasContent && (
+          <div className='book-review__toolbar'>
+            <Tooltip title='Modifier ma critique'>
+              <span>
+                <IconButton
+                  onClick={() => setIsEditing(true)}
+                  size='small'
+                  disabled={isSaving}
                 >
-                  Valider
-                </Button>
-              </form>
+                  <MdEdit />
+                </IconButton>
+              </span>
+            </Tooltip>
+
+            <Tooltip title='Supprimer ma critique'>
+              <span>
+                <IconButton
+                  onClick={handleDelete}
+                  size='small'
+                  disabled={isSaving}
+                >
+                  <MdDelete />
+                </IconButton>
+              </span>
+            </Tooltip>
+          </div>
+        )}
+      </div>
+
+      {isEditing ? (
+        <form className='book-review__form' onSubmit={handleSubmit}>
+          <div className='book-review__rating'>
+            <label>Ma note</label>
+            <div className='book-review__rating-control'>
+              <Rating
+                className='book-review__interactive-rating'
+                value={rating}
+                onChange={(event, value) => setRating(value)}
+                precision={0.5}
+                size='large'
+              />
+              {rating !== null && <span>{rating} / 5</span>}
             </div>
-          </Typography>
-        </AccordionDetails>
-      </Accordion>
+          </div>
+
+          <TextField
+            label='Ma critique'
+            value={reviewText}
+            onChange={(event) => setReviewText(event.target.value)}
+            multiline
+            minRows={4}
+            maxRows={12}
+            fullWidth
+            variant='outlined'
+            placeholder="Qu'avez-vous pensé de cet ouvrage ?"
+            disabled={isSaving}
+          />
+
+          <TextField
+            label='Lien vers ma publication Twitter / X'
+            value={twitterLink}
+            onChange={(event) => setTwitterLink(event.target.value)}
+            fullWidth
+            variant='outlined'
+            placeholder='https://...'
+            disabled={isSaving}
+          />
+
+          <div className='book-review__form-actions'>
+            {hasContent && (
+              <Button onClick={handleCancel} disabled={isSaving}>
+                Annuler
+              </Button>
+            )}
+
+            <Button
+              type='submit'
+              variant='contained'
+              disabled={isSaving}
+              className='book-review__save'
+            >
+              {isSaving ? "Enregistrement..." : "Enregistrer"}
+            </Button>
+          </div>
+        </form>
+      ) : (
+        <div className='book-review__content'>
+          {rating !== null && (
+            <div className='book-review__display-rating'>
+              <Rating
+                value={rating}
+                readOnly
+                precision={0.5}
+                style={{ color: "#e5bd32" }}
+              />
+              <strong>{rating} / 5</strong>
+            </div>
+          )}
+
+          {reviewText.trim() && (
+            <p className='book-review__text'>{reviewText}</p>
+          )}
+
+          {twitterLink && (
+            <button
+              type='button'
+              className='book-review__twitter'
+              onClick={openTwitterLink}
+            >
+              <AiFillTwitterCircle />
+              Voir ma publication
+              <MdOpenInNew />
+            </button>
+          )}
+        </div>
+      )}
+
+      {!isEditing && !hasContent && (
+        <p className='book-review__empty'>
+          Vous n'avez pas encore publié de critique.
+        </p>
+      )}
     </div>
   );
 };
