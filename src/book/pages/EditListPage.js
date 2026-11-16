@@ -14,6 +14,8 @@ const EditListPage = () => {
   const { listId } = useParams();
   const { sendRequest } = useHttpClient();
   const auth = useContext(AuthContext);
+  const history = useHistory();
+
   const [list, setList] = useState(null);
   const [name, setName] = useState("");
   const [coverImage, setCoverImage] = useState("");
@@ -25,15 +27,12 @@ const EditListPage = () => {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-
+  const [hasSearched, setHasSearched] = useState(false);
   const [sortOption, setSortOption] = useState("title-asc");
 
-  const [showImageInput, setShowImageInput] = useState(!coverImage);
-
+  const [showImageInput, setShowImageInput] = useState(true);
   const [isModified, setIsModified] = useState(false);
 
-  const history = useHistory();
-  console.log(isModified);
   useEffect(() => {
     const fetchList = async () => {
       try {
@@ -45,47 +44,45 @@ const EditListPage = () => {
             Authorization: "Bearer " + auth.token,
           },
         );
+
         setList(responseData);
-        setBooks(responseData.books);
-        setName(responseData.name);
-        setCoverImage(responseData.coverImage);
+        setBooks(responseData.books || []);
+        setName(responseData.name || "");
+        setCoverImage(responseData.coverImage || "");
+        setShowImageInput(!responseData.coverImage);
       } catch (error) {
         console.error("Erreur lors de la récupération de la liste:", error);
       }
     };
+
     fetchList();
   }, [sendRequest, listId, auth.token]);
 
   const moveBook = (index, direction) => {
     const newBooks = [...books];
     const targetIndex = index + direction;
+
     if (targetIndex < 0 || targetIndex >= books.length) return;
-    const temp = newBooks[index];
-    newBooks[index] = newBooks[targetIndex];
-    newBooks[targetIndex] = temp;
+
+    [newBooks[index], newBooks[targetIndex]] = [
+      newBooks[targetIndex],
+      newBooks[index],
+    ];
+
     setBooks(newBooks);
     setIsModified(true);
   };
 
   const handleRemoveBook = (index) => {
-    const updatedBooks = books.filter((_, i) => i !== index);
-    setBooks(updatedBooks);
-  };
-
-  const getSortedResults = () => {
-    const sorted = [...searchResults];
-
-    switch (sortOption) {
-      case "title-asc":
-        return sorted.sort((a, b) => a.titre.localeCompare(b.titre));
-      case "title-desc":
-        return sorted.sort((a, b) => b.titre.localeCompare(a.titre));
-      default:
-        return sorted;
-    }
+    setBooks((previousBooks) =>
+      previousBooks.filter((_, currentIndex) => currentIndex !== index),
+    );
+    setIsModified(true);
   };
 
   const deleteList = async () => {
+    if (!window.confirm("Supprimer définitivement cette liste ?")) return;
+
     try {
       await sendRequest(
         process.env.REACT_APP_API_URL + `/lists/${listId}`,
@@ -95,6 +92,7 @@ const EditListPage = () => {
           Authorization: "Bearer " + auth.token,
         },
       );
+
       history.push("/lists");
     } catch (error) {
       console.error("Erreur lors de la suppression de la liste:", error);
@@ -104,6 +102,7 @@ const EditListPage = () => {
   const saveChanges = async () => {
     try {
       const bookIds = books.map((book) => book._id);
+
       const responseData = await sendRequest(
         process.env.REACT_APP_API_URL + `/lists/update/${listId}`,
         "POST",
@@ -113,6 +112,7 @@ const EditListPage = () => {
           Authorization: "Bearer " + auth.token,
         },
       );
+
       setList(responseData);
       setIsModified(false);
     } catch (error) {
@@ -120,48 +120,33 @@ const EditListPage = () => {
     }
   };
 
-  const toggleFadeOwned = () => {
-    setFadeOwned((prev) => !prev);
-    if (fadeRead) setFadeRead(false);
-  };
-
-  const toggleFadeRead = () => {
-    setFadeRead((prev) => !prev);
-    if (fadeOwned) setFadeOwned(false);
-  };
-
-  const toggleSimpleList = () => {
-    setSimpleList((prev) => !prev);
-  };
-
-  const toggleImageInput = () => {
-    setShowImageInput((prev) => !prev);
-  };
-
   const calculateStats = () => {
     const totalBooks = books.length;
     const ownedBooks = books.filter((book) => book.collection?.possede).length;
     const readBooks = books.filter((book) => book.collection?.lu).length;
 
-    const totalPrice = books.reduce((sum, book) => sum + (book.prix || 0), 0);
+    const totalPrice = books.reduce(
+      (sum, book) => sum + (Number(book.prix) || 0),
+      0,
+    );
     const ownedPrice = books
       .filter((book) => book.collection?.possede)
-      .reduce((sum, book) => sum + (book.prix || 0), 0);
+      .reduce((sum, book) => sum + (Number(book.prix) || 0), 0);
 
     const totalWeight =
-      books.reduce((sum, book) => sum + (book.poids || 0), 0) / 1000;
+      books.reduce((sum, book) => sum + (Number(book.poids) || 0), 0) / 1000;
     const ownedWeight =
       books
         .filter((book) => book.collection?.possede)
-        .reduce((sum, book) => sum + (book.poids || 0), 0) / 1000;
+        .reduce((sum, book) => sum + (Number(book.poids) || 0), 0) / 1000;
 
     const totalPages = books.reduce(
-      (sum, book) => sum + (book.planches || 0),
+      (sum, book) => sum + (Number(book.planches) || 0),
       0,
     );
     const readPages = books
       .filter((book) => book.collection?.lu)
-      .reduce((sum, book) => sum + (book.planches || 0), 0);
+      .reduce((sum, book) => sum + (Number(book.planches) || 0), 0);
 
     return {
       totalBooks,
@@ -193,34 +178,34 @@ const EditListPage = () => {
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) return;
+
     try {
       const responseData = await sendRequest(
-        `${process.env.REACT_APP_API_URL}/book/search?q=${searchQuery}`,
+        `${process.env.REACT_APP_API_URL}/book/search?q=${encodeURIComponent(
+          searchQuery.trim(),
+        )}`,
         "GET",
         null,
         {
           Authorization: "Bearer " + auth.token,
         },
       );
-      if (responseData && responseData.booksByTitle) {
-        setSearchResults(responseData.booksByTitle);
-      } else {
-        setSearchResults([]);
-      }
+
+      setSearchResults(responseData?.booksByTitle || []);
+      setHasSearched(true);
     } catch (error) {
       console.error("Erreur lors de la recherche de livres:", error);
       setSearchResults([]);
+      setHasSearched(true);
     }
   };
 
   const addBookToList = (book) => {
-    if (!books.some((b) => b._id === book._id)) {
-      setBooks((prevBooks) => [...prevBooks, book]);
-      setIsModified(true);
-    }
-  };
+    if (books.some((existingBook) => existingBook._id === book._id)) return;
 
-  const stats = calculateStats();
+    setBooks((previousBooks) => [...previousBooks, book]);
+    setIsModified(true);
+  };
 
   const handleNameChange = (value) => {
     setName(value);
@@ -232,199 +217,319 @@ const EditListPage = () => {
     setIsModified(true);
   };
 
-  if (!list) return <div>Chargement...</div>;
+  const toggleFadeOwned = () => {
+    setFadeOwned((previous) => !previous);
+    if (!fadeOwned) setFadeRead(false);
+  };
+
+  const toggleFadeRead = () => {
+    setFadeRead((previous) => !previous);
+    if (!fadeRead) setFadeOwned(false);
+  };
+
+  const stats = calculateStats();
+
+  const sortedResults = [...searchResults].sort((a, b) => {
+    const titleA = a.titre || "";
+    const titleB = b.titre || "";
+
+    return sortOption === "title-desc"
+      ? titleB.localeCompare(titleA)
+      : titleA.localeCompare(titleB);
+  });
+
+  if (!list) {
+    return <div className='edit-list__loading'>Chargement de la liste...</div>;
+  }
 
   return (
     <div className='edit-list'>
-      <h1>Modifier la Liste {name}</h1>
+      <header className='edit-list__header'>
+        <div>
+          <button
+            type='button'
+            className='edit-list__back'
+            onClick={() => history.push("/lists")}
+          >
+            ← Mes listes
+          </button>
 
-      <div className='edit-list__form'>
-        <div className='edit-list__fields'>
-          <input
-            type='text'
-            value={name}
-            onChange={(e) => handleNameChange(e.target.value)}
-            placeholder='Nom de la liste'
-          />
-          {showImageInput && (
-            <input
-              type='text'
-              value={coverImage}
-              onChange={(e) => handleImageChange(e.target.value)}
-              placeholder="URL de l'image de couverture"
-            />
-          )}
+          <h1>{name || "Liste sans nom"}</h1>
+          <p>Gère les livres et les informations de ta liste.</p>
         </div>
 
-        {coverImage && (
-          <div
-            className='cover-preview'
-            onClick={toggleImageInput}
-            style={{ cursor: "pointer" }}
-          >
-            <img src={coverImage} alt='Aperçu de la couverture' />
-          </div>
-        )}
-      </div>
+        <span className='edit-list__book-count'>
+          {books.length} {books.length > 1 ? "livres" : "livre"}
+        </span>
+      </header>
 
       {isModified && (
-        <p className='unsaved-alert'>
-          🚨 Modification(s) non sauvegardée(s) 🚨
-        </p>
+        <div className='unsaved-alert'>
+          <span>!</span>
+          Des modifications ne sont pas encore sauvegardées.
+        </div>
       )}
 
-      <div className='filter-buttons'>
-        <button onClick={toggleFadeOwned} className={fadeOwned ? "active" : ""}>
-          Masquer les livres possédés
-        </button>
-        <button onClick={toggleFadeRead} className={fadeRead ? "active" : ""}>
-          Masquer les livres lus
-        </button>
-        <button
-          onClick={toggleSimpleList}
-          className={simpleList ? "active" : ""}
-        >
-          {simpleList ? "Modifier l'ordre" : "Afficher uniquement"}
-        </button>
-      </div>
+      <section className='edit-list__settings'>
+        <div className='edit-list__section-heading'>
+          <div>
+            <h2>Informations de la liste</h2>
+            <p>Personnalise le nom et la couverture de ta liste.</p>
+          </div>
+        </div>
 
-      <div
-        className={`display-books-serie_container ${
-          simpleList ? "simple-list" : ""
-        }`}
-      >
-        <h2>Livres dans la liste</h2>
+        <div className='edit-list__form'>
+          <div className='edit-list__fields'>
+            <label htmlFor='list-name'>Nom de la liste</label>
+            <input
+              id='list-name'
+              type='text'
+              value={name}
+              onChange={(event) => handleNameChange(event.target.value)}
+              placeholder='Nom de la liste'
+            />
+
+            <div className='edit-list__image-heading'>
+              <label htmlFor='list-cover'>Image de couverture</label>
+              {coverImage && (
+                <button
+                  type='button'
+                  onClick={() => setShowImageInput((previous) => !previous)}
+                >
+                  {showImageInput ? "Masquer le champ" : "Modifier l'image"}
+                </button>
+              )}
+            </div>
+
+            {showImageInput && (
+              <input
+                id='list-cover'
+                type='text'
+                value={coverImage}
+                onChange={(event) => handleImageChange(event.target.value)}
+                placeholder="URL de l'image de couverture"
+              />
+            )}
+          </div>
+
+          {coverImage && (
+            <div className='cover-preview'>
+              <img src={coverImage} alt='Couverture de la liste' />
+            </div>
+          )}
+        </div>
+      </section>
+
+      <section className='edit-list__books'>
+        <div className='edit-list__section-heading'>
+          <div>
+            <h2>Livres de la liste</h2>
+            <p>Consulte, filtre et organise les livres de ta sélection.</p>
+          </div>
+        </div>
+
+        <div className='filter-buttons'>
+          <button
+            type='button'
+            onClick={toggleFadeOwned}
+            className={fadeOwned ? "active" : ""}
+          >
+            {fadeOwned ? "Livres possédés masqués" : "Masquer les possédés"}
+          </button>
+
+          <button
+            type='button'
+            onClick={toggleFadeRead}
+            className={fadeRead ? "active" : ""}
+          >
+            {fadeRead ? "Livres lus masqués" : "Masquer les livres lus"}
+          </button>
+
+          <button
+            type='button'
+            onClick={() => setSimpleList((previous) => !previous)}
+            className={!simpleList ? "active" : ""}
+          >
+            {simpleList ? "Modifier l'ordre" : "Terminer le réordonnancement"}
+          </button>
+        </div>
+
         <div
-          className={`display-books-serie ${
-            simpleList ? "horizontal-scroll" : ""
+          className={`display-books-serie_container ${
+            simpleList ? "simple-list" : ""
           }`}
         >
-          {books.map((book, index) => (
-            <Tooltip title={makeTitle(book)} placement='top' key={book._id}>
-              <div
-                className={`display-books-serie__book ${
-                  (fadeOwned && book.collection?.possede) ||
-                  (fadeRead && book.collection?.lu)
-                    ? "faded"
-                    : ""
-                }`}
-              >
-                <img
-                  src={book.image}
-                  alt={book.titre}
-                  onClick={() => history.push(`/book/${book._id}`)}
-                />
-                {!simpleList && (
-                  <div className='top-right'>
-                    <button
-                      onClick={() => moveBook(index, -1)}
-                      disabled={index === 0}
-                    >
-                      ↑
-                    </button>
-                    <button
-                      onClick={() => moveBook(index, 1)}
-                      disabled={index === books.length - 1}
-                    >
-                      ↓
-                    </button>
-                  </div>
-                )}
-                {!simpleList && (
-                  <div className='bottom-right'>
-                    <button
-                      className='delete'
-                      onClick={() => handleRemoveBook(index)}
-                    >
-                      Supprimer
-                    </button>
-                  </div>
-                )}
-              </div>
-            </Tooltip>
-          ))}
-        </div>
-      </div>
+          {books.length === 0 ? (
+            <div className='edit-list__empty-books'>
+              Aucun livre dans cette liste pour le moment.
+            </div>
+          ) : (
+            <div
+              className={`display-books-serie ${
+                simpleList ? "horizontal-scroll" : ""
+              }`}
+            >
+              {books.map((book, index) => (
+                <Tooltip title={makeTitle(book)} placement='top' key={book._id}>
+                  <div
+                    className={`display-books-serie__book ${
+                      (fadeOwned && book.collection?.possede) ||
+                      (fadeRead && book.collection?.lu)
+                        ? "faded"
+                        : ""
+                    }`}
+                  >
+                    <img
+                      src={book.image}
+                      alt={book.titre}
+                      onClick={() => history.push(`/book/${book._id}`)}
+                    />
 
-      <div className='action-buttons'>
+                    {!simpleList && (
+                      <>
+                        <div className='top-right'>
+                          <button
+                            type='button'
+                            onClick={() => moveBook(index, -1)}
+                            disabled={index === 0}
+                            aria-label='Déplacer vers le haut'
+                          >
+                            ↑
+                          </button>
+                          <button
+                            type='button'
+                            onClick={() => moveBook(index, 1)}
+                            disabled={index === books.length - 1}
+                            aria-label='Déplacer vers le bas'
+                          >
+                            ↓
+                          </button>
+                        </div>
+
+                        <div className='bottom-right'>
+                          <button
+                            type='button'
+                            className='delete'
+                            onClick={() => handleRemoveBook(index)}
+                          >
+                            Supprimer
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </Tooltip>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      <div className='edit-list__actions'>
         <CustomButtons
           buttonType='edit'
-          title='Sauvegarder'
+          title='Sauvegarder les modifications'
           onClick={saveChanges}
           disabled={!isModified}
         />
         <CustomButtons
           buttonType='delete'
-          title='Supprimer'
+          title='Supprimer la liste'
           onClick={deleteList}
         />
       </div>
 
-      <div className='stats-container'>
-        <div className='stat-item'>
-          <div className='icon'>📚</div>
-          <h3>
-            {stats.ownedBooks}/{stats.totalBooks}
-          </h3>
-          <p>Possédés ({stats.ownedPercentage}%)</p>
+      <section className='edit-list__statistics'>
+        <div className='edit-list__section-heading'>
+          <div>
+            <h2>Statistiques de la liste</h2>
+            <p>Quelques chiffres sur ta sélection.</p>
+          </div>
         </div>
-        <div className='stat-item'>
-          <div className='icon'>📖</div>
-          <h3>
-            {stats.readBooks}/{stats.totalBooks}
-          </h3>
-          <p>Lus ({stats.readPercentage}%)</p>
-        </div>
-        <div className='stat-item'>
-          <div className='icon'>💰</div>
-          <h3>{stats.totalPrice.toFixed(2)} €</h3>
-          <p>Prix total</p>
-        </div>
-        <div className='stat-item'>
-          <div className='icon'>🪙</div>
-          <h3>{stats.ownedPrice.toFixed(2)} €</h3>
-          <p>Prix possédé ({stats.ownedPricePercentage}%)</p>
-        </div>
-        <div className='stat-item'>
-          <div className='icon'>⚖️</div>
-          <h3>{stats.totalWeight.toFixed(2)} kg</h3>
-          <p>Poids total</p>
-        </div>
-        <div className='stat-item'>
-          <div className='icon'>📦</div>
-          <h3>{stats.ownedWeight.toFixed(2)} kg</h3>
-          <p>Poids possédé ({stats.ownedWeightPercentage}%)</p>
-        </div>
-        <div className='stat-item'>
-          <div className='icon'>📄</div>
-          <h3>{stats.totalPages}</h3>
-          <p>Planches totales</p>
-        </div>
-        <div className='stat-item'>
-          <div className='icon'>✅</div>
-          <h3>{stats.readPages}</h3>
-          <p>Planches lues ({stats.readPagesPercentage}%)</p>
-        </div>
-      </div>
 
-      <div className='search-section'>
-        <h2>Ajouter des livres</h2>
+        <div className='stats-container'>
+          <div className='stat-item'>
+            <div className='icon'>📚</div>
+            <h3>
+              {stats.ownedBooks}/{stats.totalBooks}
+            </h3>
+            <p>Possédés ({stats.ownedPercentage}%)</p>
+          </div>
+
+          <div className='stat-item'>
+            <div className='icon'>📖</div>
+            <h3>
+              {stats.readBooks}/{stats.totalBooks}
+            </h3>
+            <p>Lus ({stats.readPercentage}%)</p>
+          </div>
+
+          <div className='stat-item'>
+            <div className='icon'>💰</div>
+            <h3>{stats.totalPrice.toFixed(2)} €</h3>
+            <p>Prix total</p>
+          </div>
+
+          <div className='stat-item'>
+            <div className='icon'>🪙</div>
+            <h3>{stats.ownedPrice.toFixed(2)} €</h3>
+            <p>Prix possédé ({stats.ownedPricePercentage}%)</p>
+          </div>
+
+          <div className='stat-item'>
+            <div className='icon'>⚖️</div>
+            <h3>{stats.totalWeight.toFixed(2)} kg</h3>
+            <p>Poids total</p>
+          </div>
+
+          <div className='stat-item'>
+            <div className='icon'>📦</div>
+            <h3>{stats.ownedWeight.toFixed(2)} kg</h3>
+            <p>Poids possédé ({stats.ownedWeightPercentage}%)</p>
+          </div>
+
+          <div className='stat-item'>
+            <div className='icon'>📄</div>
+            <h3>{stats.totalPages}</h3>
+            <p>Planches totales</p>
+          </div>
+
+          <div className='stat-item'>
+            <div className='icon'>✅</div>
+            <h3>{stats.readPages}</h3>
+            <p>Planches lues ({stats.readPagesPercentage}%)</p>
+          </div>
+        </div>
+      </section>
+
+      <section className='search-section'>
+        <div className='edit-list__section-heading'>
+          <div>
+            <h2>Ajouter des livres</h2>
+            <p>
+              Recherche un livre dans le catalogue pour l'ajouter à ta liste.
+            </p>
+          </div>
+        </div>
 
         <div className='search-controls'>
           <div className='search-bar'>
             <input
               type='text'
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") handleSearch();
+              }}
               placeholder='Rechercher un titre...'
               className='search-input'
             />
+
             <IconButton
               onClick={handleSearch}
               type='button'
-              sx={{ p: "10px" }}
-              aria-label='search'
+              aria-label='Rechercher'
+              size='small'
             >
               <SearchIcon />
             </IconButton>
@@ -432,8 +537,9 @@ const EditListPage = () => {
 
           <select
             value={sortOption}
-            onChange={(e) => setSortOption(e.target.value)}
+            onChange={(event) => setSortOption(event.target.value)}
             className='sort-select'
+            aria-label='Trier les résultats'
           >
             <option value='title-asc'>Titre A → Z</option>
             <option value='title-desc'>Titre Z → A</option>
@@ -441,12 +547,14 @@ const EditListPage = () => {
         </div>
 
         <div className='search-results'>
-          {getSortedResults().length === 0 && (
-            <p className='no-results'>Aucun résultat</p>
+          {hasSearched && sortedResults.length === 0 && (
+            <p className='no-results'>Aucun résultat trouvé.</p>
           )}
 
-          {getSortedResults().map((book) => {
-            const alreadyAdded = books.some((b) => b._id === book._id);
+          {sortedResults.map((book) => {
+            const alreadyAdded = books.some(
+              (existingBook) => existingBook._id === book._id,
+            );
 
             return (
               <div key={book._id} className='search-result-card'>
@@ -458,9 +566,10 @@ const EditListPage = () => {
 
                 <div className='result-info'>
                   <span className='result-title'>{makeTitle(book)}</span>
-
                   <span className='result-price'>
-                    {book.prix ? `${book.prix.toFixed(2)} €` : ""}
+                    {Number(book.prix)
+                      ? `${Number(book.prix).toFixed(2)} €`
+                      : ""}
                   </span>
                 </div>
 
@@ -468,6 +577,7 @@ const EditListPage = () => {
                   <span className='already-added'>✓ Déjà ajouté</span>
                 ) : (
                   <button
+                    type='button'
                     onClick={() => addBookToList(book)}
                     className='add-button-list'
                   >
@@ -478,7 +588,7 @@ const EditListPage = () => {
             );
           })}
         </div>
-      </div>
+      </section>
     </div>
   );
 };
